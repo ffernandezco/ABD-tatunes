@@ -2,6 +2,7 @@ package eus.ehu.giigsi.abd;
 
 public class Constants {
     public static final String ERROR = "ERROR: ";
+
     public static final String MSG = "MSG: ";
     public static final String CREATE_TABLE_SUCCESS = MSG+"Table created";
     public static final String INSERT_SUCCESS = MSG+"Tuple added";
