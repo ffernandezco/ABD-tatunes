@@ -1,6 +1,7 @@
 package eus.ehu.giigsi.abd.parser;
 
 import eus.ehu.giigsi.abd.structures.Database;
+import eus.ehu.giigsi.abd.structures.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,21 @@ public class Insert implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        return null;
+        if (table == null || values == null)
+        {
+            return "Error: tabla o valores estan vacios";
+        }
+
+        //Table tablaBuscada = database.getTables();
+
+        if (table.length()>0)
+        {
+           database.Insert(table, values);
+           database.tableByName(table).insert(values);
+        }
+
+
+
+        return null ;
     }
 }
