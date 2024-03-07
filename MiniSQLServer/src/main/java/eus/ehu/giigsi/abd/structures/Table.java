@@ -3,8 +3,11 @@ package eus.ehu.giigsi.abd.structures;
 import eus.ehu.giigsi.abd.parser.Condition;
 import eus.ehu.giigsi.abd.parser.SetValue;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Table {
     //TODO
@@ -19,6 +22,13 @@ public class Table {
 
     public boolean load(String path)
     {
+        try ( Scanner entrada = new Scanner(new File(path))){
+            while (entrada.hasNext()){
+
+            }
+        } catch ( FileNotFoundException e ) {
+            System.err.println("Fichero no encontrado");
+        }
         return false;
     }
 
@@ -29,11 +39,23 @@ public class Table {
 
     public Column columnByName(String column)
     {
+        for(Column columna : columns) {
+            if (columna.getName().equals(column)) {
+                return columna;
+            }
+        }
         return null;
     }
     public void deleteColumnByName(String name)
     {
-
+        for(Column columna : columns){
+            if(columna.getName().equals(name)){
+                columns.remove(columna);
+            }
+            else{
+                System.out.println("No hay ninguna columna con el nombre introducido.");
+            }
+        }
     }
 
 
