@@ -18,6 +18,7 @@ public class Database {
     public List<Table> tables = new ArrayList<>();
     public String name = null;
     private String mUsername;
+    private String mPassword;
 
     @Getter
     @Setter(AccessLevel.PRIVATE)
@@ -35,7 +36,8 @@ public class Database {
 
     public Database(String adminUsername, String adminPassword)
     {
-
+            mUsername = adminUsername;
+            mPassword = adminPassword;
     }
 
 
@@ -57,7 +59,17 @@ public class Database {
 
     public boolean deleteWhere(String tableName, Condition columnCondition)
     {
-        return false;
+        Table table = findTable(tableName);
+
+        if (table == null){
+         System.out.println(Constants.TABLE_DOES_NOT_EXIST_ERROR);
+         return false;
+        }
+           table.deleteWhere(columnCondition);
+           return true;
+    }
+    public void findeTable(Table pTable){
+        return null;
     }
 
     public boolean update(String tableName, List<SetValue> columnNames, Condition columnCondition)
