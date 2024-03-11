@@ -47,7 +47,12 @@ public class Select implements MiniSQLQuery{
             result += " " + where;
         }
 
-        return database.executeMiniSQLQuery(result);
+        try {
+            return database.executeMiniSQLQuery(result);
+        }
+        catch (Exception e) {
+            return e.getMessage();
+        }
 
     }
 }
