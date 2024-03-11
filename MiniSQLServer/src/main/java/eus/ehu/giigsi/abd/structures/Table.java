@@ -52,6 +52,7 @@ public class Table {
             if(columna.getName().equals(name)){
                 columns.remove(columna);
             }
+
             else{
                 System.out.println("No hay ninguna columna con el nombre introducido.");
             }
