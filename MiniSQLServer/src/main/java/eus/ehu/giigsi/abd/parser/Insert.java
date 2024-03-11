@@ -29,16 +29,25 @@ public class Insert implements MiniSQLQuery{
             return "Error: tabla o valores estan vacios";
         }
 
-        //Table tablaBuscada = database.getTables();
-
-        if (table.length()>0)
+       StringBuilder insert = new StringBuilder();
+        insert.append("INSERT INTO").append(table).append("VALUES(");
+        for (int i =0; i < values.size(); i++)
         {
-           database.Insert(table, values);
-           database.tableByName(table).insert(values) ;
+            insert.append(" (' ").append(values.get(i)).append(" ') ");
+
+            if (i < values.size() - 1)
+            {
+               insert.append(", ");
+            }
         }
+        insert.append(")");
 
+        try{
+           database.executeMiniSQLQuery(insert.toString());
+           return  "Insercion satisfactoria";
 
-
-        return null ;
+        } catch(Exception e){
+            return "Error en la insercion"+ e.getMessage();
+        }
     }
 }
