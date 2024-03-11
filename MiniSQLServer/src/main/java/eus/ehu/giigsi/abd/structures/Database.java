@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.*;
 
 public class Database {
     private static final String DEFAULT_RESULT_TABLE_NAME = "Result";
@@ -40,13 +41,17 @@ public class Database {
         mPassword = adminPassword;
     }
 
+    public static boolean load(String databaseName, String username, String password) {
+        File file = new File("../archives/" + databaseName + ".txt");
+        try (FileReader fr = new FileReader(file)) {
+            System.out.println("Database loaded successfully");
+            return true;
+        } catch (IOException e) {
+            System.out.println(Constants.DATABASE_DOES_NOT_EXIST_ERROR);
+            return false;
+        }
 
-    public static Database load(String databaseName, String username, String password)
-    {
-        return null;
     }
-
-
 
     public boolean save(String databaseName)
     {
@@ -65,21 +70,45 @@ public class Database {
             System.out.println(Constants.TABLE_DOES_NOT_EXIST_ERROR);
             return false;
         }
-        table.deleteWhere(columnCondition);
-        return true;
+        else {
+            table.deleteWhere(columnCondition);
+            return true;
+        }
     }
-    public void findeTable(Table pTable){
-        return null;
-    }
+    public Table findTable(String tableName){
+            for (Table t : tables) {
+                if (t.name.equals(tableName)) {
+                    return t;
+                }
+            }
+            return null; // Devuelve null si la tabla no se encuentra
+        }
 
     public boolean update(String tableName, List<SetValue> columnNames, Condition columnCondition)
     {
-        return false;
+        Table table = findTable(tableName);
+
+        if (table == null){
+            System.out.println(Constants.TABLE_DOES_NOT_EXIST_ERROR);
+            return false;
+        }
+        else {
+            table.update(columnNames, columnCondition);
+            return true;
+        }
     }
 
     public boolean Insert(String tableName, List<String> values)
     {
-        return false;
+        Table table = findTable(tableName);
+        if(table == null){
+            System.out.println(Constants.TABLE_DOES_NOT_EXIST_ERROR);
+            return false;
+        }
+        else{
+            table.insert(values);
+            return true;
+        }
     }
 
     public String executeMiniSQLQuery(String query)
@@ -99,7 +128,6 @@ public class Database {
     }
     public boolean dropTable(String tableName)
     {
-
         return false;
     }
     public void addTable(Table table)
