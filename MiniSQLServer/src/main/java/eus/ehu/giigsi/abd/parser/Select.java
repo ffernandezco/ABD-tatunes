@@ -32,6 +32,22 @@ public class Select implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        return null;
+        String result = "Select ";
+
+        for(int i = 0; i < columns.size(); i++) {
+            result += columns.get(i);
+            if(i+1 < columns.size()) {
+                result += ", ";
+            }
+        }
+
+        result += " from" + table;
+
+        if(where != null) {
+            result += " " + where;
+        }
+
+        return database.executeMiniSQLQuery(result);
+
     }
 }
