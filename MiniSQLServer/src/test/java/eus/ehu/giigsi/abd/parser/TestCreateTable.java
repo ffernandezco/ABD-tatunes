@@ -14,6 +14,8 @@ public class TestCreateTable {
         columns.add(new Column(Column.DataType.STRING, "Str"));
         columns.add(new Column(Column.DataType.DOUBLE, "Dbl"));
         columns.add(new Column(Column.DataType.INT, "Int"));
+
+        //Clase 11/03
     }
 
 }
