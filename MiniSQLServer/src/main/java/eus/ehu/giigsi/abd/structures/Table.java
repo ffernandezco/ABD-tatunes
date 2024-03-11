@@ -63,13 +63,16 @@ public class Table {
     @Override
     public String toString()
     {
-
-        return null;
+        String salida = "Tabla " + name + "\n" + "Contenido: \n";
+        for (Column column : columns) {
+            salida = salida + "- " + column.toString() + "\n";
+        }
+        return salida;
     }
 
     public void deleteWhere(Condition condition)
     {
-
+        //Depende de Column
     }
 
     public boolean insert(List<String> values)
