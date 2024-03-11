@@ -34,7 +34,7 @@ public class Insert implements MiniSQLQuery{
         if (table.length()>0)
         {
            database.Insert(table, values);
-           database.tableByName(table).insert(values);
+           database.tableByName(table).insert(values) ;
         }
 
 
