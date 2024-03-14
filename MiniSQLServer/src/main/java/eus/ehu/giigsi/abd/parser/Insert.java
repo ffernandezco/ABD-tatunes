@@ -44,7 +44,7 @@ public class Insert implements MiniSQLQuery{
 
         try{
            database.executeMiniSQLQuery(insert.toString());
-           return  "Insercion satisfactoria";
+           return  "Inserción satisfactoria";
 
         } catch(Exception e){
             return "Error en la insercion"+ e.getMessage();
