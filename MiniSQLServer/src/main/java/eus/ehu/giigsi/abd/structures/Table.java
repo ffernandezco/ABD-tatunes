@@ -72,6 +72,7 @@ public class Table {
 
     public void deleteWhere(Condition condition)
     {
+
         //Depende de Column
     }
 
