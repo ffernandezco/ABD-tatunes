@@ -41,18 +41,11 @@ public class Select implements MiniSQLQuery{
             }
         }
 
-        result += " from" + table;
+        result += " from " + table;
 
         if(where != null) {
-            result += " " + where;
+            result += " where " + where.column + " " + where.operator + " " + where.literalValue;
         }
-
-        try {
-            return database.executeMiniSQLQuery(result);
-        }
-        catch (Exception e) {
-            return e.getMessage();
-        }
-
+            return result;
     }
 }
