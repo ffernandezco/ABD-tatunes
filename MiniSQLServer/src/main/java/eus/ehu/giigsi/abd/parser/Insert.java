@@ -11,7 +11,7 @@ import java.util.List;
 public class Insert implements MiniSQLQuery{
     @Getter
     @Setter(AccessLevel.PRIVATE)
-    public String table;
+    public String table ;
 
     @Getter
     @Setter(AccessLevel.PRIVATE)
