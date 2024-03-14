@@ -41,14 +41,14 @@ public class Database {
         mPassword = adminPassword;
     }
 
-    public static boolean load(String databaseName, String username, String password) {
-        File file = new File("../archives/" + databaseName + ".txt");
+    public static FileReader load(String databaseName, String username, String password) {
+        File file = new File("/archives/" + databaseName + ".txt");
         try (FileReader fr = new FileReader(file)) {
             System.out.println("Database loaded successfully");
-            return true;
+            return fr;
         } catch (IOException e) {
             System.out.println(Constants.DATABASE_DOES_NOT_EXIST_ERROR);
-            return false;
+            return null;
         }
 
     }
