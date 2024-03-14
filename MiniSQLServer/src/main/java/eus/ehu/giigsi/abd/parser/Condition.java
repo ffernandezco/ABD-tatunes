@@ -23,10 +23,11 @@ public class Condition {
         this.literalValue = literalValue;
     }
 
-
-
     public boolean ValueMeetsCondition(String value, Column.DataType type)
     {
+        if (operator.equals("=")) {
+
+        }
         return false;
     }
 }
