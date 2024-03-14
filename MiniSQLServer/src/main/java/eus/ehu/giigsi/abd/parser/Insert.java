@@ -30,7 +30,7 @@ public class Insert implements MiniSQLQuery{
         }
 
        StringBuilder insert = new StringBuilder();
-        insert.append("INSERT INTO").append(table).append("VALUES(");
+        insert.append("INSERT INTO").append(table).append("VALUES(") ;
         for (int i =0; i < values.size(); i++)
         {
             insert.append(" (' ").append(values.get(i)).append(" ') ");
