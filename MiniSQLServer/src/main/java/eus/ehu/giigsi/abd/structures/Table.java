@@ -105,7 +105,7 @@ public class Table {
                     columna.updateWhere(condition, value.getValue());
                 }
                 else {
-                    errorMessage = "Columna no encontrada."
+                    errorMessage = "Columna no encontrada.";
                 }
 
         }
