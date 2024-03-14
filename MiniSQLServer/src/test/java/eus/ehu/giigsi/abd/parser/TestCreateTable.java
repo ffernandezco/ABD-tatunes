@@ -3,6 +3,7 @@ package eus.ehu.giigsi.abd.parser;
 import eus.ehu.giigsi.abd.structures.Column;
 import eus.ehu.giigsi.abd.structures.Database;
 import eus.ehu.giigsi.abd.structures.Table;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,22 +11,41 @@ import java.util.List;
 
 public class TestCreateTable {
 
+    Database database;
+    @BeforeEach
+    public void createDatabase() {
+        database = new Database("admin", "admin");
+
+
+        List<String> vInt = new ArrayList<>();
+        vInt.add("1");
+        vInt.add("3");
+        vInt.add("5");
+
+        List<String> vStr = new ArrayList<>();
+        vStr.add("A");
+        vStr.add("C");
+        vStr.add("D");
+
+        List<String> vDbl = new ArrayList<>();
+        vDbl.add("1.99");
+        vDbl.add("3.99");
+        vDbl.add("5.99");
+
+        List<Column> columns= new ArrayList<>();
+        columns.add(new Column(Column.DataType.INT, "int", vInt));
+        columns.add(new Column(Column.DataType.STRING, "str", vStr));
+        columns.add(new Column(Column.DataType.DOUBLE, "dbl", vDbl));
+        Table table = new Table("Tabla1", columns);
+
+        database.addTable(table);
+    }
+
     @Test
     public void prueba1() {
         String result, expected;
 
-        List<Column> columns = new ArrayList<Column>();
-        columns.add(new Column(Column.DataType.STRING, "Str"));
-        columns.add(new Column(Column.DataType.DOUBLE, "Dbl"));
-        columns.add(new Column(Column.DataType.INT, "Int"));
-
-        List<ColumnParameters> columnParameters = new ArrayList<ColumnParameters>();
-
-        Table tablePrueba1 = new Table("Prueba1", columns);
-        //CreateTable ct = new CreateTable(tablePrueba1, columnParameters);
-
-        //Clase 11/03
-        //result = ct.execute(null);
+        //CreateTable ct = new CreateTable("Tabla1",);
     }
 
 }
