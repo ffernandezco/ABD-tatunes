@@ -64,27 +64,53 @@ public class Table {
     public String toString()
     {
         String salida = "Tabla " + name + "\n" + "Contenido: \n";
-        for (Column column : columns) {
-            salida = salida + "- " + column.toString() + "\n";
+        for (Column columna : columns) {
+            salida = salida + "- " + columna.toString() + "\n";
         }
         return salida;
     }
 
-    public void deleteWhere(Condition condition)
-    {
-
-        //Depende de Column
+    public void deleteWhere(Condition condition) {
+        for (Column columna : columns) {
+            if (columna.name.equals(condition.column)) {
+                List<Integer> indices = columna.indicesWhereIsTrue(condition);
+                for (int i = indices.size()-1; i>=0; i--) {
+                    int index = indices.get(i);
+                    columna.deleteAt(index);
+                }
+            }
+        }
     }
+
 
     public boolean insert(List<String> values)
     {
-
-        return false;
+        if (values.size() > columns.size()) {
+            return false;
+        }
+        for (int i = 0; i < columns.size(); i++) {
+            Column columna = columns.get(i);
+            String value = values.get(i);
+            columna.values.add(value);
+        }
+        return true;
     }
 
     public String update(List<SetValue> setValues, Condition condition)
     {
         String errorMessage = null;
+        for(SetValue value : setValues) {
+            for (Column columna : columns) {
+                if (columna.name.equals(value.getColumn())) {
+                    columna.updateWhere(condition, value.getValue());
+                }
+                else {
+                    errorMessage = "Columna no encontrada."
+                }
+
+        }
+
+        }
         return errorMessage;
     }
 }
