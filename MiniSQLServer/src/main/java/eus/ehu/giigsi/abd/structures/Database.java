@@ -57,58 +57,53 @@ public class Database {
     {
         return false;
     }
-    public Table select(String table, List<String> columns, Condition columnCondition)
-    {
-        return null;
-    }
-
-    public boolean deleteWhere(String tableName, Condition columnCondition)
-    {
-        Table table = findTable(tableName);
-
-        if (table == null){
-            System.out.println(Constants.TABLE_DOES_NOT_EXIST_ERROR);
-            return false;
-        }
-        else {
-            table.deleteWhere(columnCondition);
-            return true;
-        }
-    }
-    public Table findTable(String tableName){
-            for (Table t : tables) {
-                if (t.name.equals(tableName)) {
-                    return t;
-                }
+    public void select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
+        String user = null;
+        String password = null;
+        FileReader fr = load(databaseName, user, password);
+        int numLine = findTable(fr, table);
+        if(numLine != -1){
+            BufferedReader reader = new BufferedReader(fr);
+            String line;
+            for(int i=numLine; !(line = reader.readLine()).equalsIgnoreCase("end");i++){
+                System.out.println(line);
             }
-            return null; // Devuelve null si la tabla no se encuentra
         }
+        return;
+    }
+
+    public boolean deleteWhere(String tableName, Condition columnCondition) {
+        return false;
+    }
 
     public boolean update(String tableName, List<SetValue> columnNames, Condition columnCondition)
     {
-        Table table = findTable(tableName);
-
-        if (table == null){
-            System.out.println(Constants.TABLE_DOES_NOT_EXIST_ERROR);
-            return false;
-        }
-        else {
-            table.update(columnNames, columnCondition);
-            return true;
-        }
+        return false;
     }
 
-    public boolean Insert(String tableName, List<String> values)
+    public boolean Insert(String databaseName,String tableName, List<String> values) throws IOException
     {
-        Table table = findTable(tableName);
-        if(table == null){
-            System.out.println(Constants.TABLE_DOES_NOT_EXIST_ERROR);
-            return false;
+        String user = null;
+        String password = null;
+        FileReader fr = load(databaseName, user, password);
+        int numLine = findTable(fr, tableName);
+        if(numLine != -1){
+            BufferedReader reader = new BufferedReader(fr);
+            String line;
+            int currentLine=0;
+            while((line = reader.readLine()) != null && currentLine < numLine - 1) {
+                currentLine++;
+            }
+            int i=0;
+            while(currentLine< values.size()){
+                FileWriter fw = new FileWriter("/archives/"+databaseName+".txt");
+                BufferedWriter writer = new BufferedWriter(fw);
+                writer.write(values.get(i) + "\n");
+                i++;
+                currentLine++;
+            }
         }
-        else{
-            table.insert(values);
-            return true;
-        }
+        return false;
     }
 
     public String executeMiniSQLQuery(String query)
@@ -144,4 +139,18 @@ public class Database {
     {
         return true;
     }
+    public int findTable(FileReader fr, String tableName) throws IOException{
+            BufferedReader reader = new BufferedReader(fr);
+            String line;
+            int lineNum=0;
+            while((line = reader.readLine()) != null){
+                lineNum++;
+                if(line.contains(tableName)){
+                    reader.close();
+                    return lineNum;
+                }
+            }
+                reader.close();
+                return -1;
+        }
 }
