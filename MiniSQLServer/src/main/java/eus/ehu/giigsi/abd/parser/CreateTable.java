@@ -24,17 +24,19 @@ public class CreateTable implements MiniSQLQuery{
     }
     public String execute(Database database)
     {
-        List<Column> listColumns = new ArrayList<Column>();
+        String result = "Create table " + Table + "(";
 
-        String result = "Table: " + Table + "\n";
+        for(int i = 0; i < columnsParameters.size(); i++) {
+            result += columnsParameters.get(i).getName() + " " + columnsParameters.get(i).getType();
 
-        for(ColumnParameters c : columnsParameters) {
-            Column column = new Column(c.getType(), c.getName());
-            listColumns.add(column);
-            result += column.getName() + "\n";
+            if(i+1 == columnsParameters.size()) {
+                result += ",";
+            }
         }
 
-        Table t = new Table(this.Table, listColumns);
+        result += ")";
+
+        database.executeMiniSQLQuery(result);
 
         return result;
     }
