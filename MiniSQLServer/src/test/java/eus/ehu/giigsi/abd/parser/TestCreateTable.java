@@ -45,7 +45,14 @@ public class TestCreateTable {
     public void prueba1() {
         String result, expected;
 
-        //CreateTable ct = new CreateTable("Tabla1",);
+        List<ColumnParameters> columnParameters = new ArrayList<>();
+        columnParameters.add(new ColumnParameters("int", Column.DataType.INT));
+        columnParameters.add(new ColumnParameters("str", Column.DataType.STRING));
+        columnParameters.add(new ColumnParameters("dbl", Column.DataType.DOUBLE));
+
+        CreateTable ct = new CreateTable("Tabla1",columnParameters);
+
+
     }
 
 }
