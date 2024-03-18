@@ -2,6 +2,7 @@ package eus.ehu.giigsi.abd.parser;
 
 import eus.ehu.giigsi.abd.structures.Column;
 import eus.ehu.giigsi.abd.structures.Database;
+import eus.ehu.giigsi.abd.structures.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,21 +31,10 @@ public class Update implements MiniSQLQuery{
     {
         String result;
 
-        result = "Update from " + table + " set ";
+        //Table t = database.tableByName(table);
+        //t.update(columns, where);
 
-        for(int i = 0; i < columns.size(); i++) {
-            result += columns.get(i).getColumn() + " = " + columns.get(i).getValue();
-
-            if(i+1 < columns.size()) {
-                result += ",";
-            }
-        }
-
-        result += " where " + where.column + " " + where.operator + " " + where.literalValue;
-
-        database.executeMiniSQLQuery(result);
-
-        return result;
+        return null;
     }
 
 }
