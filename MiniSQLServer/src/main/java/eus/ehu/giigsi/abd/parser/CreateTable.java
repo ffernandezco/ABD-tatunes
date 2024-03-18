@@ -26,7 +26,7 @@ public class CreateTable implements MiniSQLQuery{
     {
         List<Column> listColumns = new ArrayList<Column>();
 
-        String result = "Table:" + Table + "\n";
+        String result = "Table: " + Table + "\n";
 
         for(ColumnParameters c : columnsParameters) {
             Column column = new Column(c.getType(), c.getName());

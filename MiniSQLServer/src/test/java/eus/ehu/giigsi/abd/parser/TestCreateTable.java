@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class TestCreateTable {
 
     Database database;
@@ -52,7 +54,15 @@ public class TestCreateTable {
 
         CreateTable ct = new CreateTable("Tabla1",columnParameters);
 
+        result = ct.execute(database);
 
+        expected = "Table: " + ct.Table + "\n";
+
+        for(ColumnParameters c : ct.columnsParameters) {
+            expected += c.getName() + "\n";
+        }
+
+        assertEquals(expected, result);
     }
 
 }
