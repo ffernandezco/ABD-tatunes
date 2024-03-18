@@ -15,7 +15,7 @@ public class Delete implements MiniSQLQuery{
 
     public Delete(String table, Condition where)
     {
-        this.table = table;
+        this.table = table ;
         this.where = where;
     }
 
@@ -23,7 +23,7 @@ public class Delete implements MiniSQLQuery{
     {
         if (table == null || where == null)
         {
-            System.out.println("Error : tabla o condición esta vacia");
+            System.out.println("Error : tabla o condición esta vacia") ;
         }
         StringBuilder delete = new StringBuilder();
         delete.append("DELETE").append(table).append("WHERE(");
