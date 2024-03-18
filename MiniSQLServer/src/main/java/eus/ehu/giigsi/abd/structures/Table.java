@@ -27,7 +27,9 @@ public class Table {
 
             }
         } catch ( FileNotFoundException e ) {
+
             System.err.println("Fichero no encontrado");
+
         }
         return false;
     }
