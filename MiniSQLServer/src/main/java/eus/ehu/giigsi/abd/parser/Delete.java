@@ -26,11 +26,18 @@ public class Delete implements MiniSQLQuery{
             System.out.println("Error : tabla o condición esta vacia") ;
         }
         StringBuilder delete = new StringBuilder();
-        delete.append("DELETE").append(table).append("WHERE(");
-        for (int i =0 ;i < where.column.length(); i++)
-        {
+        delete.append("DELETE").append("FROM").append(table);
+        if (where != null && !where.literalValue.isEmpty()) {
 
+            delete.append("WHERE").append(where);
         }
-      return null;
+        try {
+          database.executeMiniSQLQuery(delete.toString());
+            return "Eliminacion satisfactoria";
+
+        }catch (Exception e){
+            return "Error en la supresión:"+ e.getMessage();
+        }
+
     }
 }
