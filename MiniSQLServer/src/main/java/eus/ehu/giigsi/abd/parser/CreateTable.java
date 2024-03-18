@@ -35,6 +35,7 @@ public class CreateTable implements MiniSQLQuery{
         }
 
         Table t = new Table(this.Table, listColumns);
+        database.addTable(t);
 
         return result;
     }
