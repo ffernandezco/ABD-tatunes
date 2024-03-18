@@ -24,7 +24,7 @@ public class Table {
     {
         try ( Scanner entrada = new Scanner(new File(path))){
             while (entrada.hasNext()){
-
+                //TODO
             }
         } catch ( FileNotFoundException e ) {
 
@@ -36,6 +36,7 @@ public class Table {
 
     public boolean save(String databaseName)
     {
+            //TODO
         return false;
     }
 
@@ -48,6 +49,7 @@ public class Table {
         }
         return null;
     }
+
     public void deleteColumnByName(String name)
     {
         for(Column columna : columns){
@@ -109,9 +111,7 @@ public class Table {
                 else {
                     errorMessage = "Columna no encontrada.";
                 }
-
-        }
-
+            }
         }
         return errorMessage;
     }
