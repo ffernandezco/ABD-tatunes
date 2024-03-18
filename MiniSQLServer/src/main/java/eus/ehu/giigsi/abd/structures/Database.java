@@ -73,7 +73,6 @@ public class Database {
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
-
         return false;
     }
 
@@ -96,7 +95,7 @@ public class Database {
                 currentLine++;
             }
             int i=0;
-            while(currentLine< values.size()){
+            while(i< values.size()){
                 FileWriter fw = new FileWriter("/archives/"+databaseName+".txt");
                 BufferedWriter writer = new BufferedWriter(fw);
                 writer.write(values.get(i) + "\n");
@@ -130,15 +129,42 @@ public class Database {
     {
 
     }
+    public boolean createTable(String database,String tableName, List<ColumnParameters> columnParameters) throws IOException {
 
-    public boolean createTable(String tableName, List<ColumnParameters> columnParameters)
-    {
-        return false;
+        try{
+            FileReader fr = load(database,mUsername,mPassword);
+            BufferedReader reader = new BufferedReader(fr);
+            String line;
+            while((line = reader.readLine())!=null){
+                if(line.contains(tableName)){
+                 System.out.println(Constants.TABLE_ALREADY_EXISTS_ERROR);
+                 return false;
+                }
+            }
+            BufferedWriter writer = new BufferedWriter(new FileWriter("/archives/"+database+".txt",true));
+            writer.write(tableName+"\n");
+            for(int i=0; i<columnParameters.size();i++){
+                writer.write(columnParameters.get(i).name+" ");
+                writer.write(columnParameters.get(i).type.name()+", ");
+            }
+            System.out.println(Constants.CREATE_TABLE_SUCCESS);
+            return true;
+        }catch (IOException e){
+            System.out.println(Constants.ERROR);
+            return false;
+        }
     }
 
-    public boolean IsUserAdmin()
-    {
-        return true;
+    public boolean IsUserAdmin() throws IOException {
+        FileReader fr = new FileReader("/archives/admin.txt");
+        BufferedReader reader = new BufferedReader(fr);
+        String line;
+        while((line = reader.readLine())!=null){
+            if(line.contains(mUsername)){
+                return true;
+            }
+        }
+        return false;
     }
     public int findTable(FileReader fr, String tableName) throws IOException{
             BufferedReader reader = new BufferedReader(fr);
