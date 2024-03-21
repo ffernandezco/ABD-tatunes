@@ -23,8 +23,6 @@ public class Condition {
         this.literalValue = literalValue;
     }
 
-
-
     public boolean ValueMeetsCondition(String value, Column.DataType type)
     {
         return false;
