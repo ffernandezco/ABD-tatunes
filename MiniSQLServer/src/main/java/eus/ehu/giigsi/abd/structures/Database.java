@@ -67,6 +67,7 @@ public class Database {
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
+
         return false;
     }
 
