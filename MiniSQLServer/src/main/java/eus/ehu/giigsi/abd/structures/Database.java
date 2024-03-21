@@ -35,8 +35,9 @@ public class Database {
 
     }
 
-    public Database(String adminUsername, String adminPassword)
+    public Database(String pName,String adminUsername, String adminPassword)
     {
+        name = pName;
         mUsername = adminUsername;
         mPassword = adminPassword;
     }
