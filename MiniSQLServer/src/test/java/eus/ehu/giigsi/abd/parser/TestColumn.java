@@ -123,4 +123,9 @@ public class TestColumn {
 
         assertEquals(Arrays.asList("Francisco", "Julen", "Asier", "Mauricio", "Martina"), column2.values);
     }
+
+    @Test
+    void deleteAt() {
+        //TODO
+    }
 }
