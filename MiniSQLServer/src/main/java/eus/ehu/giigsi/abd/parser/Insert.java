@@ -50,4 +50,5 @@ public class Insert implements MiniSQLQuery{
             return "Error en la insercion"+ e.getMessage();
         }
     }
+
 }
