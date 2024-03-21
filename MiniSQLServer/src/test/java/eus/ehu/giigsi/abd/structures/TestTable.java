@@ -42,6 +42,7 @@ public class TestTable {
         assertEquals(columns, table.columns);
     }
 
+
     //TODO: tests load + save
 
     @Test
