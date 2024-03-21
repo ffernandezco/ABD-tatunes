@@ -16,6 +16,8 @@ public class DropTable implements MiniSQLQuery{
 
     public String execute(Database database)
     {
+        database.dropTable(table);
+
         return null;
     }
 }

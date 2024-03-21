@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
@@ -100,8 +101,7 @@ public class Database {
         return false;
     }
 
-    public String executeMiniSQLQuery(String query)
-    {
+    public String executeMiniSQLQuery(String query) throws IOException {
         //Parse the query
         MiniSQLQuery miniSQLQuery = MiniSQLParser.parse(query);
 
@@ -117,13 +117,31 @@ public class Database {
     }
     public boolean dropTable(String tableName)
     {
+        Table table = tableByName(tableName);
+
         return false;
     }
     public void addTable(Table table)
     {
-
+        tables.add(table);
     }
     public boolean createTable(String database,String tableName, List<ColumnParameters> columnParameters) throws IOException {
+
+        List<Column> columns = new ArrayList<>();
+
+        for(ColumnParameters c : columnParameters) {
+            Column.DataType type = c.getType();
+            String name = c.getName();
+
+            Column column = new Column(type, name);
+
+            columns.add(column);
+        }
+
+        Table table = new Table(tableName, columns);
+
+        addTable(table);
+
 
         try{
             FileReader fr = load(database,mUsername,mPassword);
@@ -139,7 +157,11 @@ public class Database {
             writer.write(tableName+"\n");
             for(int i=0; i<columnParameters.size();i++){
                 writer.write(columnParameters.get(i).name+" ");
-                writer.write(columnParameters.get(i).type.name()+", ");
+                writer.write(columnParameters.get(i).type.name());
+
+                if(i+1 < columnParameters.size()) {
+                    writer.write(", ");
+                }
             }
             System.out.println(Constants.CREATE_TABLE_SUCCESS);
             return true;

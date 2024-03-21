@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,10 @@ public class CreateTable implements MiniSQLQuery{
         Table = pTable;
         columnsParameters = columns;
     }
-    public String execute(Database database) {
+    public String execute(Database database) throws IOException {
+
+        database.createTable(database.name, Table, columnsParameters);
+
         return null;
     }
 }
