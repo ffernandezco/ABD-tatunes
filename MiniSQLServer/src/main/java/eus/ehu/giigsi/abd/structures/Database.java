@@ -51,8 +51,6 @@ public class Database {
             System.out.println(Constants.DATABASE_DOES_NOT_EXIST_ERROR);
             return null;
         }
-
-
     }
 
     public boolean save(String databaseName)
@@ -100,8 +98,7 @@ public class Database {
         return false;
     }
 
-    public String executeMiniSQLQuery(String query)
-    {
+    public String executeMiniSQLQuery(String query) throws IOException {
         //Parse the query
         MiniSQLQuery miniSQLQuery = MiniSQLParser.parse(query);
 

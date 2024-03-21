@@ -9,13 +9,11 @@ public class DropTable implements MiniSQLQuery{
     @Getter
     @Setter(AccessLevel.PRIVATE)
     public String table;
-    public DropTable(String table)
-    {
+    public DropTable(String table) {
         this.table = table;
     }
 
-    public String execute(Database database)
-    {
+    public String execute(Database database){
         return null;
     }
 }

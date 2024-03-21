@@ -16,8 +16,7 @@ public class Grant implements MiniSQLQuery{
     @Setter(AccessLevel.PRIVATE)
     public String profileName;
 
-    public Grant(String privilegeName, String tableName, String profileName)
-    {
+    public Grant(String privilegeName, String tableName, String profileName) {
         this.privilegeName = privilegeName;
         this.tableName = tableName;
         this.profileName = profileName;
