@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/* public class TestInsert {
+public class TestInsert {
 
     @Test
     public void TestInsert (){
@@ -54,4 +54,3 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 }
-*/
