@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Table {
-    //TODO
     public List<Column> columns;
     public String name = null;
 
