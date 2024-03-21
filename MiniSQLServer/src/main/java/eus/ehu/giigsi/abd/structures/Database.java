@@ -58,19 +58,11 @@ public class Database {
     {
         return false;
     }
-    public void select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
-        String user = null;
-        String password = null;
+    public Table select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
+        String user = this.mUsername;
+        String password = this.mPassword;
         FileReader fr = load(databaseName, user, password);
-        int numLine = findTable(fr, table);
-        if(numLine != -1){
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            for(int i=numLine; !(line = reader.readLine()).equalsIgnoreCase("end");i++){
-                System.out.println(line);
-            }
-        }
-        return;
+        return null;
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
