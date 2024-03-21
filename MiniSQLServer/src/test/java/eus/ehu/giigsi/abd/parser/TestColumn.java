@@ -68,9 +68,30 @@ public class TestColumn {
     void updateWhereTest() {
 
         // INT
-        List<String> initialValues = Arrays.asList("1", "2", "3", "4", "5");
-        Column column1 = new Column(Column.DataType.INT, "IDs", initialValues);
+        List<String> initialValues = Arrays.asList("20", "32", "47", "25", "16");
+        Column column = new Column(Column.DataType.INT, "Edades", initialValues);
 
+        Condition condition = new Condition("Edades", ">", "30");
+        column.updateWhere(condition, "100");
 
+        assertEquals(Arrays.asList("20", "100", "100", "25", "16"), column.values);
+
+        // DOUBLE
+        List<String> initialValues1 = Arrays.asList("35.65", "19.99", "9.99", "40.25", "4.95");
+        Column column1 = new Column(Column.DataType.DOUBLE, "Precios", initialValues1);
+
+        Condition condition1 = new Condition("Precios", "<", "20.00");
+        column1.updateWhere(condition1, "14.99");
+
+        assertEquals(Arrays.asList("35.65", "14.99", "14.99", "40.25", "14.99"), column1.values);
+
+        // STRING
+        List<String> initialValues2 = Arrays.asList("Francisco", "Julen", "Asier", "Mauricio", "Iñaki");
+        Column column2 = new Column(Column.DataType.STRING, "Integrantes", initialValues2);
+
+        Condition condition2 = new Condition("Integrantes", "=", "Iñaki");
+        column2.updateWhere(condition2, "Martina");
+
+        assertEquals(Arrays.asList("Francisco", "Julen", "Asier", "Mauricio", "Martina"), column2.values);
     }
 }
