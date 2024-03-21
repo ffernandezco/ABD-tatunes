@@ -15,7 +15,7 @@ public class Delete implements MiniSQLQuery{
 
     public Delete(String table, Condition where)
     {
-        this.table = table ;
+        this.table = table;
         this.where = where;
     }
 
@@ -27,7 +27,7 @@ public class Delete implements MiniSQLQuery{
         }
         StringBuilder delete = new StringBuilder();
         delete.append("DELETE").append("FROM").append(table);
-        if (where != null && !where.literalValue.isEmpty()) {
+        if (where != null && !where.literalValue.isEmpty()){
 
             delete.append("WHERE").append(where);
         }
