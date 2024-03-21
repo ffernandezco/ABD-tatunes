@@ -3,11 +3,13 @@ package eus.ehu.giigsi.abd.structures;
 import eus.ehu.giigsi.abd.parser.Condition;
 import eus.ehu.giigsi.abd.parser.SetValue;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Table {
-    //TODO
     public List<Column> columns;
     public String name = null;
 
@@ -19,45 +21,97 @@ public class Table {
 
     public boolean load(String path)
     {
+        try ( Scanner entrada = new Scanner(new File(path))){
+            while (entrada.hasNext()){
+                //TODO
+            }
+        } catch ( FileNotFoundException e ) {
+
+            System.err.println("Fichero no encontrado");
+
+        }
         return false;
     }
 
     public boolean save(String databaseName)
     {
+            //TODO
         return false;
     }
 
     public Column columnByName(String column)
     {
+        for(Column columna : columns) {
+            if (columna.getName().equals(column)) {
+                return columna;
+            }
+        }
         return null;
     }
+
     public void deleteColumnByName(String name)
     {
+        for(Column columna : columns){
+            if(columna.getName().equals(name)){
+                columns.remove(columna);
+            }
 
+            else{
+                System.out.println("No hay ninguna columna con el nombre introducido.");
+            }
+        }
     }
 
 
     @Override
     public String toString()
     {
-
-        return null;
+        String salida = "Tabla " + name + "\n" + "Contenido: \n";
+        for (Column columna : columns) {
+            salida = salida + "- " + columna.toString() + "\n";
+        }
+        return salida;
     }
 
-    public void deleteWhere(Condition condition)
-    {
-
+    public void deleteWhere(Condition condition) {
+        for (Column columna : columns) {
+            if (columna.name.equals(condition.column)) {
+                List<Integer> indices = columna.indicesWhereIsTrue(condition);
+                for (int i = indices.size()-1; i>=0; i--) {
+                    int index = indices.get(i);
+                    columna.deleteAt(index);
+                }
+            }
+        }
     }
+
 
     public boolean insert(List<String> values)
     {
-
-        return false;
+        if (values.size() > columns.size()) {
+            return false;
+        }
+        for (int i = 0; i < columns.size(); i++) {
+            Column columna = columns.get(i);
+            String value = values.get(i);
+            columna.values.add(value);
+        }
+        return true;
     }
 
     public String update(List<SetValue> setValues, Condition condition)
     {
         String errorMessage = null;
+        for(SetValue value : setValues) {
+            for (Column columna : columns) {
+                if (columna.name.equals(value.getColumn())) {
+                    columna.updateWhere(condition, value.getValue());
+                }
+                else {
+                    errorMessage = "Columna no encontrada.";
+                }
+            }
+        }
         return errorMessage;
     }
 }
