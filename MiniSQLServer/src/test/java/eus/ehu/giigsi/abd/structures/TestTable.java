@@ -46,16 +46,19 @@ public class TestTable {
     //TODO: tests load + save
 
     @Test
-    public void testColumnByType() {
+    public void testColumnByName() {
         String name = "Test";
         List<Column> columns = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            List<String> valores = List.of("Valor" + i);
-            columns.add(new Column(Column.DataType.STRING, "Columna" + i, valores));
-        }
+        List<String> valores = List.of("Valor1","Valor2","Valor3");
+        columns.add(new Column(Column.DataType.STRING, "Columna", valores));
         Table table = new Table(name, columns);
+        assertEquals(columns.get(0), table.columnByName("Columna"));
+        assertEquals(null, table.columnByName("demo"));
+    }
 
-        //TODO: probar clase
+    @Test
+    public void testToString() {
+        //TODO
     }
 
 }
