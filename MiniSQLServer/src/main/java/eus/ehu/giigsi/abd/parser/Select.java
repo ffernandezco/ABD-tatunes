@@ -32,6 +32,7 @@ public class Select implements MiniSQLQuery{
 
     public String execute(Database database)
     {
+
         return null;
     }
 }

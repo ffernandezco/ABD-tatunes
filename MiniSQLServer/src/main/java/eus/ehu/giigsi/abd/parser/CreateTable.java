@@ -20,8 +20,7 @@ public class CreateTable implements MiniSQLQuery{
         Table = pTable;
         columnsParameters = columns;
     }
-    public String execute(Database database)
-    {
+    public String execute(Database database) {
         return null;
     }
 }
