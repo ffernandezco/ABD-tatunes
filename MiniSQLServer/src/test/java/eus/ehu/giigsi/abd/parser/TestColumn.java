@@ -67,5 +67,10 @@ public class TestColumn {
     @Test
     void updateWhereTest() {
 
+        // INT
+        List<String> initialValues = Arrays.asList("1", "2", "3", "4", "5");
+        Column column1 = new Column(Column.DataType.INT, "IDs", initialValues);
+
+
     }
 }

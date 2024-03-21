@@ -25,9 +25,6 @@ public class Condition {
 
     public boolean ValueMeetsCondition(String value, Column.DataType type)
     {
-        if (operator.equals("=")) {
-
-        }
         return false;
     }
 }
