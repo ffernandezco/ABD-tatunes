@@ -94,4 +94,33 @@ public class TestColumn {
 
         assertEquals(Arrays.asList("Francisco", "Julen", "Asier", "Mauricio", "Martina"), column2.values);
     }
+
+    @Test
+    void setValue() {
+        // INT
+        List<String> initialValues = Arrays.asList("1", "2", "3");
+        Column column = new Column(Column.DataType.INT, "Numeros", initialValues);
+
+        column.SetValue(0, "10");
+        column.SetValue(2, "15");
+
+        assertEquals(Arrays.asList("10", "2", "15"), column.values);
+
+        // DOUBLE
+        List<String> initialValues1 = Arrays.asList("4.9", "7.2", "9.3", "6.85");
+        Column column1 = new Column(Column.DataType.DOUBLE, "Notas finales", initialValues1);
+
+        column1.SetValue(0, "5.0");
+        column1.SetValue(3, "7.0");
+
+        assertEquals(Arrays.asList("5.0", "7.2", "9.3", "7.0"), column1.values);
+
+        // STRING
+        List<String> initialValues2 = Arrays.asList("Francisco", "Julen", "Asier", "Mauricio", "Eneko");
+        Column column2 = new Column(Column.DataType.STRING, "Alumnos", initialValues2);
+
+        column2.SetValue(4, "Martina");
+
+        assertEquals(Arrays.asList("Francisco", "Julen", "Asier", "Mauricio", "Martina"), column2.values);
+    }
 }
