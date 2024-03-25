@@ -25,6 +25,8 @@ public class CreateTable implements MiniSQLQuery{
 
         database.createTable(database.name, Table, columnsParameters);
 
+        //h
+
         return null;
     }
 }
