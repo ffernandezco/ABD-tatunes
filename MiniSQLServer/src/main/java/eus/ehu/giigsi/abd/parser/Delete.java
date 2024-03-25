@@ -22,7 +22,7 @@ public class Delete implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        boolean resultado = database.deleteWhere(table,where);
+        boolean resultado = database.deleteWhere(table,where) ;
 
         if (resultado == true){
             return Constants.DELETE_SUCCESS;

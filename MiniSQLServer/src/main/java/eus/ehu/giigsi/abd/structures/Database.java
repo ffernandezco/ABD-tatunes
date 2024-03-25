@@ -68,6 +68,8 @@ public class Database {
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
 
+
+
         return false;
     }
 
@@ -83,7 +85,7 @@ public class Database {
         FileReader fr = load(databaseName, user, password);
         int numLine = findTable(fr, tableName);
         if(numLine != -1){
-            BufferedReader reader = new BufferedReader(fr);
+            BufferedReader reader = new BufferedReader(fr)  ;
             String line;
             int currentLine=0;
             while((line = reader.readLine()) != null && currentLine < numLine - 1) {
