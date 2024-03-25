@@ -68,7 +68,10 @@ public class Table {
     {
         String salida = "Tabla " + name + "\n" + "Contenido: \n";
         for (Column columna : columns) {
-            salida = salida + "- " + columna.toString() + "\n";
+            salida = salida + "\t Columna: " + columna.getName() + "\n";
+            for (String valor : columna.getValues()) {
+                salida = salida + "\t \t" + valor + "\n";
+            }
         }
         return salida;
     }
