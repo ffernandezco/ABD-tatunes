@@ -5,6 +5,7 @@ import eus.ehu.giigsi.abd.structures.Database;
 import eus.ehu.giigsi.abd.structures.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import java.io.IOException;
@@ -24,17 +25,16 @@ public class Insert implements MiniSQLQuery{
         this.values = values;
     }
 
-    public String execute(Database database)
+    public String execute( Database database)
     {
         String db= "";
-
         try {
             Boolean resultado = database.Insert(db, table, values);
             if (resultado== true){
                 return Constants.INSERT_SUCCESS;
             }
             return Constants.ERROR;
-        } catch (IOException e) {
+        }catch (IOException e) {
             throw new RuntimeException(e);
         }
 
