@@ -98,13 +98,10 @@ public class Column {
             while (scanner.hasNextLine()) {
                 values.add(scanner.nextLine());
             }
-
             return new Column(type, name, values);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-
     }
-
 }

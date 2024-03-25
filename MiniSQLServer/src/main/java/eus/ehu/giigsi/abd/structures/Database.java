@@ -42,12 +42,13 @@ public class Database {
         mPassword = adminPassword;
     }
 
-    public static FileReader load(String databaseName, String username, String password) {
-        File file = new File("/archives/" + databaseName + ".txt");
-        try (FileReader fr = new FileReader(file)) {
+    public static Database load(String databaseName, String username, String password) {
+        Database db = new Database(databaseName, username, password);
+        File file = new File("/archives/"+databaseName);
+        if (file.exists() && file.isDirectory()) {
             System.out.println("Database loaded successfully");
-            return fr;
-        } catch (IOException e) {
+            return db;
+        } else {
             System.out.println(Constants.DATABASE_DOES_NOT_EXIST_ERROR);
             return null;
         }
@@ -58,10 +59,26 @@ public class Database {
         return false;
     }
     public Table select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
-        String user = this.mUsername;
-        String password = this.mPassword;
-        FileReader fr = load(databaseName, user, password);
-        return null;
+        Database db = load(databaseName,this.mUsername,this.mPassword);
+        try(FileReader fr = new FileReader("/archives/"+db.name+"/"+table+"/"+columnCondition.column+".txt")){
+            BufferedReader reader = new BufferedReader(fr);
+            String line;
+            switch (columnCondition.operator) {
+                case "=":
+                    while((line = reader.readLine())!=null){
+                        if(line.equalsIgnoreCase(columnCondition.literalValue)){
+
+                        }
+                    }
+                case "<":
+
+                case ">":
+            }
+        }
+        catch (IOException e){
+            System.out.println(Constants.TABLE_DOES_NOT_EXIST_ERROR);
+            return null;
+        }
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
@@ -75,7 +92,7 @@ public class Database {
 
     public boolean Insert(String databaseName,String tableName, List<String> values) throws IOException
     {
-        String user = null;
+        /*String user = null;
         String password = null;
         FileReader fr = load(databaseName, user, password);
         int numLine = findTable(fr, tableName);
@@ -94,7 +111,7 @@ public class Database {
                 i++;
                 currentLine++;
             }
-        }
+        }*/
         return false;
     }
 
@@ -120,8 +137,8 @@ public class Database {
 
     }
     public boolean createTable(String database,String tableName, List<ColumnParameters> columnParameters) throws IOException {
-
-        try{
+        return false;
+        /*try{
             FileReader fr = load(database,mUsername,mPassword);
             BufferedReader reader = new BufferedReader(fr);
             String line;
@@ -142,7 +159,7 @@ public class Database {
         }catch (IOException e){
             System.out.println(Constants.ERROR);
             return false;
-        }
+        }*/
     }
 
     public boolean IsUserAdmin() throws IOException {
@@ -156,18 +173,4 @@ public class Database {
         }
         return false;
     }
-    public int findTable(FileReader fr, String tableName) throws IOException{
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            int lineNum=0;
-            while((line = reader.readLine()) != null){
-                lineNum++;
-                if(line.contains(tableName)){
-                    reader.close();
-                    return lineNum;
-                }
-            }
-                reader.close();
-                return -1;
-        }
 }
