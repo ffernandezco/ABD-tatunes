@@ -113,11 +113,25 @@ public class Database {
 
     public Table tableByName(String tableName)
     {
+        boolean enc = false;
+        int i = 0;
+
+        while(i < tables.size() && enc == false) {
+            if(tables.get(i).name == tableName) {
+                return tables.get(i);
+            }
+        }
+
         return null;
     }
-    public boolean dropTable(String tableName)
-    {
+    public boolean dropTable(String tableName) {
         Table table = tableByName(tableName);
+
+        if (table != null) {
+            tables.remove(table);
+
+            // FALTA BORRARLO EN LOS DIRECTORIOS
+        }
 
         return false;
     }
@@ -125,50 +139,31 @@ public class Database {
     {
         tables.add(table);
     }
-    public boolean createTable(String database,String tableName, List<ColumnParameters> columnParameters) throws IOException {
+    public boolean createTable(String tableName, List<ColumnParameters> columnParameters) throws IOException {
 
-        List<Column> columns = new ArrayList<>();
+        // Verificamos si existe la tabla
+        // Recorremos el array de columnParameters para crear columnas y, posteriormente crear la tabla
+        if(tableByName(tableName) == null) {
+            List<Column> columns = new ArrayList<>();
 
-        for(ColumnParameters c : columnParameters) {
-            Column.DataType type = c.getType();
-            String name = c.getName();
+            for (ColumnParameters c : columnParameters) {
+                Column.DataType type = c.getType();
+                String name = c.getName();
 
-            Column column = new Column(type, name);
+                Column column = new Column(type, name);
 
-            columns.add(column);
+                columns.add(column);
+            }
+
+            Table table = new Table(tableName, columns);
+
+            addTable(table);
+
+            return table.save(this.name);
+
         }
 
-        Table table = new Table(tableName, columns);
-
-        addTable(table);
-
-
-        try{
-            FileReader fr = load(database,mUsername,mPassword);
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            while((line = reader.readLine())!=null){
-                if(line.contains(tableName)){
-                 System.out.println(Constants.TABLE_ALREADY_EXISTS_ERROR);
-                 return false;
-                }
-            }
-            BufferedWriter writer = new BufferedWriter(new FileWriter("/archives/"+database+".txt",true));
-            writer.write(tableName+"\n");
-            for(int i=0; i<columnParameters.size();i++){
-                writer.write(columnParameters.get(i).name+" ");
-                writer.write(columnParameters.get(i).type.name());
-
-                if(i+1 < columnParameters.size()) {
-                    writer.write(", ");
-                }
-            }
-            System.out.println(Constants.CREATE_TABLE_SUCCESS);
-            return true;
-        }catch (IOException e){
-            System.out.println(Constants.ERROR);
-            return false;
-        }
+        return false;
     }
 
     public boolean IsUserAdmin() throws IOException {

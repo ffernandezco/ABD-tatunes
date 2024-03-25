@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,10 +24,10 @@ public class CreateTable implements MiniSQLQuery{
     }
     public String execute(Database database) throws IOException {
 
-        database.createTable(database.name, Table, columnsParameters);
+        if(database.createTable(Table, columnsParameters)) {
+            return Constants.CREATE_TABLE_SUCCESS;
+        }
 
-        //h
-
-        return null;
+        return "Cannot create table";
     }
 }
