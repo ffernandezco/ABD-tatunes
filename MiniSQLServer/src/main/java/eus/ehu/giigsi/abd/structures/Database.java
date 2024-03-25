@@ -101,7 +101,6 @@ public class Database {
     public String executeMiniSQLQuery(String query) throws IOException {
         //Parse the query
         MiniSQLQuery miniSQLQuery = MiniSQLParser.parse(query);
-
         if (miniSQLQuery == null)
             return Constants.SYNTAX_ERROR;
 
