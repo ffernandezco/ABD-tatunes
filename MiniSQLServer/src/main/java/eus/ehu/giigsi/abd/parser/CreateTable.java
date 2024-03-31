@@ -22,7 +22,7 @@ public class CreateTable implements MiniSQLQuery{
         Table = pTable;
         columnsParameters = columns;
     }
-    public String execute(Database database) throws IOException {
+    public String execute(Database database) {
 
         if(database.createTable(Table, columnsParameters)) {
             return Constants.CREATE_TABLE_SUCCESS;

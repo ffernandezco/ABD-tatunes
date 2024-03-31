@@ -139,13 +139,14 @@ public class Database {
     {
         tables.add(table);
     }
-    public boolean createTable(String tableName, List<ColumnParameters> columnParameters) throws IOException {
+    public boolean createTable(String tableName, List<ColumnParameters> columnParameters) {
 
         // Verificamos si existe la tabla
         // Recorremos el array de columnParameters para crear columnas y, posteriormente crear la tabla
         if(tableByName(tableName) == null) {
             List<Column> columns = new ArrayList<>();
 
+            // Convertimos cada ColumnParameter en Column
             for (ColumnParameters c : columnParameters) {
                 Column.DataType type = c.getType();
                 String name = c.getName();
@@ -155,10 +156,12 @@ public class Database {
                 columns.add(column);
             }
 
+            // Creamos la tabla y la añadimos a la lista de la base de datos
             Table table = new Table(tableName, columns);
 
             addTable(table);
 
+            // Guardamos la tabla en nuestros ficheros
             return table.save(this.name);
 
         }
