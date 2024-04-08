@@ -35,15 +35,14 @@ public class Database {
 
     }
 
-    public Database(String pName,String adminUsername, String adminPassword)
+    public Database(String adminUsername, String adminPassword)
     {
-        name = pName;
         mUsername = adminUsername;
         mPassword = adminPassword;
     }
 
     public static Database load(String databaseName, String username, String password) {
-        Database db = new Database(databaseName, username, password);
+        Database db = new Database(username,password);
         File file = new File("/archives/"+databaseName);
         if (file.exists() && file.isDirectory()) {
             System.out.println("Database loaded successfully");
@@ -58,32 +57,40 @@ public class Database {
     {
         return false;
     }
-    public Table select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
-        Database db = load(databaseName,this.mUsername,this.mPassword);
-        try(FileReader fr = new FileReader("/archives/"+db.name+"/"+table+"/"+".txt")){
+    public Table select(String table, List<String> columns, Condition columnCondition) throws IOException {
+        try(FileReader fr = new FileReader("/archives/"+this.name+"/"+table+"/"+".txt")){
             BufferedReader reader = new BufferedReader(fr);
             String line;
-            for(int i=0; i<columns.size();i++){
-                if(columns.get(i).equals(columnCondition.column)){
-                    //columnCondition.ValueMeetsCondition(columnCondition.literalValue,columns.get(i));
+            String[] columnName = null;
+            String[] columnType = null;
+            if((line = reader.readLine())!= null){
+                columnName = line.split(", ");
+                line = reader.readLine();
+                columnType = line.split(", ");
+            }
+            int indexcolumn = -1;
+            int i = 0;
+            while(i<columnName.length){
+                if(columnCondition.column.equalsIgnoreCase(columnName[i].trim())){
+                    indexcolumn =i;
+                }
+                else{
+                    i++;
                 }
             }
-            switch (columnCondition.operator) {
-                case "=":
-                    while((line = reader.readLine())!=null){
-                        if(line.equalsIgnoreCase(columnCondition.literalValue)){
+            String[] values = null;
+            while((line= reader.readLine())!= null){
+                values = line.split(", ");
+                if(indexcolumn != -1 && indexcolumn < values.length && values[indexcolumn].trim().equalsIgnoreCase(columnCondition.literalValue)){
 
-                        }
-                    }
-                case "<":
-
-                case ">":
+                }
             }
         }
         catch (IOException e){
             System.out.println(Constants.TABLE_DOES_NOT_EXIST_ERROR);
             return null;
         }
+        return null;
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
