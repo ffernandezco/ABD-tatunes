@@ -72,22 +72,29 @@ public class TestTable {
                 "\t \tValor3\n", table.toString());
     }
 
-
-    /*
     @Test
     public void testDeleteWhere() {
         String name = "Test";
         List<Column> columns = new ArrayList<>();
-        List<String> valores = List.of("Valor1","Valor2","Valor3");
+        List<String> valores = new ArrayList<>(List.of("Valor1", "Valor2", "Valor3"));
         columns.add(new Column(Column.DataType.STRING, "Columna", valores));
         Table table = new Table(name, columns);
-        Condition condition = new Condition("Columna","=","Valor3");
+        Condition condition = new Condition("Columna", "=", "Valor3");
         table.deleteWhere(condition);
-        assertEquals("Valor1", table.columns.get(0));
-        assertEquals("Valor2", table.columns.get(1));
-        assertNotEquals("Valor3", table.columns.get(2));
+        assertEquals("Valor1", table.columns.get(0).getValues().get(0));
+        assertEquals("Valor2", table.columns.get(0).getValues().get(1));
     }
+
+    /*
+    @Test
+    public void testInsert() {
+        List<Column> columns = new ArrayList<>();
+        List<String> valores = new ArrayList<>(List.of("Valor1", "Valor2", "Valor3"));
+        columns.add(new Column(Column.DataType.STRING, "Columna", valores));
+    }
+
      */
+
 
 
 }
