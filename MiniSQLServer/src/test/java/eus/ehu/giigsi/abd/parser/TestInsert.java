@@ -27,7 +27,7 @@ public class TestInsert {
 
 
         Column columna1 = new Column(Column.DataType.STRING, "Columna1" ,Arrays.asList("v1","v2","v3")) ;
-        Table table  = new Table("Table1", (List<Column>) columna1);
+        Table table  = new Table("Table1", (List<Column>) columna1) ;
 
         db.addTable(table);
     }
