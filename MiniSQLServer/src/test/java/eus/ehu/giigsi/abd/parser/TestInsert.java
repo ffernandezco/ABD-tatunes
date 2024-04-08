@@ -5,6 +5,7 @@ import eus.ehu.giigsi.abd.structures.Column;
 import eus.ehu.giigsi.abd.structures.Database;
 import eus.ehu.giigsi.abd.structures.Table;
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -18,16 +19,14 @@ public class TestInsert {
 
     private Database db;
 
-    public TestInsert(Database db) {
-        this.db = db;
-    }
 
-    @Before
+
+    @BeforeEach
     public void setUp(){
 
-
+        db  = new Database("admin","user","password");
         Column columna1 = new Column(Column.DataType.STRING, "Columna1" ,Arrays.asList("v1","v2","v3")) ;
-        Table table  = new Table("Table1", (List<Column>) columna1) ;
+        Table table  = new Table("Table1", Arrays.asList(columna1)) ;
 
         db.addTable(table);
     }
