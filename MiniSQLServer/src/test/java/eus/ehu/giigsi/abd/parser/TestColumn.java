@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -126,6 +129,90 @@ public class TestColumn {
 
     @Test
     void deleteAt() {
-        //TODO
+        // INT
+        List<String> initialValues = new ArrayList<>();
+        initialValues.addAll(Arrays.asList("1", "2", "3", "4", "5"));
+        Column column = new Column(Column.DataType.INT, "Portales", initialValues);
+        column.deleteAt(2);
+
+        assertEquals(4, column.values.size());
+        assertEquals("4", column.values.get(2));
+        assertEquals("5", column.values.get(3));
+
+        // DOUBLE
+        List<String> initialValues1 = new ArrayList<>();
+        initialValues1.addAll(Arrays.asList("4.1", "1.2", "3.3"));
+        Column column1 = new Column(Column.DataType.DOUBLE, "Piso y puerta", initialValues1); // Agregar initialValues1 aquí
+        column1.deleteAt(0);
+
+        assertEquals(2, column1.values.size());
+        assertEquals("1.2", column1.values.get(0));
+        assertEquals("3.3", column1.values.get(1));
+
+        // STRING
+        List<String> initialValues2 = new ArrayList<>();
+        initialValues2.addAll(Arrays.asList("Postas", "Manuel Iradier", "Dulzaina"));
+        Column column2 = new Column(Column.DataType.STRING, "Calles", initialValues2); // Agregar initialValues2 aquí
+        column2.deleteAt(2);
+
+        assertEquals(2, column2.values.size());
+        assertEquals("Postas", column2.values.get(0));
+        assertEquals("Manuel Iradier", column2.values.get(1));
     }
+
+
+    @Test
+    void Save() {
+        // Creamos una columna de prueba
+        List<String> initialValues = Arrays.asList("Duki", "Ysy A", "Neo Pistea");
+        Column column = new Column(Column.DataType.STRING, "Modo Diablo", initialValues);
+
+        // Guardamos la columna en un archivo de prueba
+        String testFilePath  = "testColumnSave.txt";
+        assertTrue(column.Save(testFilePath));
+
+        // Verificamos si el archivo se ha creado sin problemas
+        File testFile = new File(testFilePath);
+        assertTrue(testFile.exists());
+
+        // Leemos el archivo y comprobamos que los datos que esten guardados sean correctos
+        Column loadedColumn = Column.Load(testFilePath);
+        assertNotNull(loadedColumn);
+        assertEquals(column.type, loadedColumn.type);
+        assertEquals(column.name, loadedColumn.name);
+        assertEquals(column.values, loadedColumn.values);
+
+        // Eliminamos el archivo de prueba
+        testFile.delete();
+    }
+
+    @Test
+    void Load() {
+        // Creamos un archivo de prueba con datos de alguna columna
+        String testFilePath = "testColumnLoad.txt";
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(testFilePath))) {
+            writer.println("STRING");
+            writer.println("Modo Diablo");
+            writer.println("Duki");
+            writer.println("Ysy A");
+            writer.println("Neo Pistea");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Cargamos el archivo y verificamos que los datos que se han cargado son correctos
+        Column loadedColumn = Column.Load(testFilePath);
+        assertNotNull(loadedColumn);
+        assertEquals(Column.DataType.STRING, loadedColumn.type);
+        assertEquals("Modo Diablo", loadedColumn.name);
+        assertEquals(Arrays.asList("Duki", "Ysy A", "Neo Pistea"), loadedColumn.values);
+
+        // Eliminamos el archivo de prueba
+        File testFile = new File(testFilePath);
+        testFile.delete();
+
+    }
+
+
 }

@@ -69,6 +69,8 @@ public class Column {
     {
         if (pos >= 0 && pos < values.size()) {
             values.remove(pos);
+        } else {
+            throw new IndexOutOfBoundsException("El índice indicado está fuera de rango");
         }
     }
 
