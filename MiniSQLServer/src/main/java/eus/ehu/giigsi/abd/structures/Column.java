@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Column {
+
     public enum DataType{STRING, INT, DOUBLE}
 
     public DataType type;

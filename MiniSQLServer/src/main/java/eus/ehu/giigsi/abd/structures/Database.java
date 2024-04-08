@@ -60,9 +60,14 @@ public class Database {
     }
     public Table select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
         Database db = load(databaseName,this.mUsername,this.mPassword);
-        try(FileReader fr = new FileReader("/archives/"+db.name+"/"+table+"/"+columnCondition.column+".txt")){
+        try(FileReader fr = new FileReader("/archives/"+db.name+"/"+table+"/"+".txt")){
             BufferedReader reader = new BufferedReader(fr);
             String line;
+            for(int i=0; i<columns.size();i++){
+                if(columns.get(i).equals(columnCondition.column)){
+                    //columnCondition.ValueMeetsCondition(columnCondition.literalValue,columns.get(i));
+                }
+            }
             switch (columnCondition.operator) {
                 case "=":
                     while((line = reader.readLine())!=null){
@@ -163,7 +168,7 @@ public class Database {
     }
 
     public boolean IsUserAdmin() throws IOException {
-        FileReader fr = new FileReader("/archives/admin.txt");
+        FileReader fr = new FileReader("/archives/profiles/admins.txt");
         BufferedReader reader = new BufferedReader(fr);
         String line;
         while((line = reader.readLine())!=null){
