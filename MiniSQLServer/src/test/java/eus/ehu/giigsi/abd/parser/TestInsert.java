@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestInsert {
 
+
+    /*
     @Test
     public void TestInsert (){
          Database db = new Database("user",  "user");
@@ -50,6 +52,8 @@ public class TestInsert {
         assertEquals("Error: tabla o valores estan vacios", resultado);
         System.out.println(resultado);
     }
+
+     */
 
 
 

@@ -32,6 +32,7 @@ public class Column {
         this.values = values;
     }
 
+
     public Column(DataType type, String name){
         this.type = type;
         this.name = name;

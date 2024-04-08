@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TestCondition {
-
     @Test
     void ValueMeetsCondition() {
         // INT
