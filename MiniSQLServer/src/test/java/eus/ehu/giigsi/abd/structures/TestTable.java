@@ -72,6 +72,7 @@ public class TestTable {
                 "\t \tValor3\n", table.toString());
     }
 
+
     /*
     @Test
     public void testDeleteWhere() {
