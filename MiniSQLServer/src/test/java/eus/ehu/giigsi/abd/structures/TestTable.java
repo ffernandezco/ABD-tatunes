@@ -1,6 +1,7 @@
 package eus.ehu.giigsi.abd.structures;
 
 import eus.ehu.giigsi.abd.parser.Condition;
+import eus.ehu.giigsi.abd.parser.SetValue;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -86,16 +87,28 @@ public class TestTable {
     }
 
 
-    /*
     @Test
     public void testInsert() {
         List<Column> columns = new ArrayList<>();
+        List<String> valores = new ArrayList<>(List.of("Valor1"));
+        List<String> inicio = new ArrayList<>();
+        columns.add(new Column(Column.DataType.STRING, "Columna", inicio));
+        Table table = new Table("Tabla", columns);
+        table.insert(valores);
+        assertEquals("Valor1", table.columns.get(0).getValues().get(0));
+    }
+
+    /*
+    @Test
+    public void testUpdate() {
+        List<Column> columns = new ArrayList<>();
         List<String> valores = new ArrayList<>(List.of("Valor1", "Valor2", "Valor3"));
         columns.add(new Column(Column.DataType.STRING, "Columna", valores));
+        Table table = new Table("Tabla", columns);
+        Condition condition = new Condition("Columna", "=", "Valor3");
+        List<SetValue> nuevosValores = new SetValue("Columna", "Valor3");
     }
 
      */
-
-
 
 }
