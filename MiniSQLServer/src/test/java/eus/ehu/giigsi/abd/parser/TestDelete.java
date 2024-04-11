@@ -33,7 +33,7 @@ public class TestDelete {
         Delete delete = new Delete(table1,condition);
 
         String resultado= delete.execute(db);
-        assertFalse(Boolean.parseBoolean(Constants.DELETE_SUCCESS), resultado);
+        assertFalse(Boolean.parseBoolean(Constants.DELETE_SUCCESS), resultado) ;
 
     }
 
