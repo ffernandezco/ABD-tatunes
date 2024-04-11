@@ -58,6 +58,35 @@ public class Database {
 
     public boolean save(String databaseName)
     {
+        boolean exist = false;
+        try {
+            String path = "C:\\MiniSqlServer";
+
+            File[] databases = new File(path).listFiles();
+
+            for(File db : databases) {
+                if(db.getName().equals(databaseName)) {
+                    exist = true;
+                    break;
+                }
+            }
+
+
+            // Elegimos alguna de estas dos opciones:
+            // Decirle que no puede crear una base de datos con ese nombre porque ya dispone de una así
+            // Suponer que quiere sobreescribir la base de datos y actualizar tablas y columnas
+            if(exist) {
+
+            } else {
+
+            }
+
+            File f = new File(path);
+
+        } catch (Exception e) {
+
+        }
+
         return false;
     }
     public Table select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
