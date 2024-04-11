@@ -85,6 +85,7 @@ public class TestTable {
         assertEquals("Valor2", table.columns.get(0).getValues().get(1));
     }
 
+
     /*
     @Test
     public void testInsert() {
