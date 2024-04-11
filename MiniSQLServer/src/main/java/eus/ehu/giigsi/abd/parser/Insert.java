@@ -27,15 +27,15 @@ public class Insert implements MiniSQLQuery{
 
     public String execute( Database database)
     {
-        String db= "";
+
         try {
-            Boolean resultado = database.Insert(db, table, values);
+            Boolean resultado = database.Insert(String.valueOf(database), table, values) ;
             if (resultado== true){
                 return Constants.INSERT_SUCCESS;
             }
             return Constants.ERROR;
         }catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e) ;
         }
 
     }

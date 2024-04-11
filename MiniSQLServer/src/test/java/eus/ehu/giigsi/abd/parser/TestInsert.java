@@ -32,7 +32,8 @@ public class TestInsert {
     }
 
     @Test
-    public void TestInsert () throws IOException {
+    public void TestInsert (Database db) throws IOException {
+        this.db = db;
         Insert insert = new Insert("Table1", Arrays.asList("valor1", "valor2"));
 
         String resultado= insert.execute(db);
