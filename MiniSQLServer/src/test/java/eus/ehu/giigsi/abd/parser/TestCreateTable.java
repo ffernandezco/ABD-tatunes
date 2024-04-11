@@ -9,7 +9,5 @@ public class TestCreateTable {
     @BeforeEach
     void init() {
         database = new Database("database1", "admin", "admin");
-
-
     }
 }

@@ -59,40 +59,33 @@ public class Database {
     public boolean save(String databaseName)
     {
         boolean exist = false;
-        try {
-            String path = "C:\\MiniSqlServer";
 
-            File[] databases = new File(path).listFiles();
+        String path = "C:\\MiniSqlServer"; // File.separator
 
-            for(File db : databases) {
-                if(db.getName().equals(databaseName)) {
-                    exist = true;
-                    break;
-                }
+        File[] databases = new File(path).listFiles();
+
+        for(File db : databases) {
+            if(db.getName().equals(databaseName)) {
+                exist = true;
+                break;
             }
+        }
 
-
-            // Elegimos alguna de estas dos opciones:
-            // Decirle que no puede crear una base de datos con ese nombre porque ya dispone de una así
-            // Suponer que quiere sobreescribir la base de datos y actualizar tablas y columnas
-            if(exist) {
-
-            } else {
-
-            }
-
+        if(exist) {
+            System.out.print("Ya existe una base de datos con ese nombre");
+        }
+        else {
             File f = new File(path);
-
-        } catch (Exception e) {
-
+            return f.mkdir();
         }
 
         return false;
     }
-    public Table select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
+
+    public Table select(String table, List<String> columns, Condition columnCondition) {
         String user = this.mUsername;
         String password = this.mPassword;
-        FileReader fr = load(databaseName, user, password);
+        FileReader fr = load(this.name, user, password);
         return null;
     }
 
@@ -210,17 +203,17 @@ public class Database {
         return false;
     }
     public int findTable(FileReader fr, String tableName) throws IOException{
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            int lineNum=0;
-            while((line = reader.readLine()) != null){
-                lineNum++;
-                if(line.contains(tableName)){
-                    reader.close();
-                    return lineNum;
-                }
-            }
+        BufferedReader reader = new BufferedReader(fr);
+        String line;
+        int lineNum=0;
+        while((line = reader.readLine()) != null){
+            lineNum++;
+            if(line.contains(tableName)){
                 reader.close();
-                return -1;
+                return lineNum;
+            }
         }
+        reader.close();
+        return -1;
+    }
 }
