@@ -60,7 +60,7 @@ public class Database {
     {
         boolean exist = false;
 
-        String path = "C:\\MiniSqlServer"; // File.separator
+        String path = "C:\\MiniSqlServer" + File.separator + databaseName; // File.separator
 
         File[] databases = new File(path).listFiles();
 

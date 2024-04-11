@@ -32,13 +32,12 @@ public class Table {
         String path = databaseName + File.separator + this.name;
 
         try {
-            new File(path);
-            return true;
+            File f = new File(path);
+            return f.mkdir();
 
         } catch (Exception e) {
             System.out.println(Constants.ERROR + e.getMessage());
             return false;
-
         }
     }
 
