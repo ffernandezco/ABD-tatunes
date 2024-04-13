@@ -22,8 +22,8 @@ public class TestDropTable {
         listaCP.add(new ColumnParameters("int", Column.DataType.INT));
         */
 
-        CreateTable ct = new CreateTable("testDT", null);
-        ct.execute(database);
+        DropTable dt = new DropTable("testDT");
+        dt.execute(database);
     }
 
     @Test
