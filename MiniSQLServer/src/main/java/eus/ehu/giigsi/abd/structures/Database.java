@@ -60,10 +60,13 @@ public class Database {
     {
         boolean exist = false;
 
+        // Guardaremos en una ruta relativa para evitarnos problemas en caso de disponer diferentes SO
         String path = "C:\\MiniSqlServer" + File.separator + databaseName; // File.separator
 
+        // Recuperamos los ficheros que encontramos en esa ruta
         File[] databases = new File(path).listFiles();
 
+        // Comparamos los ficheros con el nombre de nuestra BD para evitarnos guardar una BD ya creada anteriormente
         for(File db : databases) {
             if(db.getName().equals(databaseName)) {
                 exist = true;
@@ -71,15 +74,15 @@ public class Database {
             }
         }
 
+        // Solo creamos el directorio en caso de no encontrar ficheros con ese nombre
         if(exist) {
             System.out.print("Ya existe una base de datos con ese nombre");
+            return false;
         }
         else {
             File f = new File(path);
             return f.mkdir();
         }
-
-        return false;
     }
 
     public Table select(String table, List<String> columns, Condition columnCondition) {
@@ -135,15 +138,19 @@ public class Database {
 
     public Table tableByName(String tableName)
     {
-        boolean enc = false;
         int i = 0;
 
-        while(i < tables.size() && enc == false) {
+        // Buscamos en cada vector del array tables y si coinciden se devuelve el item
+        while(i < tables.size()) {
             if(tables.get(i).name == tableName) {
                 return tables.get(i);
             }
+            else {
+                i++;
+            }
         }
 
+        // En caso de no existir se devuelve null
         return null;
     }
     public boolean dropTable(String tableName) {
@@ -188,6 +195,8 @@ public class Database {
 
         }
 
+        // En caso de existir no se crea la tabla
+        System.out.print("Ya existe una tabla con ese nombre");
         return false;
     }
 
