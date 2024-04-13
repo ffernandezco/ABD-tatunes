@@ -61,6 +61,7 @@ public class Database {
         boolean exist = false;
 
         // Guardaremos en una ruta relativa para evitarnos problemas en caso de disponer diferentes SO
+        // Falta cambiar la ruta a relativa
         String path = "C:\\MiniSqlServer" + File.separator + databaseName; // File.separator
 
         // Recuperamos los ficheros que encontramos en esa ruta
@@ -154,14 +155,22 @@ public class Database {
         return null;
     }
     public boolean dropTable(String tableName) {
+        // Buscamos si existe la tabla que quiere borrarse
         Table table = tableByName(tableName);
 
+        // Falta cambiar la ruta a relativa
+        String path = this.name + File.pathSeparator + tableName;
+
         if (table != null) {
+            // Borramos la tabla de la lista
             tables.remove(table);
 
-            // FALTA BORRARLO EN LOS DIRECTORIOS
+            // Borramos el directorio del equipo
+            File directorio = new File(path);
+            return directorio.delete();
         }
 
+        System.out.print("No existe tabla con ese nombre");
         return false;
     }
     public void addTable(Table table)
