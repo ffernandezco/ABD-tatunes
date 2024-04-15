@@ -9,6 +9,10 @@ public class MiniSQLParser {
     public static final Pattern CREATE_SECURITY_PROFILE_PATTERN = Pattern.compile("CREATE\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)");
     public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 2;
     //TODO todos los demás patrones
+    public static final Pattern CREATE_TABLE_PATTERN = Pattern.compile("CREATE\\s+TABLE\\s+(?<nombre>[a-zA-Z]+)\\s*\\((?<columnas>[^)]+)\\)");
+    public static final int CREATE_TABLE_PATTERN_GROUP_NAME = 1;
+    public static final int CREATE_TABLE_PATTERN_GROUP_COLUMNS = 2;
+
     public static MiniSQLQuery parse(String miniSQLQuery)
     {
         Matcher matcher;
