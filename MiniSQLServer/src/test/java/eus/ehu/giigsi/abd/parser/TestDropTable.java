@@ -20,10 +20,9 @@ public class TestDropTable {
         listaCP.add(new ColumnParameters("str", Column.DataType.STRING));
         listaCP.add(new ColumnParameters("dbl", Column.DataType.DOUBLE));
         listaCP.add(new ColumnParameters("int", Column.DataType.INT));
-        .
-        .
         */
 
+        // Inicio 15/04
         DropTable dt = new DropTable("testDT");
         dt.execute(database);
     }
