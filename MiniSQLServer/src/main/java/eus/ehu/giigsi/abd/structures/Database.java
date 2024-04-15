@@ -72,7 +72,14 @@ public class Database {
 
     public boolean update(String tableName, List<SetValue> columnNames, Condition columnCondition)
     {
-        return false;
+        boolean found = false;
+        for( Table table : tables) {
+            if (table.name.equals(tableName)) {
+                table.update(columnNames, columnCondition);
+                found = true;
+            }
+        }
+        return found;
     }
 
     public boolean Insert(String databaseName,String tableName, List<String> values) throws IOException
