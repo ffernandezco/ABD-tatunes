@@ -62,16 +62,18 @@ public class Database {
 
         // Guardaremos en una ruta relativa para evitarnos problemas en caso de disponer diferentes SO
         // Falta cambiar la ruta a relativa
-        String path = "C:\\MiniSqlServer" + File.separator + databaseName; // File.separator
+        String path = "databases" + File.separator + databaseName; // File.separator
 
         // Recuperamos los ficheros que encontramos en esa ruta
         File[] databases = new File(path).listFiles();
 
         // Comparamos los ficheros con el nombre de nuestra BD para evitarnos guardar una BD ya creada anteriormente
-        for(File db : databases) {
-            if(db.getName().equals(databaseName)) {
-                exist = true;
-                break;
+        if(databases != null) {
+            for (File db : databases) {
+                if (db.getName().equals(databaseName)) {
+                    exist = true;
+                    break;
+                }
             }
         }
 
@@ -82,7 +84,7 @@ public class Database {
         }
         else {
             File f = new File(path);
-            return f.mkdir();
+            return f.mkdirs();
         }
     }
 
@@ -185,13 +187,15 @@ public class Database {
             List<Column> columns = new ArrayList<>();
 
             // Convertimos cada ColumnParameter en Column
-            for (ColumnParameters c : columnParameters) {
-                Column.DataType type = c.getType();
-                String name = c.getName();
+            if(columnParameters != null) {
+                for (ColumnParameters c : columnParameters) {
+                    Column.DataType type = c.getType();
+                    String name = c.getName();
 
-                Column column = new Column(type, name);
+                    Column column = new Column(type, name);
 
-                columns.add(column);
+                    columns.add(column);
+                }
             }
 
             // Creamos la tabla y la añadimos a la lista de la base de datos

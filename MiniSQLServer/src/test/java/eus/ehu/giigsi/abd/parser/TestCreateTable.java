@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestCreateTable {
     Database database;
     @BeforeEach
-    void init() {
+    public void init() {
         database = new Database("database1", "admin", "admin");
         database.save("database1");
 

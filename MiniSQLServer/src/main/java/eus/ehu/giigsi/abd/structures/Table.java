@@ -29,11 +29,11 @@ public class Table {
 
     public boolean save(String databaseName)
     {
-        String path = databaseName + File.separator + this.name;
+        String path = "databases" + File.separator + databaseName + File.separator + this.name;
 
         try {
             File f = new File(path);
-            return f.mkdir();
+            return f.mkdirs();
 
         } catch (Exception e) {
             System.out.println(Constants.ERROR + e.getMessage());

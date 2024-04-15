@@ -2,6 +2,7 @@ package eus.ehu.giigsi.abd.parser;
 
 import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Database;
+import eus.ehu.giigsi.abd.structures.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,8 +24,8 @@ public class TestDropTable {
         */
 
         // Inicio 15/04
-        DropTable dt = new DropTable("testDT");
-        dt.execute(database);
+        CreateTable ct = new CreateTable("testDT", null);
+        ct.execute(database);
     }
 
     @Test
