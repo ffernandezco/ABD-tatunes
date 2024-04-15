@@ -82,7 +82,7 @@ public class Database {
             while((line= reader.readLine())!= null){
                 values = line.split(", ");
                 if(indexcolumn != -1 && indexcolumn < values.length && values[indexcolumn].trim().equalsIgnoreCase(columnCondition.literalValue)){
-
+                    return null;
                 }
             }
         }
