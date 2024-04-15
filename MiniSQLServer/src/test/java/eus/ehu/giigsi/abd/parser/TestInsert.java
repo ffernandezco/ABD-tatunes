@@ -13,6 +13,7 @@ public class TestInsert {
 
 
     /*
+
     @Test
     public void TestInsert (){
          Database db = new Database("user",  "user");
