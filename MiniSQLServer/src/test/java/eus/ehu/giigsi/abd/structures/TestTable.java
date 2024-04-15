@@ -108,7 +108,6 @@ public class TestTable {
         Condition condition = new Condition("Columna", "=", "Valor3");
         List<SetValue> nuevosValores = new SetValue("Columna", "Valor3");
     }
-
      */
 
 }
