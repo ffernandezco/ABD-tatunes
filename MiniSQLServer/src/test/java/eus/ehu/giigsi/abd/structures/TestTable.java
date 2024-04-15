@@ -98,16 +98,22 @@ public class TestTable {
         assertEquals("Valor1", table.columns.get(0).getValues().get(0));
     }
 
-    /*
     @Test
     public void testUpdate() {
         List<Column> columns = new ArrayList<>();
-        List<String> valores = new ArrayList<>(List.of("Valor1", "Valor2", "Valor3"));
-        columns.add(new Column(Column.DataType.STRING, "Columna", valores));
+        List<String> valoresIniciales = new ArrayList<>(List.of("Valor1"));
+        columns.add(new Column(Column.DataType.STRING, "Columna", valoresIniciales));
         Table table = new Table("Tabla", columns);
-        Condition condition = new Condition("Columna", "=", "Valor3");
-        List<SetValue> nuevosValores = new SetValue("Columna", "Valor3");
+        Condition condition = new Condition("Columna", "=", "Valor1");
+        List<SetValue> setValues = new ArrayList<>();
+        setValues.add(new SetValue("Columna", "nuevoValor1"));
+        String errorMessage = table.update(setValues, condition);
+
+        // Comprobar salida del mensaje
+        assertEquals(null, errorMessage);
+
+        // Comprobar que se ha actualizado por el nuevo valoe especificado
+        assertEquals("nuevoValor1", table.columns.get(0).getValues().get(0));
     }
-     */
 
 }
