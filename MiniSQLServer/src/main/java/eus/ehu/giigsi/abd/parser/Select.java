@@ -32,7 +32,7 @@ public class Select implements MiniSQLQuery{
     }
 
     public String execute(Database database) throws IOException {
-        database.select(database.name, this.table, this.columns, this.where);
+        database.select(this.table, this.columns, this.where);
         return null;
     }
 }

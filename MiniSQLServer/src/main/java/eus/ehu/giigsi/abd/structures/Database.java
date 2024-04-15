@@ -58,31 +58,35 @@ public class Database {
         return false;
     }
     public Table select(String table, List<String> columns, Condition columnCondition) throws IOException {
-        try(FileReader fr = new FileReader("/archives/"+this.name+"/"+table+"/"+".txt")){
+        try(FileReader fr = new FileReader("/archives/"+this.name+"/"+table+"/"+columnCondition.column+".txt")){
             BufferedReader reader = new BufferedReader(fr);
             String line;
-            String[] columnName = null;
-            String[] columnType = null;
-            if((line = reader.readLine())!= null){
-                columnName = line.split(", ");
-                line = reader.readLine();
-                columnType = line.split(", ");
-            }
-            int indexcolumn = -1;
-            int i = 0;
-            while(i<columnName.length){
-                if(columnCondition.column.equalsIgnoreCase(columnName[i].trim())){
-                    indexcolumn =i;
-                }
-                else{
+            List<Integer> index = null;
+            List<String> colValues= null;
+            List<Column> values = null;
+            Column.DataType type = null;
+            int i=1;
+            if(columnCondition.operator.equalsIgnoreCase("=")) {
+                while ((line = reader.readLine()) != null) {//Recojo las líneas en las que coincide el dato
+                    if(line.equalsIgnoreCase(columnCondition.literalValue)){
+                        index.add(i);
+                    }
                     i++;
                 }
             }
-            String[] values = null;
-            while((line= reader.readLine())!= null){
-                values = line.split(", ");
-                if(indexcolumn != -1 && indexcolumn < values.length && values[indexcolumn].trim().equalsIgnoreCase(columnCondition.literalValue)){
-                    return null;
+            if(columnCondition.operator.equalsIgnoreCase("<")){
+                while ((line = reader.readLine()) != null) {//Recojo la línea en la que esta el dato
+                    int val = Integer.parseInt(line);
+                    int litVal = Integer.parseInt(columnCondition.literalValue);
+                    if(val<litVal){
+                        index.add(i);
+                    }
+                    i++;
+                }
+            }
+            for(int j=0;i<columns.size();i++){
+                try(FileReader file = new FileReader("/archives/"+this.name+"/"+table+"/"+columns.get(i)+".txt")) {
+
                 }
             }
         }
