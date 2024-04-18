@@ -88,6 +88,7 @@ public class Database {
                 try(FileReader file = new FileReader("/archives/"+this.name+"/"+table+"/"+columns.get(i)+".txt")) {
 
                 }
+
             }
         }
         catch (IOException e){
