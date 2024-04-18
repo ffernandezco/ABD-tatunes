@@ -57,7 +57,34 @@ public class Database {
 
     public boolean save(String databaseName)
     {
-        return false;
+        boolean exist = false;
+
+        // Guardaremos en una ruta relativa para evitarnos problemas en caso de disponer diferentes SO
+        // Falta cambiar la ruta a relativa
+        String path = "databases" + File.separator + databaseName; // File.separator
+
+        // Recuperamos los ficheros que encontramos en esa ruta
+        File[] databases = new File(path).listFiles();
+
+        // Comparamos los ficheros con el nombre de nuestra BD para evitarnos guardar una BD ya creada anteriormente
+        if(databases != null) {
+            for (File db : databases) {
+                if (db.getName().equals(databaseName)) {
+                    exist = true;
+                    break;
+                }
+            }
+        }
+
+        // Solo creamos el directorio en caso de no encontrar ficheros con ese nombre
+        if(exist) {
+            System.out.print("Ya existe una base de datos con ese nombre");
+            return false;
+        }
+        else {
+            File f = new File(path);
+            return f.mkdirs();
+        }
     }
     public Table select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
         String user = this.mUsername;
@@ -78,29 +105,44 @@ public class Database {
         return false;
     }
 
-    public boolean Insert(String databaseName,String tableName, List<String> values) throws IOException
-    {
-        String user = null;
+    public boolean Insert(String tableName, List<String> values) {
+        /*String user = null;
         String password = null;
-        FileReader fr = load(databaseName, user, password);
-        int numLine = findTable(fr, tableName);
+        FileReader fr = load(  this.name,user, password);
+        int numLine = findTable(tableName);
         if(numLine != -1){
             BufferedReader reader = new BufferedReader(fr);
             String line;
             int currentLine=0;
-            while((line = reader.readLine()) != null && currentLine < numLine - 1) {
+            while(true) {
+                try {
+                    if (!((line = reader.readLine()) != null && currentLine < numLine - 1)) break;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 currentLine++;
             }
             int i=0;
             while(i< values.size()){
-                FileWriter fw = new FileWriter("/archives/"+databaseName+".txt");
+                FileWriter fw = null;
+                try {
+                    fw = new FileWriter("/archives/"+this.name+".txt");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 BufferedWriter writer = new BufferedWriter(fw);
-                writer.write(values.get(i) + "\n");
+                try {
+                    writer.write(values.get(i) + "\n");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 i++;
                 currentLine++;
             }
         }
-        return false;
+        return false;*/
+        Table table = tableByName(tableName);
+        return table.insert(values);
     }
 
     public String executeMiniSQLQuery(String query)
@@ -116,6 +158,19 @@ public class Database {
 
     public Table tableByName(String tableName)
     {
+        int i = 0;
+
+        // Buscamos en cada vector del array tables y si coinciden se devuelve el item
+        while(i < tables.size()) {
+            if(tables.get(i).name == tableName) {
+                return tables.get(i);
+            }
+            else {
+                i++;
+            }
+        }
+
+        // En caso de no existir se devuelve null
         return null;
     }
     public boolean dropTable(String tableName)
@@ -124,7 +179,7 @@ public class Database {
     }
     public void addTable(Table table)
     {
-
+        tables.add(table);
     }
     public boolean createTable(String database,String tableName, List<ColumnParameters> columnParameters) throws IOException {
 
@@ -163,8 +218,8 @@ public class Database {
         }
         return false;
     }
-    public int findTable(FileReader fr, String tableName) throws IOException{
-            BufferedReader reader = new BufferedReader(fr);
+    public int findTable( String tableName) {
+          /*  BufferedReader reader = new BufferedReader(fr);
             String line;
             int lineNum=0;
             while((line = reader.readLine()) != null){
@@ -175,6 +230,7 @@ public class Database {
                 }
             }
                 reader.close();
-                return -1;
+                return -1;*/
+        return 0;
         }
 }

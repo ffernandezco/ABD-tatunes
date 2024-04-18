@@ -25,16 +25,27 @@ public class TestInsert {
     public void setUp(){
 
         db  = new Database("admin","user","password");
+        db.save("admin");
         Column columna1 = new Column(Column.DataType.STRING, "Columna1" ,Arrays.asList("v1","v2","v3")) ;
         Table table  = new Table("Table1", Arrays.asList(columna1)) ;
 
         db.addTable(table);
+        table.save("admin");
     }
 
     @Test
-    public void TestInsert (Database db) throws IOException {
+    public void TestInsert () {
         this.db = db;
-        Insert insert = new Insert("Table1", Arrays.asList("valor1", "valor2"));
+        Insert insert = new Insert("Table1", Arrays.asList("valor1"));
+
+        String resultado= insert.execute(db);
+        assertEquals(Constants.INSERT_SUCCESS, resultado);
+
+    }
+
+    @Test
+    public void TestInsert2 () throws IOException {
+        Insert insert = new Insert("Table1", Arrays.asList("valor1"));
 
         String resultado= insert.execute(db);
         assertEquals(Constants.INSERT_SUCCESS, resultado);
