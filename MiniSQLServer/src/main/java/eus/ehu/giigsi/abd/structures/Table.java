@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd.structures;
 
+import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.parser.Condition;
 import eus.ehu.giigsi.abd.parser.SetValue;
 
@@ -21,22 +22,23 @@ public class Table {
 
     public boolean load(String path)
     {
-        try ( Scanner entrada = new Scanner(new File(path))){
-            while (entrada.hasNext()){
-                //TODO
-            }
-        } catch ( FileNotFoundException e ) {
+        File f = new File(path);
 
-            System.err.println("Fichero no encontrado");
-
-        }
         return false;
     }
 
     public boolean save(String databaseName)
     {
-            //TODO
-        return false;
+        String path = "databases" + File.separator + databaseName + File.separator + this.name;
+
+        try {
+            File f = new File(path);
+            return f.mkdirs();
+
+        } catch (Exception e) {
+            System.out.println(Constants.ERROR + e.getMessage());
+            return false;
+        }
     }
 
     public Column columnByName(String column)

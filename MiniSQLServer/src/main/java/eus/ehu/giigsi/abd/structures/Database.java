@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
@@ -57,12 +58,40 @@ public class Database {
 
     public boolean save(String databaseName)
     {
-        return false;
+        boolean exist = false;
+
+        // Guardaremos en una ruta relativa para evitarnos problemas en caso de disponer diferentes SO
+        // Falta cambiar la ruta a relativa
+        String path = "databases" + File.separator + databaseName; // File.separator
+
+        // Recuperamos los ficheros que encontramos en esa ruta
+        File[] databases = new File(path).listFiles();
+
+        // Comparamos los ficheros con el nombre de nuestra BD para evitarnos guardar una BD ya creada anteriormente
+        if(databases != null) {
+            for (File db : databases) {
+                if (db.getName().equals(databaseName)) {
+                    exist = true;
+                    break;
+                }
+            }
+        }
+
+        // Solo creamos el directorio en caso de no encontrar ficheros con ese nombre
+        if(exist) {
+            System.out.print("Ya existe una base de datos con ese nombre");
+            return false;
+        }
+        else {
+            File f = new File(path);
+            return f.mkdirs();
+        }
     }
-    public Table select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
+
+    public Table select(String table, List<String> columns, Condition columnCondition) {
         String user = this.mUsername;
         String password = this.mPassword;
-        FileReader fr = load(databaseName, user, password);
+        FileReader fr = load(this.name, user, password);
         return null;
     }
 
@@ -100,8 +129,7 @@ public class Database {
         return false;
     }
 
-    public String executeMiniSQLQuery(String query)
-    {
+    public String executeMiniSQLQuery(String query) throws IOException {
         //Parse the query
         MiniSQLQuery miniSQLQuery = MiniSQLParser.parse(query);
 
@@ -113,40 +141,76 @@ public class Database {
 
     public Table tableByName(String tableName)
     {
+        int i = 0;
+
+        // Buscamos en cada vector del array tables y si coinciden se devuelve el item
+        while(i < tables.size()) {
+            if(tables.get(i).name == tableName) {
+                return tables.get(i);
+            }
+            else {
+                i++;
+            }
+        }
+
+        // En caso de no existir se devuelve null
         return null;
     }
-    public boolean dropTable(String tableName)
-    {
+    public boolean dropTable(String tableName) {
+        // Buscamos si existe la tabla que quiere borrarse
+        Table table = tableByName(tableName);
+
+        // Falta cambiar la ruta a relativa
+        String path = this.name + File.pathSeparator + tableName;
+
+        if (table != null) {
+            // Borramos la tabla de la lista
+            tables.remove(table);
+
+            // Borramos el directorio del equipo
+            File directorio = new File(path);
+            return directorio.delete();
+        }
+
+        System.out.print("No existe tabla con ese nombre");
         return false;
     }
     public void addTable(Table table)
     {
-
+        tables.add(table);
     }
-    public boolean createTable(String database,String tableName, List<ColumnParameters> columnParameters) throws IOException {
+    public boolean createTable(String tableName, List<ColumnParameters> columnParameters) {
 
-        try{
-            FileReader fr = load(database,mUsername,mPassword);
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            while((line = reader.readLine())!=null){
-                if(line.contains(tableName)){
-                 System.out.println(Constants.TABLE_ALREADY_EXISTS_ERROR);
-                 return false;
+        // Verificamos si existe la tabla
+        // Recorremos el array de columnParameters para crear columnas y, posteriormente crear la tabla
+        if(tableByName(tableName) == null) {
+            List<Column> columns = new ArrayList<>();
+
+            // Convertimos cada ColumnParameter en Column
+            if(columnParameters != null) {
+                for (ColumnParameters c : columnParameters) {
+                    Column.DataType type = c.getType();
+                    String name = c.getName();
+
+                    Column column = new Column(type, name);
+
+                    columns.add(column);
                 }
             }
-            BufferedWriter writer = new BufferedWriter(new FileWriter("/archives/"+database+".txt",true));
-            writer.write(tableName+"\n");
-            for(int i=0; i<columnParameters.size();i++){
-                writer.write(columnParameters.get(i).name+" ");
-                writer.write(columnParameters.get(i).type.name()+", ");
-            }
-            System.out.println(Constants.CREATE_TABLE_SUCCESS);
-            return true;
-        }catch (IOException e){
-            System.out.println(Constants.ERROR);
-            return false;
+
+            // Creamos la tabla y la añadimos a la lista de la base de datos
+            Table table = new Table(tableName, columns);
+
+            addTable(table);
+
+            // Guardamos la tabla en nuestros ficheros
+            return table.save(this.name);
+
         }
+
+        // En caso de existir no se crea la tabla
+        System.out.print("Ya existe una tabla con ese nombre");
+        return false;
     }
 
     public boolean IsUserAdmin() throws IOException {
@@ -161,17 +225,17 @@ public class Database {
         return false;
     }
     public int findTable(FileReader fr, String tableName) throws IOException{
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            int lineNum=0;
-            while((line = reader.readLine()) != null){
-                lineNum++;
-                if(line.contains(tableName)){
-                    reader.close();
-                    return lineNum;
-                }
-            }
+        BufferedReader reader = new BufferedReader(fr);
+        String line;
+        int lineNum=0;
+        while((line = reader.readLine()) != null){
+            lineNum++;
+            if(line.contains(tableName)){
                 reader.close();
-                return -1;
+                return lineNum;
+            }
         }
+        reader.close();
+        return -1;
+    }
 }

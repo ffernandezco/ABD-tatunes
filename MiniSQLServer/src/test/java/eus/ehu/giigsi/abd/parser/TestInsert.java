@@ -16,7 +16,7 @@ public class TestInsert {
 
     @Test
     public void TestInsert (){
-         Database db = new Database("user",  "user");
+         Database db = new Database("database", "user",  "user");
          String table = "usuarios";
          List<String> values = Arrays.asList("Julen", "20");
          Insert insert = new Insert(table,values);
@@ -30,7 +30,7 @@ public class TestInsert {
 
     @Test
     public void TestInsertTablaVacia (){
-        Database db = new Database("user",  "user");
+        Database db = new Database("database", "user",  "user");
 
         List<String> values = Arrays.asList("Julen", "20");
         Insert insert = new Insert(null,values);
@@ -43,7 +43,7 @@ public class TestInsert {
     }
     @Test
     public void TestInsertValoresVacios (){
-        Database db = new Database("user",  "user");
+        Database db = new Database("database","user",  "user");
 
         String table = "usuarios";
         Insert insert = new Insert(null,null);

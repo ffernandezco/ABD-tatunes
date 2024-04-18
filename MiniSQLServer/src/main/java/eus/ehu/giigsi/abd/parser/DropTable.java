@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,6 +17,10 @@ public class DropTable implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        return null;
+        if(database.dropTable(table)) {
+            return Constants.DROP_TABLE_SUCCESS;
+        }
+
+        return "Cannot delete table";
     }
 }
