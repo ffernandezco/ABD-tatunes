@@ -58,44 +58,75 @@ public class Database {
         return false;
     }
     public Table select(String table, List<String> columns, Condition columnCondition) throws IOException {
-        try(FileReader fr = new FileReader("/archives/"+this.name+"/"+table+"/"+columnCondition.column+".txt")){
+        List<Integer> index = new ArrayList<>();
+        List<Column> colList = new ArrayList<>();
+        Column.DataType type = null;
+        try(FileReader fr = new FileReader("/archives/"+this.name+"/"+table+"/"+columnCondition.column+".txt")) {
             BufferedReader reader = new BufferedReader(fr);
             String line;
-            List<Integer> index = null;
-            List<String> colValues= null;
-            List<Column> values = null;
-            Column.DataType type = null;
-            int i=1;
-            if(columnCondition.operator.equalsIgnoreCase("=")) {
+            if (columnCondition.operator.equalsIgnoreCase("=")) {
+                int i = 1;
                 while ((line = reader.readLine()) != null) {//Recojo las líneas en las que coincide el dato
-                    if(line.equalsIgnoreCase(columnCondition.literalValue)){
+                    if (line.equalsIgnoreCase(columnCondition.literalValue)) {
                         index.add(i);
                     }
                     i++;
                 }
-            }
-            if(columnCondition.operator.equalsIgnoreCase("<")){
+            } else if (columnCondition.operator.equalsIgnoreCase("<")) {
+                reader.readLine();
+                int i=2;
                 while ((line = reader.readLine()) != null) {//Recojo la línea en la que esta el dato
                     int val = Integer.parseInt(line);
                     int litVal = Integer.parseInt(columnCondition.literalValue);
-                    if(val<litVal){
+                    if (val < litVal) {
                         index.add(i);
                     }
                     i++;
                 }
-            }
-            for(int j=0;i<columns.size();i++){
-                try(FileReader file = new FileReader("/archives/"+this.name+"/"+table+"/"+columns.get(i)+".txt")) {
-
+            } else if (columnCondition.operator.equalsIgnoreCase(">")) {
+                int i=2;
+                reader.readLine();
+                while ((line = reader.readLine()) != null) {//Recojo la línea en la que esta el dato
+                    int val = Integer.parseInt(line);
+                    int litVal = Integer.parseInt(columnCondition.literalValue);
+                    if (val > litVal) {
+                        index.add(i);
+                    }
+                    i++;
                 }
-
             }
         }
         catch (IOException e){
             System.out.println(Constants.TABLE_DOES_NOT_EXIST_ERROR);
             return null;
         }
-        return null;
+        for(int j=0;j<columns.size();j++){
+            List<String> colValues = new ArrayList<>();
+            try(FileReader file = new FileReader("/archives/"+this.name+"/"+table+"/"+columns.get(j)+".txt")) {
+                BufferedReader br = new BufferedReader(file);
+                String primeraLinea = br.readLine();
+                type = Column.DataType.valueOf(primeraLinea);
+                String linea;
+                int valorCorrecto;
+                for(int k=0;k<index.size();k++){
+                    valorCorrecto =2;
+                    int p = index.get(k);
+                    while((linea = br.readLine())!= null){
+                        if(valorCorrecto == p){
+                            colValues.add(linea);
+                        }
+                        valorCorrecto++;
+                    }
+                }
+                Column col = new Column(type, columns.get(j),colValues);
+                colList.add(col);
+            }
+                catch (IOException e){
+                    System.out.println(Constants.COLUMN_DOES_NOT_EXIST_ERROR);
+                }
+        }
+        Table tb = new Table(table, colList);
+        return tb;
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {

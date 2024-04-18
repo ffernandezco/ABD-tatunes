@@ -1,6 +1,7 @@
 package eus.ehu.giigsi.abd.parser;
 
 import eus.ehu.giigsi.abd.structures.Database;
+import eus.ehu.giigsi.abd.structures.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +33,18 @@ public class Select implements MiniSQLQuery{
     }
 
     public String execute(Database database) throws IOException {
-        database.select(this.table, this.columns, this.where);
-        return null;
+        Table tb = database.select(this.table, this.columns, this.where);
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<tb.columns.size();i++){
+            for(String elemento : tb.columns.get(i).values){
+                sb.append(elemento).append(",");
+            }
+            if(sb.length()>0){
+                sb.deleteCharAt(sb.length()-1);
+            }
+            sb.append("\n");
+        }
+        String val = sb.toString();
+        return val;
     }
 }
