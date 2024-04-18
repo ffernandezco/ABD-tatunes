@@ -104,32 +104,11 @@ public class Database {
         return false;
     }
 
-    public boolean Insert(String databaseName,String tableName, List<String> values) throws IOException
-    {
-        String user = null;
-        String password = null;
-        FileReader fr = load(databaseName, user, password);
-        int numLine = findTable(fr, tableName);
-        if(numLine != -1){
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            int currentLine=0;
-            while((line = reader.readLine()) != null && currentLine < numLine - 1) {
-                currentLine++;
-            }
-            int i=0;
-            while(i< values.size()){
-                FileWriter fw = new FileWriter("/archives/"+databaseName+".txt");
-                BufferedWriter writer = new BufferedWriter(fw);
-                writer.write(values.get(i) + "\n");
-                i++;
-                currentLine++;
-            }
-        }
+    public boolean Insert(String tableName, List<String> values) {
         return false;
     }
 
-    public String executeMiniSQLQuery(String query) throws IOException {
+    public String executeMiniSQLQuery(String query) {
         //Parse the query
         MiniSQLQuery miniSQLQuery = MiniSQLParser.parse(query);
 
@@ -223,19 +202,5 @@ public class Database {
             }
         }
         return false;
-    }
-    public int findTable(FileReader fr, String tableName) throws IOException{
-        BufferedReader reader = new BufferedReader(fr);
-        String line;
-        int lineNum=0;
-        while((line = reader.readLine()) != null){
-            lineNum++;
-            if(line.contains(tableName)){
-                reader.close();
-                return lineNum;
-            }
-        }
-        reader.close();
-        return -1;
     }
 }
