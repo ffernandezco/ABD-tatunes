@@ -22,7 +22,7 @@ public class TestDelete {
 
         db  = new Database("admin","user","password");
         Column columna1 = new Column(Column.DataType.STRING, "Columna1" , Arrays.asList("v1","v2","v3")) ;
-        Table table  = new Table("Table1", Arrays.asList(columna1));
+        Table table  = new Table("Table1", Arrays.asList(columna1)) ;
         db.addTable(table);
     }
 
@@ -33,7 +33,7 @@ public class TestDelete {
         Delete delete = new Delete(table1,condition);
 
         String resultado= delete.execute(db);
-        assertFalse(Boolean.parseBoolean(Constants.DELETE_SUCCESS), resultado); ;
+        assertFalse(Boolean.parseBoolean(Constants.DELETE_SUCCESS), resultado);
 
     }
 
@@ -41,7 +41,7 @@ public class TestDelete {
     public  void TestDeleteError () throws IOException{
         Delete delete = new Delete("Table1", condition);
 
-        String resultado = delete.execute(db);
+        String resultado = delete.execute(db) ;
 
         assertEquals(Constants.ERROR, resultado);
 
