@@ -17,6 +17,7 @@ public class MiniSQLParser {
     {
         Matcher matcher;
 
+
         //REGULAR MINISQL QUERIES
         //TODO
 
