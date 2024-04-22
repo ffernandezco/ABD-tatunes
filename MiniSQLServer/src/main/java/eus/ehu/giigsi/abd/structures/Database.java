@@ -104,6 +104,7 @@ public class Database {
     }
 
     public Table select(String table, List<String> columns, Condition columnCondition) {
+        /*
         Table t = tableByName(table);
 
         if(t != null) {
@@ -115,7 +116,7 @@ public class Database {
 
 
         }
-
+        */
         return null;
     }
 
