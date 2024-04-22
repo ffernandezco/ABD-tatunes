@@ -216,7 +216,7 @@ public class TestColumn {
     }
 
 
-    public static class TestColumn {
+    public static class TestColumn1 {
         @Test
         void testCreacionInicial() {
             //Creamos una instancia column con unos valores puestos por nosotros, verificamos que la inicialización de

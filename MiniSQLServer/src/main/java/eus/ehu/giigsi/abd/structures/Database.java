@@ -77,23 +77,41 @@ public class Database {
             }
         }
 
-        // Solo creamos el directorio en caso de no encontrar ficheros con ese nombre
-        if(exist) {
+        try {
             int i = 0;
-            while (tables.get(i).load(databaseName) == true) {
-                return true;
+            if (exist) {
+                while (tables.get(i).save(databaseName) == true) {
+                    i++;
+                }
+            } else {
+                // Solo creamos el directorio en caso de no encontrar ficheros con ese nombre
+                File f = new File(path);
+                f.mkdirs();
+
+                while (tables.get(i).save(databaseName) == true) {
+                    i++;
+                }
             }
+
+            return true;
+        }
+        catch (Exception e) {
+            System.out.println(e.toString());
+
+            return false;
         }
 
-        File f = new File(path);
-        return f.mkdirs();
     }
 
     public Table select(String table, List<String> columns, Condition columnCondition) {
         Table t = tableByName(table);
 
         if(t != null) {
-            Boolean b = t.load(this.name);
+            FileReader fr = load(this.name, this.mUsername, this.mPassword);
+
+            if (fr != null) {
+                BufferedReader br = new BufferedReader(fr);
+            }
 
 
         }
