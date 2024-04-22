@@ -79,19 +79,25 @@ public class Database {
 
         // Solo creamos el directorio en caso de no encontrar ficheros con ese nombre
         if(exist) {
-            System.out.print("Ya existe una base de datos con ese nombre");
-            return false;
+            int i = 0;
+            while (tables.get(i).load(databaseName) == true) {
+                return true;
+            }
         }
-        else {
-            File f = new File(path);
-            return f.mkdirs();
-        }
+
+        File f = new File(path);
+        return f.mkdirs();
     }
 
     public Table select(String table, List<String> columns, Condition columnCondition) {
-        String user = this.mUsername;
-        String password = this.mPassword;
-        FileReader fr = load(this.name, user, password);
+        Table t = tableByName(table);
+
+        if(t != null) {
+            Boolean b = t.load(this.name);
+
+
+        }
+
         return null;
     }
 
