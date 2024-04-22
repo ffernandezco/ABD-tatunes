@@ -57,7 +57,7 @@ public class Database {
     {
         return false;
     }
-    public Table select(String table, List<String> columns, Condition columnCondition) throws IOException {
+    public Table select(String table, List<String> columns, Condition columnCondition) {
         List<Integer> index = new ArrayList<>();
         List<Column> colList = new ArrayList<>();
         Column.DataType type = null;
