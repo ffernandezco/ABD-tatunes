@@ -22,6 +22,7 @@ public class TestUpdate {
         columnsTable2.add(new Column(Column.DataType.STRING, "LDAP"));
         columnsTable2.add(new Column(Column.DataType.STRING, "Asignatura"));
         columnsTable2.add(new Column(Column.DataType.STRING, "Nota"));
+        columnsTable2.add(new Column(Column.DataType.STRING, "NotaTexto"));
         Table notas = new Table("Registro de notas", columnsTable2);
 
         // Agregar las tablas a la lista de tablas de la base de datos
@@ -47,7 +48,7 @@ public class TestUpdate {
         // Insertar calificaciones
         List<String> nota1 = new ArrayList<>();
         nota1.add("1007012");
-        nota1.add("Cálculo");
+        nota1.add("Calculo");
         nota1.add("9.2");
         notas.insert(nota1);
 
@@ -106,15 +107,16 @@ public class TestUpdate {
 
         // Crear una lista de cambios
         List<SetValue> sobresaliente = new ArrayList<>();
-        sobresaliente.add(new SetValue("Nota", "Sobresaliente"));
+        sobresaliente.add(new SetValue("NotaTexto", "Sobresaliente"));
 
-        // Actualizar una tabla de la base de datos
+        List<SetValue> suspenso = new ArrayList<>();
+        suspenso.add(new SetValue("NotaTexto", "Suspenso"));
+
         boolean result = db.update("notas", sobresaliente, condition);
-        boolean result1 = db.update("notas", sobresaliente, condition1);
+        boolean result1 = db.update("notas", suspenso, condition1);
 
-        // Verificar que la actualización se ha hecho bien
-        assertTrue(result, "La actualización se ha hecho correctamente.");
-        assertTrue(result1, "La actualización se ha hecho correctamente.");
+        assertTrue(result);
+        assertTrue(result1);
 
     }
 }
