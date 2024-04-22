@@ -81,4 +81,5 @@ public class MiniSQLParser {
         }
         return commaSeparator;
     }
+
 }
