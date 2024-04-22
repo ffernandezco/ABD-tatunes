@@ -20,10 +20,18 @@ public class TestDelete {
     @BeforeEach
     public void setUp(){
 
-        db  = new Database("admin","user","password");
+        /*db  = new Database("admin","user","password");
         Column columna1 = new Column(Column.DataType.STRING, "Columna1" , Arrays.asList("v1","v2","v3")) ;
         Table table  = new Table("Table1", Arrays.asList(columna1)) ;
-        db.addTable(table);
+        db.addTable(table);*/
+
+        db  = new Database("admin","user","password");
+        db.save("admin");
+        Column columna1 = new Column(Column.DataType.STRING, "columna1" ,Arrays.asList("v1","v2","v3")) ;
+        Table table  = new Table("table1", Arrays.asList(columna1)) ;
+
+        db.addTable(table) ;
+        table.save("admin");
     }
 
 
@@ -33,7 +41,8 @@ public class TestDelete {
         Delete delete = new Delete(table1,condition);
 
         String resultado= delete.execute(db);
-        assertFalse(Boolean.parseBoolean(Constants.DELETE_SUCCESS), resultado);
+        assertEquals(Constants.DELETE_SUCCESS, resultado);
+
 
     }
 

@@ -96,7 +96,7 @@ public class Table {
         for (int i = 0; i < columns.size(); i++) {
             Column columna = columns.get(i);
             String value = values.get(i);
-            columna.values.add(value);
+           // columna.values.add(value);
 
             try {
                 FileWriter fileWriter = new FileWriter(this.name + ".txt");
