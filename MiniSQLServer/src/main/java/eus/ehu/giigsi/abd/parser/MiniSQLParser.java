@@ -12,14 +12,23 @@ public class MiniSQLParser {
     public static final Pattern CREATE_TABLE_PATTERN = Pattern.compile("CREATE\\s+TABLE\\s+(?<table>[a-zA-Z]+)\\s*\\((?<columns>[^)]+)\\)");
     public static final Pattern DROP_TABLE_PATTERN = Pattern.compile("DROP\\s+TABLE\\s+(?<table>[a-zA-Z]+)");
     public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z,\\s]+)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<condition>.+))?");
+    public static final Pattern DELETE_PATTERN = Pattern.compile("DELETE\\s+FROM\\s+(?<table>[a-zA-Z]+)\\s+WHERE\\s+(?<condition>.+)");
+    public static final Pattern INSERT_PATTERN = Pattern.compile("INSERT\\s+INTO\\s+(?<table>[a-zA-Z]+)\\s+VALUES\\s*\\((?<literalValues>[^)]+)\\)");
+    public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<conditions>.+)");
     public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 2;
-    //TODO todos los demás patrones
     public static final int CREATE_TABLE_PATTERN_GROUP_NAME = 1;
     public static final int CREATE_TABLE_PATTERN_GROUP_COLUMNS = 2;
     public static final int DROP_TABLE_PATTERN_GROUP_NAME = 1;
     public static final int SELECT_PATTERN_GROUP_COLUMNS = 1;
     public static final int SELECT_PATTERN_GROUP_TABLE = 2;
     public static final int SELECT_PATTERN_GROUP_CONDITION = 3;
+    public static final int DELETE_PATTERN_GROUP_TABLE = 1;
+    public static final int DELETE_PATTERN_GROUP_CONDITION = 2;
+    public static final int INSERT_PATTERN_GROUP_TABLE = 1;
+    public static final int INSERT_PATTERN_GROUP_VALUES = 2;
+    public static final int UPDATE_PATTERN_GROUP_TABLE = 1;
+    public static final int UPDATE_PATTERN_GROUP_VALUES = 2;
+    public static final int UPDATE_PATTERN_GROUP_CONDITION = 3;
     public static MiniSQLQuery parse(String miniSQLQuery)
     {
         Matcher matcher;
@@ -75,7 +84,64 @@ public class MiniSQLParser {
             return new Select(table, columns, condition);
         }
 
+        //Delete
+        matcher = DELETE_PATTERN.matcher(miniSQLQuery);
+        if (matcher.find()) {
+            String table = matcher.group(DELETE_PATTERN_GROUP_TABLE);
+            String conditionData = matcher.group(DELETE_PATTERN_GROUP_CONDITION);
+            Condition condition = null;
+            if (conditionData != null && !conditionData.isEmpty()) {
+                String[] conditionConverted = conditionData.trim().split("\\s+"); //Separa la cadena en los 3 valores para crear un objeto Condition
+                if (conditionConverted.length == 3) {
+                    String column = conditionConverted[0];
+                    String operator = conditionConverted[1];
+                    String literalValue = conditionConverted[2];
+                    condition = new Condition(column, operator, literalValue);
+                }
+            }
+            return new Delete(table, condition);
+        }
 
+        //Insert
+        matcher = INSERT_PATTERN.matcher(miniSQLQuery);
+        if (matcher.find()) {
+            String table = matcher.group(INSERT_PATTERN_GROUP_TABLE);
+            String literalValues = matcher.group(INSERT_PATTERN_GROUP_VALUES);
+            List<String> values = commaSeparatedNames(literalValues); //Crea una lista a partir de los valores literales dados con la función dada
+            return new Insert(table, values);
+        }
+
+        //Update
+        matcher = UPDATE_PATTERN.matcher(miniSQLQuery);
+        if (matcher.find()) {
+            String table = matcher.group(UPDATE_PATTERN_GROUP_TABLE);
+            String literalValues = matcher.group(UPDATE_PATTERN_GROUP_VALUES);
+            String conditionData = matcher.group(UPDATE_PATTERN_GROUP_CONDITION);
+
+            // Valores: hay que crear instancia de SetValue, no se puede pasar lista tal cual de String
+            List<SetValue> columns = new ArrayList<>();
+            String[] parts = literalValues.split("\\s*,\\s*");
+            for (String part : parts) {
+                String[] keyValue = part.split("\\s*=\\s*");
+                if (keyValue.length == 2) {
+                    columns.add(new SetValue(keyValue[0], keyValue[1]));
+                }
+            }
+
+            // Condiciones
+            Condition condition = null;
+            if (conditionData != null && !conditionData.isEmpty()) {
+                String[] conditionConverted = conditionData.trim().split("\\s+"); //Separa la cadena en los 3 valores para crear un objeto Condition
+                if (conditionConverted.length == 3) {
+                    String column = conditionConverted[0];
+                    String operator = conditionConverted[1];
+                    String literalValue = conditionConverted[2];
+                    condition = new Condition(column, operator, literalValue);
+                }
+            }
+
+            return new Update(table, columns, condition);
+        }
 
         //SECURITY QUERIES
 
