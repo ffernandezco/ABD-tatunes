@@ -20,6 +20,10 @@ public class Table {
         this.columns = columns;
     }
 
+    public Table() {
+
+    }
+
     public boolean load(String path)
     {
         File f = new File(path);

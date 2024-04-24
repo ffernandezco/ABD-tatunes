@@ -108,11 +108,10 @@ public class Database {
 
         if(t != null) {
 
-
             Column c = t.columnByName(columnCondition.getColumn());
             List<Integer> valoresIntroducir = new ArrayList<>();
 
-            // Guardamos la posición de los valores que cumplen la condición
+            // Guardamos el índice de los valores que cumplen la condición
             for (int i = 0; i < c.values.size(); i++) {
                 boolean aceptado = columnCondition.ValueMeetsCondition(c.values.get(i), c.type);
 
@@ -120,6 +119,8 @@ public class Database {
                     valoresIntroducir.add(i);
                 }
             }
+
+            List<Column> columnasSelect = new ArrayList<>();
 
             // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
             for (String nombreColumna : columns) {
@@ -134,11 +135,12 @@ public class Database {
                     }
 
                     // Insertamos la lista en la tabla
-                    t.insert(c1.getValues());
+                    Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                    columnasSelect.add(aux);
                 }
             }
-
-            return t;
+            Table select = new Table("Resultado", columnasSelect);
+            return select;
         }
 
         return null;
@@ -233,7 +235,6 @@ public class Database {
 
             // Guardamos la tabla en nuestros ficheros
             return table.save(this.name);
-
         }
 
         // En caso de existir no se crea la tabla
