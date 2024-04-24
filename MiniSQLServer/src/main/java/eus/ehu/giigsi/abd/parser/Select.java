@@ -35,7 +35,7 @@ public class Select implements MiniSQLQuery{
     {
         if (database.select(this.table, this.columns, this.where) != null) {
             // Hay que preguntar sobre lo qued debería devolver
-            return "";
+            return Constants.CREATE_TABLE_SUCCESS;
         }
         return Constants.SYNTAX_ERROR;
     }
