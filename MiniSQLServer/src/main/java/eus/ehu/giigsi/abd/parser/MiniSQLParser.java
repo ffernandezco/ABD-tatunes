@@ -31,7 +31,7 @@ public class MiniSQLParser {
     public static final int UPDATE_PATTERN_GROUP_CONDITION = 3;
     public static MiniSQLQuery parse(String miniSQLQuery)
     {
-        //System.out.println("Ejecutando " + miniSQLQuery);
+        // System.out.println("Ejecutando " + miniSQLQuery);
         Matcher matcher;
 
         //REGULAR MINISQL QUERIES
