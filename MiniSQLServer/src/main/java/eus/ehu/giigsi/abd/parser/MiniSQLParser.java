@@ -143,6 +143,7 @@ public class MiniSQLParser {
             return new Update(table, columns, condition);
         }
 
+
         //SECURITY QUERIES
 
 
