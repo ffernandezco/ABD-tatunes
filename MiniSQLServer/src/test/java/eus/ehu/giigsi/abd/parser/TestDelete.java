@@ -31,7 +31,7 @@ public class TestDelete {
         Table table  = new Table("table1", Arrays.asList(columna1)) ;
 
         db.addTable(table) ;
-        table.save("admin");
+        table.save("admin") ;
     }
 
 
