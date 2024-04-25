@@ -94,9 +94,13 @@ public class Database {
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
-        Table table = new Table(tableName, (List<Column>) columnCondition);
-        table.deleteWhere(columnCondition);
-       return true;
+       for (Table table: tables){
+           if (table.columnByName(tableName).equals(tableName));
+            table.deleteWhere(columnCondition);
+            return true;
+
+       }
+       return false;
     }
 
     public boolean update(String tableName, List<SetValue> columnNames, Condition columnCondition)

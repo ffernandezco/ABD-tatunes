@@ -43,6 +43,7 @@ public class Table {
 
     public Column columnByName(String column)
     {
+
         for(Column columna : columns) {
             if (columna.getName().equals(column)) {
                 return columna;
