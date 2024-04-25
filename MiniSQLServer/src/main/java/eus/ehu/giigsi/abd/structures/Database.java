@@ -61,7 +61,7 @@ public class Database {
         List<Integer> index = new ArrayList<>();
         List<Column> colList = new ArrayList<>();
         Column.DataType type = null;
-        try(FileReader fr = new FileReader("/archives/"+this.name+"/"+table+"/"+columnCondition.column+".txt")) {
+        try(FileReader fr = new FileReader("eus/ehu/giigsi/abd/archives/"+this.name+"/"+table+"/"+columnCondition.column+".txt")) {
             BufferedReader reader = new BufferedReader(fr);
             String line;
             if (columnCondition.operator.equalsIgnoreCase("=")) {

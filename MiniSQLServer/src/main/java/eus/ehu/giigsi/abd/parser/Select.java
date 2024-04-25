@@ -20,11 +20,11 @@ public class Select implements MiniSQLQuery{
     @Setter(AccessLevel.PRIVATE)
     public Condition where;
 
-    public Select(String table, List<String> columns, Condition where)
+    public Select(String pTable, List<String> pColumns, Condition pWhere)
     {
-        this.table = table;
-        this.columns = columns;
-        this.where = where;
+        table = pTable;
+        columns = pColumns;
+        where = pWhere;
     }
 
     public Select(String table, List<String> columns)
@@ -33,6 +33,19 @@ public class Select implements MiniSQLQuery{
     }
 
     public String execute(Database database) throws IOException {
-        return "";
+        Table tb = database.select(table, columns, where);
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<tb.columns.size();i++){
+            for(String elemento : tb.columns.get(i).values){
+                sb.append(elemento).append(",");
+            }
+            if(sb.length()>0){
+                sb.deleteCharAt(sb.length()-1);
+            }
+            sb.append("\n");
+        }
+        String val = sb.toString();
+        return val;
+
     }
 }
