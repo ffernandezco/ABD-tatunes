@@ -54,7 +54,7 @@ public class Column {
     {
         List<Integer> indicesToUpdate = indicesWhereIsTrue(condition);
 
-        for (int index : indicesToUpdate) { //sugerencia del intellij
+        for (int index : indicesToUpdate) {
             values.set(index, value);
         }
     }

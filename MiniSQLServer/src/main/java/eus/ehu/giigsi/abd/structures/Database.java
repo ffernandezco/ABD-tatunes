@@ -109,8 +109,9 @@ public class Database {
         if(t != null) {
 
             Column c = t.columnByName(columnCondition.getColumn());
-            List<Integer> valoresIntroducir = new ArrayList<>();
+            List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
 
+            /*
             // Guardamos el índice de los valores que cumplen la condición
             for (int i = 0; i < c.values.size(); i++) {
                 boolean aceptado = columnCondition.ValueMeetsCondition(c.values.get(i), c.type);
@@ -119,6 +120,7 @@ public class Database {
                     valoresIntroducir.add(i);
                 }
             }
+            */
 
             List<Column> columnasSelect = new ArrayList<>();
 
@@ -152,6 +154,14 @@ public class Database {
 
     public boolean update(String tableName, List<SetValue> columnNames, Condition columnCondition)
     {
+        Table table = tableByName(tableName);
+
+        if (table != null) {
+            for (SetValue sv : columnNames) {
+               Column c1 = table.columnByName(sv.getColumn());
+               c1.updateWhere(columnCondition, sv.getValue());
+           }
+        }
         return false;
     }
 
