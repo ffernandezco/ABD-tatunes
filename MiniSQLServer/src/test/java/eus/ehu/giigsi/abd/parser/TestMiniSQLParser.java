@@ -84,7 +84,34 @@ public class TestMiniSQLParser {
         assertEquals("Espacios", values.get(1));
     }
 
-    /*
+    @Test
+    public void testUpdateParse() {
+        String query = "UPDATE TableName SET dato=nombre1, dato1=30 WHERE id=1";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof Update);
+        Update updateQuery = (Update) parsedQuery;
+
+        assertEquals("TableName", updateQuery.getTable());
+
+        List<SetValue> columns = updateQuery.getColumns();
+        assertNotNull(columns);
+        assertEquals(2, columns.size());
+        assertEquals("dato", columns.get(0).getColumn());
+        assertEquals("nombre1", columns.get(0).getValue());
+        assertEquals("dato1", columns.get(1).getColumn());
+        assertEquals("30", columns.get(1).getValue());
+
+
+        Condition whereCondition = updateQuery.getWhere();
+        assertNotNull(whereCondition);
+        assertEquals("id", whereCondition.getColumn());
+        assertEquals("=", whereCondition.getOperator());
+        assertEquals("1", whereCondition.getLiteralValue());
+    }
+
+
+
     @Test
     public void testSelectParse() {
         String query = "SELECT columnName1 FROM Table WHERE id > 11";
@@ -105,7 +132,7 @@ public class TestMiniSQLParser {
         assertEquals(">", whereCondition.getOperator());
         assertEquals("11", whereCondition.getLiteralValue());
     }
-     */
+
 
 
     @Test

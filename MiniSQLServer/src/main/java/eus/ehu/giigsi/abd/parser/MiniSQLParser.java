@@ -11,8 +11,7 @@ public class MiniSQLParser {
     public static final Pattern CREATE_SECURITY_PROFILE_PATTERN = Pattern.compile("CREATE\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)");
     public static final Pattern CREATE_TABLE_PATTERN = Pattern.compile("CREATE\\s+TABLE\\s+(?<table>[a-zA-Z]+)\\s*\\((?<columns>[^)]+)\\)");
     public static final Pattern DROP_TABLE_PATTERN = Pattern.compile("DROP\\s+TABLE\\s+(?<table>[a-zA-Z]+)");
-    //public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z,\\s]+)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<condition>.+))?");
-    public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z]+(?:\\s*,\\s*[a-zA-Z]+)*)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<condition>.+))?");
+    public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z0-9]+(?:\\s*,\\s*[a-zA-Z]+)*)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<condition>.+))?");
     public static final Pattern DELETE_PATTERN = Pattern.compile("DELETE\\s+FROM\\s+(?<table>[a-zA-Z]+)\\s+WHERE\\s+(?<condition>.+)");
     public static final Pattern INSERT_PATTERN = Pattern.compile("INSERT\\s+INTO\\s+(?<table>[a-zA-Z]+)\\s+VALUES\\s*\\((?<literalValues>[^)]+)\\)");
     public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<conditions>.+)");
@@ -32,7 +31,7 @@ public class MiniSQLParser {
     public static final int UPDATE_PATTERN_GROUP_CONDITION = 3;
     public static MiniSQLQuery parse(String miniSQLQuery)
     {
-        System.out.println("Parsing query: " + miniSQLQuery);
+        //System.out.println("Ejecutando " + miniSQLQuery);
         Matcher matcher;
 
         //REGULAR MINISQL QUERIES
@@ -131,11 +130,12 @@ public class MiniSQLParser {
             // Condiciones
             Condition condition = null;
             if (conditionData != null && !conditionData.isEmpty()) {
-                String[] conditionConverted = conditionData.trim().split("\\s+"); //Separa la cadena en los 3 valores para crear un objeto Condition
-                if (conditionConverted.length == 3) {
-                    String column = conditionConverted[0];
-                    String operator = conditionConverted[1];
-                    String literalValue = conditionConverted[2];
+                Pattern conditionPattern = Pattern.compile("(\\w+)\\s*([<>=])\\s*(\\w+)");
+                Matcher conditionMatcher = conditionPattern.matcher(conditionData);
+                if (conditionMatcher.matches() && conditionMatcher.groupCount() == 3) {
+                    String column = conditionMatcher.group(1);
+                    String operator = conditionMatcher.group(2);
+                    String literalValue = conditionMatcher.group(3);
                     condition = new Condition(column, operator, literalValue);
                 }
             }
