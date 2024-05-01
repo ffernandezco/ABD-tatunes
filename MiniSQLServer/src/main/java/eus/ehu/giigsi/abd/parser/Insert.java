@@ -28,7 +28,7 @@ public class Insert implements MiniSQLQuery{
         if (database.Insert(this.table, this.values)) {
             return Constants.INSERT_SUCCESS;
         }
-        return Constants.ERROR;
+        return Constants.ERROR + "tabla o valores estan vacios";
     }
 
 }

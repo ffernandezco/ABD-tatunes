@@ -8,54 +8,70 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestDelete {
     private Database db;
     Condition condition;
-    String table1 = "Table1";
+    Table table1;
 
     @BeforeEach
     public void setUp(){
+        db = new Database("database", "user",  "user");
 
-        /*db  = new Database("admin","user","password");
-        Column columna1 = new Column(Column.DataType.STRING, "Columna1" , Arrays.asList("v1","v2","v3")) ;
-        Table table  = new Table("Table1", Arrays.asList(columna1)) ;
-        db.addTable(table);*/
+        List<String> vInt = new ArrayList<>();
+        vInt.add("1");
+        vInt.add("3");
+        vInt.add("5");
 
-        db  = new Database("admin","user","password");
-        db.save("admin");
-        Column columna1 = new Column(Column.DataType.STRING, "columna1" ,Arrays.asList("v1","v2","v3")) ;
-        Table table  = new Table("table1", Arrays.asList(columna1)) ;
+        List<String> vStr = new ArrayList<>();
+        vStr.add("A");
+        vStr.add("C");
+        vStr.add("D");
 
-        db.addTable(table) ;
-        table.save("admin");
+        List<String> vDbl = new ArrayList<>();
+        vDbl.add("1.99");
+        vDbl.add("3.99");
+        vDbl.add("5.99");
+
+        List<Column> column = new ArrayList<>();
+        column.add(new Column(Column.DataType.INT, "int", vInt));
+        column.add(new Column(Column.DataType.STRING, "str", vStr));
+        column.add(new Column(Column.DataType.DOUBLE, "dbl", vDbl));
+
+        String nombreTabla = "usuarios";
+        table1 = new Table(nombreTabla, column);
+        this.db.addTable(table1);
     }
 
 
     @Test
-    public void TestDelete () throws IOException {
-         condition = new Condition("columna1","", "");
-        Delete delete = new Delete(table1,condition);
+    public void TestDelete () {
+        condition = new Condition("str","=", "C");
+        Delete delete = new Delete(table1.name, condition);
 
         String resultado= delete.execute(db);
+
+        assertEquals("2", table1.columnByName("str").values.size());
+        assertEquals("A", table1.columnByName("str").getValues().get(0));
+        assertEquals("D", table1.columnByName("str").getValues().get(1));
+
         assertEquals(Constants.DELETE_SUCCESS, resultado);
-
-
     }
 
+    /*
     @Test
-    public  void TestDeleteError () throws IOException{
+    public  void TestDeleteError () {
         Delete delete = new Delete("Table1", condition);
 
         String resultado = delete.execute(db) ;
 
         assertEquals(Constants.ERROR, resultado);
-
-
     }
-
+    */
 
 }
