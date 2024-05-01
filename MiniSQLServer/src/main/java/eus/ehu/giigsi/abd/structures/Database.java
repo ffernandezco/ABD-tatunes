@@ -160,6 +160,7 @@ public class Database {
             for (SetValue sv : columnNames) {
                Column c1 = table.columnByName(sv.getColumn());
                c1.updateWhere(columnCondition, sv.getValue());
+               return true;
            }
         }
         return false;
