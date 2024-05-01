@@ -56,6 +56,9 @@ public class Database {
 
     }
 
+    // COMPROBAR:
+    // ¿HACE FALTA QUE VERIFIQUE SI HAY BDs CON EL MISMO NOMBRE?
+    // ¿NO HARÍA FALTA CREAR LA CARPETA DE LA BD PORQUE LO HARÍA EL MKDIRS DE LA CLASE TABLA?
     public boolean save(String databaseName)
     {
         boolean exist = false;
@@ -97,7 +100,6 @@ public class Database {
         }
         catch (Exception e) {
             System.out.println(e.toString());
-
             return false;
         }
 
@@ -167,6 +169,19 @@ public class Database {
     }
 
     public boolean Insert(String tableName, List<String> values) {
+        Table t = tableByName(tableName);
+
+        if (t != null) {
+
+            if (values != null && !values.isEmpty()) {
+
+                for (String v : values) {
+
+
+                }
+            }
+        }
+
         return false;
     }
 
