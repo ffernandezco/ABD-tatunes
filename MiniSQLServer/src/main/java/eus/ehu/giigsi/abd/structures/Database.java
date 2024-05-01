@@ -145,6 +145,14 @@ public class Database {
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
+        Table t = tableByName(tableName);
+
+        if (t != null) {
+            t.deleteWhere(columnCondition);
+
+            return true;
+        }
+
         return false;
     }
 
@@ -155,14 +163,15 @@ public class Database {
         if (table != null) {
 
             if (columnNames != null && !columnNames.isEmpty()) {
-
-                for (SetValue sv : columnNames) {
+                int i = 0;
+                for (SetValue sv : columnNames){
 
                     Column c1 = table.columnByName(sv.getColumn());
                     c1.updateWhere(columnCondition, sv.getValue());
-                    return true;
                 }
             }
+
+            return true;
         }
 
         return false;
@@ -175,10 +184,7 @@ public class Database {
 
             if (values != null && !values.isEmpty()) {
 
-                for (String v : values) {
-
-
-                }
+                return t.insert(values);
             }
         }
 
