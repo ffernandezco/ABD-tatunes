@@ -18,15 +18,6 @@ public class TestCreateTable {
     @BeforeEach
     public void init() {
         database = new Database("database1", "admin", "admin");
-        database.save("database1");
-
-        /*
-        List<ColumnParameters> listaCP = new ArrayList<>();
-
-        listaCP.add(new ColumnParameters("str", Column.DataType.STRING));
-        listaCP.add(new ColumnParameters("dbl", Column.DataType.DOUBLE));
-        listaCP.add(new ColumnParameters("int", Column.DataType.INT));
-        */
 
         CreateTable ct = new CreateTable("testCT", null);
         ct.execute(database);
@@ -48,7 +39,13 @@ public class TestCreateTable {
     public void prueba2() {
         String result, expected;
 
-        CreateTable ct2 = new CreateTable("prueba2", null);
+        List<ColumnParameters> listaCP = new ArrayList<>();
+
+        listaCP.add(new ColumnParameters("str", Column.DataType.STRING));
+        listaCP.add(new ColumnParameters("dbl", Column.DataType.DOUBLE));
+        listaCP.add(new ColumnParameters("int", Column.DataType.INT));
+
+        CreateTable ct2 = new CreateTable("prueba2", listaCP);
 
         expected = Constants.CREATE_TABLE_SUCCESS;
         result = ct2.execute(database);

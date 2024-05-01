@@ -35,15 +35,18 @@ public class Table {
     {
         String path = "databases" + File.separator + databaseName + File.separator + this.name;
 
-        try {
-            File f = new File(path);
-            return f.mkdirs();
+        File f = new File(path);
+        boolean b = f.mkdirs();
 
+        if (b) {
+            for (Column c : columns) {
+                c.Save(path);
+            }
 
-        } catch (Exception e) {
-            System.out.println(Constants.ERROR + e.getMessage());
-            return false;
+            return true;
         }
+
+        return false;
     }
 
     public Column columnByName(String column)

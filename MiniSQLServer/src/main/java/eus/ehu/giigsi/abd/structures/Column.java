@@ -55,7 +55,7 @@ public class Column {
         List<Integer> indicesToUpdate = indicesWhereIsTrue(condition);
 
         for (int index : indicesToUpdate) {
-            values.set(index, value);
+            SetValue(index, value);
         }
     }
 
@@ -77,6 +77,7 @@ public class Column {
 
     public boolean Save(String directory)
     {
+        /*
         try(PrintWriter writer = new PrintWriter(new FileWriter(directory))) {
             writer.println(type.toString());
             writer.println(name);
@@ -89,6 +90,8 @@ public class Column {
             e.printStackTrace();
             return false;
         }
+        */
+        return true;
     }
 
     public static Column Load(String file)

@@ -111,38 +111,32 @@ public class Database {
             Column c = t.columnByName(columnCondition.getColumn());
             List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
 
-            /*
-            // Guardamos el índice de los valores que cumplen la condición
-            for (int i = 0; i < c.values.size(); i++) {
-                boolean aceptado = columnCondition.ValueMeetsCondition(c.values.get(i), c.type);
-
-                if (aceptado) {
-                    valoresIntroducir.add(i);
-                }
-            }
-            */
-
             List<Column> columnasSelect = new ArrayList<>();
 
             // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
-            for (String nombreColumna : columns) {
+            if (columns != null && !columns.isEmpty()) {
 
-                if (t.columnByName(nombreColumna) != null) {
-                    Column c1 = t.columnByName(nombreColumna);
-                    List<String> valoresColumna = new ArrayList<>();
+                for (String nombreColumna : columns) {
 
-                    // Guardamos los valores de las posiciones recogidas anteriormente en una lista
-                    for (int j : valoresIntroducir) {
-                        valoresColumna.add(c1.getValues().get(j));
+                    if (t.columnByName(nombreColumna) != null) {
+
+                        Column c1 = t.columnByName(nombreColumna);
+                        List<String> valoresColumna = new ArrayList<>();
+
+                        // Guardamos los valores de las posiciones recogidas anteriormente en una lista
+                        for (int j : valoresIntroducir) {
+                            valoresColumna.add(c1.getValues().get(j));
+                        }
+
+                        // Insertamos la lista en la tabla
+                        Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                        columnasSelect.add(aux);
                     }
-
-                    // Insertamos la lista en la tabla
-                    Column aux = new Column(c1.type, c1.getName(), valoresColumna);
-                    columnasSelect.add(aux);
                 }
+
+                Table select = new Table("Resultado", columnasSelect);
+                return select;
             }
-            Table select = new Table("Resultado", columnasSelect);
-            return select;
         }
 
         return null;
@@ -157,12 +151,18 @@ public class Database {
         Table table = tableByName(tableName);
 
         if (table != null) {
-            for (SetValue sv : columnNames) {
-               Column c1 = table.columnByName(sv.getColumn());
-               c1.updateWhere(columnCondition, sv.getValue());
-               return true;
-           }
+
+            if (columnNames != null && !columnNames.isEmpty()) {
+
+                for (SetValue sv : columnNames) {
+
+                    Column c1 = table.columnByName(sv.getColumn());
+                    c1.updateWhere(columnCondition, sv.getValue());
+                    return true;
+                }
+            }
         }
+
         return false;
     }
 
@@ -228,7 +228,7 @@ public class Database {
             List<Column> columns = new ArrayList<>();
 
             // Convertimos cada ColumnParameter en Column
-            if(columnParameters != null) {
+            if(columnParameters != null && !columnParameters.isEmpty()) {
                 for (ColumnParameters c : columnParameters) {
                     Column.DataType type = c.getType();
                     String name = c.getName();
