@@ -46,9 +46,17 @@ public class TestCreateTable {
         listaCP.add(new ColumnParameters("int", Column.DataType.INT));
 
         CreateTable ct2 = new CreateTable("prueba2", listaCP);
+        CreateTable ct3 = new CreateTable("prueba3", null);
 
         expected = Constants.CREATE_TABLE_SUCCESS;
         result = ct2.execute(database);
+        ct3.execute(database);
+
+        assertEquals("prueba2", database.tables.get(1).name);
+        assertEquals("dbl", database.tables.get(1).columns.get(1).name);
+        assertEquals(Column.DataType.INT, database.tables.get(1).columns.get(2).type);
+
+        assertEquals("prueba3", database.tables.get(2).name);
 
         assertEquals(expected, result);
     }
