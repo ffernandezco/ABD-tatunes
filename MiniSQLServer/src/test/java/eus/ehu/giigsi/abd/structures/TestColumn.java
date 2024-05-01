@@ -134,6 +134,11 @@ public class TestColumn {
         List<String> initialValues = new ArrayList<>();
         initialValues.addAll(Arrays.asList("1", "2", "3", "4", "5"));
         Column column = new Column(Column.DataType.INT, "Portales", initialValues);
+
+        column.deleteAt(5);
+        assertEquals(5, column.values.size());
+        assertEquals("5", column.values.get(4));
+
         column.deleteAt(2);
 
         assertEquals(4, column.values.size());
