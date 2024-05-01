@@ -6,6 +6,8 @@ import eus.ehu.giigsi.abd.parser.SetValue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -51,6 +53,7 @@ public class Table {
 
     public Column columnByName(String column)
     {
+
         for(Column columna : columns) {
             if (columna.getName().equals(column)) {
                 return columna;
@@ -107,7 +110,16 @@ public class Table {
         for (int i = 0; i < columns.size(); i++) {
             Column columna = columns.get(i);
             String value = values.get(i);
-            columna.values.add(value);
+           // columna.values.add(value);
+
+            try {
+                FileWriter fileWriter = new FileWriter(this.name + ".txt");
+                String texto = value;
+                fileWriter.write(texto);
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }

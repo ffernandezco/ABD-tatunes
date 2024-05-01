@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,6 +22,11 @@ public class Delete implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        return null;
+        boolean resultado = database.deleteWhere(table,where) ;
+
+        if (resultado == true){
+            return Constants.DELETE_SUCCESS;
+        }
+        return Constants.ERROR;
     }
 }
