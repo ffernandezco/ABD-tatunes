@@ -37,7 +37,7 @@ public class TestMiniSQLParser {
 
     @Test
     public void testDeleteParse() {
-        String query = "DELETE FROM Table WHERE id > 11";
+        String query = "DELETE FROM Table    WHERE id > -11.2";
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
         assertTrue(parsedQuery instanceof Delete);
         Delete deleteQuery = (Delete) parsedQuery;
@@ -48,7 +48,23 @@ public class TestMiniSQLParser {
         assertNotNull(whereCondition);
         assertEquals("id", whereCondition.getColumn());
         assertEquals(">", whereCondition.getOperator());
-        assertEquals("11", whereCondition.getLiteralValue());
+        assertEquals("-11.2", whereCondition.getLiteralValue());
+    }
+
+    @Test
+    public void testDeleteParseText() {
+        String query = "DELETE     FROM Table WHERE nombre='Asier'";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+        assertTrue(parsedQuery instanceof Delete);
+        Delete deleteQuery = (Delete) parsedQuery;
+
+        assertEquals("Table", deleteQuery.getTable());
+
+        Condition whereCondition = deleteQuery.getWhere();
+        assertNotNull(whereCondition);
+        assertEquals("nombre", whereCondition.getColumn());
+        assertEquals("=", whereCondition.getOperator());
+        assertEquals("Asier", whereCondition.getLiteralValue());
     }
 
     @Test
@@ -86,7 +102,7 @@ public class TestMiniSQLParser {
 
     @Test
     public void testUpdateParse() {
-        String query = "UPDATE TableName SET dato=nombre1, dato1=30 WHERE id=1";
+        String query = "UPDATE TableName SET     dato='nombre1', dato1=30 WHERE id = 12.1";
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
 
         assertTrue(parsedQuery instanceof Update);
@@ -107,14 +123,14 @@ public class TestMiniSQLParser {
         assertNotNull(whereCondition);
         assertEquals("id", whereCondition.getColumn());
         assertEquals("=", whereCondition.getOperator());
-        assertEquals("1", whereCondition.getLiteralValue());
+        assertEquals("12.1", whereCondition.getLiteralValue());
     }
 
 
 
     @Test
     public void testSelectParse() {
-        String query = "SELECT columnName1 FROM Table WHERE id > 11";
+        String query = "SELECT columnName1 FROM Table WHERE id > 'Fran'";
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
 
         assertTrue(parsedQuery instanceof Select);
@@ -130,9 +146,46 @@ public class TestMiniSQLParser {
         assertNotNull(whereCondition);
         assertEquals("id", whereCondition.getColumn());
         assertEquals(">", whereCondition.getOperator());
-        assertEquals("11", whereCondition.getLiteralValue());
+        assertEquals("Fran", whereCondition.getLiteralValue());
     }
 
+    @Test
+    public void testSelectParseSinWhere() {
+        String query = "SELECT columnName1 FROM Table";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof Select);
+        Select selectQuery = (Select) parsedQuery;
+
+        assertEquals("Table", selectQuery.getTable());
+
+        List<String> columns = selectQuery.getColumns();
+        assertEquals(1, columns.size());
+        assertTrue(columns.contains("columnName1"));
+
+    }
+
+    @Test
+    public void testSelectParseMultiple() {
+        String query = "SELECT      columnName1, columnName2 FROM Table WHERE id < 3.62";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof Select);
+        Select selectQuery = (Select) parsedQuery;
+
+        assertEquals("Table", selectQuery.getTable());
+
+        List<String> columns = selectQuery.getColumns();
+        assertEquals(2, columns.size());
+        assertTrue(columns.contains("columnName1"));
+        assertTrue(columns.contains("columnName2"));
+
+        Condition whereCondition = selectQuery.getWhere();
+        assertNotNull(whereCondition);
+        assertEquals("id", whereCondition.getColumn());
+        assertEquals("<", whereCondition.getOperator());
+        assertEquals("3.62", whereCondition.getLiteralValue());
+    }
 
 
     @Test

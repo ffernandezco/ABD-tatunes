@@ -11,24 +11,38 @@ public class MiniSQLParser {
     public static final Pattern CREATE_SECURITY_PROFILE_PATTERN = Pattern.compile("CREATE\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)");
     public static final Pattern CREATE_TABLE_PATTERN = Pattern.compile("CREATE\\s+TABLE\\s+(?<table>[a-zA-Z]+)\\s*\\((?<columns>[^)]+)\\)");
     public static final Pattern DROP_TABLE_PATTERN = Pattern.compile("DROP\\s+TABLE\\s+(?<table>[a-zA-Z]+)");
-    public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z0-9]+(?:\\s*,\\s*[a-zA-Z]+)*)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<condition>.+))?");
-    public static final Pattern DELETE_PATTERN = Pattern.compile("DELETE\\s+FROM\\s+(?<table>[a-zA-Z]+)\\s+WHERE\\s+(?<condition>.+)");
+    //public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z0-9]+(?:\\s*,\\s*[a-zA-Z0-9]+)*)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<condition>.+))?");
+    public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z0-9]+(?:\\s*,\\s*[a-zA-Z0-9]+)*)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*'?(?<literalValue>[^'\\s]+)'?)?");
+    //public static final Pattern DELETE_PATTERN = Pattern.compile("DELETE\\s+FROM\\s+(?<table>[a-zA-Z]+)\\s+WHERE\\s+(?<condition>.+)");
+    public static final Pattern DELETE_PATTERN = Pattern.compile("DELETE\\s+FROM\\s+(?<table>[a-zA-Z]+)\\s+WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*'?(?<literalValue>[^'\\s]+)'?");
     public static final Pattern INSERT_PATTERN = Pattern.compile("INSERT\\s+INTO\\s+(?<table>[a-zA-Z]+)\\s+VALUES\\s*\\((?<literalValues>[^)]+)\\)");
-    public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<conditions>.+)");
+    //public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<conditions>.+)");
+    public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*'?(?<literalValue>[^'\\s]+)'?");
+
     public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 2;
     public static final int CREATE_TABLE_PATTERN_GROUP_NAME = 1;
     public static final int CREATE_TABLE_PATTERN_GROUP_COLUMNS = 2;
     public static final int DROP_TABLE_PATTERN_GROUP_NAME = 1;
     public static final int SELECT_PATTERN_GROUP_COLUMNS = 1;
     public static final int SELECT_PATTERN_GROUP_TABLE = 2;
-    public static final int SELECT_PATTERN_GROUP_CONDITION = 3;
+    public static final int SELECT_PATTERN_GROUP_COLUMN = 3;
+    public static final int SELECT_PATTERN_GROUP_OPERATOR = 4;
+    public static final int SELECT_PATTERN_GROUP_LITERAL_VALUE = 5;
+
+    //public static final int SELECT_PATTERN_GROUP_CONDITION = 3;
+    //public static final int DELETE_PATTERN_GROUP_TABLE = 1;
+    //public static final int DELETE_PATTERN_GROUP_CONDITION = 2;
     public static final int DELETE_PATTERN_GROUP_TABLE = 1;
-    public static final int DELETE_PATTERN_GROUP_CONDITION = 2;
+    public static final int DELETE_PATTERN_GROUP_COLUMN = 2;
+    public static final int DELETE_PATTERN_GROUP_OPERATOR = 3;
+    public static final int DELETE_PATTERN_GROUP_LITERAL_VALUE = 4;
     public static final int INSERT_PATTERN_GROUP_TABLE = 1;
     public static final int INSERT_PATTERN_GROUP_VALUES = 2;
     public static final int UPDATE_PATTERN_GROUP_TABLE = 1;
     public static final int UPDATE_PATTERN_GROUP_VALUES = 2;
-    public static final int UPDATE_PATTERN_GROUP_CONDITION = 3;
+    public static final int UPDATE_PATTERN_GROUP_COLUMN = 3;
+    public static final int UPDATE_PATTERN_GROUP_OPERATOR = 4;
+    public static final int UPDATE_PATTERN_GROUP_LITERAL_VALUE = 5;
     public static MiniSQLQuery parse(String miniSQLQuery)
     {
         // System.out.println("Ejecutando " + miniSQLQuery);
@@ -66,9 +80,22 @@ public class MiniSQLParser {
         if (matcher.find()) {
             String table = matcher.group(SELECT_PATTERN_GROUP_TABLE);
             String columnsString = matcher.group(SELECT_PATTERN_GROUP_COLUMNS);
-            String conditionString = matcher.group(SELECT_PATTERN_GROUP_CONDITION);
+            String column = matcher.group(SELECT_PATTERN_GROUP_COLUMN);
+            String operator = matcher.group(SELECT_PATTERN_GROUP_OPERATOR);
+            String literalValue = matcher.group(SELECT_PATTERN_GROUP_LITERAL_VALUE);
 
+            //String conditionString = matcher.group(SELECT_PATTERN_GROUP_CONDITION);
+
+            Condition condition = null;
             List<String> columns = commaSeparatedNames(columnsString);
+            if (literalValue != null && !literalValue.isEmpty()) {
+                if (!literalValue.matches("-?\\d+(\\.\\d+)?")) { // No es DOUBLE ni INT
+                    literalValue = literalValue.replaceAll("'", ""); // Quitar el símbolo ' de la consulta
+                }
+                condition = new Condition(column, operator, literalValue);
+            }
+
+            /*
             Condition condition = null; // Podría no tener condición según el enunciado
             if (conditionString != null && !conditionString.isEmpty()) {
                 String[] conditionData = conditionString.trim().split("\\s+");
@@ -80,6 +107,8 @@ public class MiniSQLParser {
                     condition = new Condition(column, operator, literalValue);
                 }
             }
+
+             */
             return new Select(table, columns, condition);
         }
 
@@ -87,6 +116,19 @@ public class MiniSQLParser {
         matcher = DELETE_PATTERN.matcher(miniSQLQuery);
         if (matcher.find()) {
             String table = matcher.group(DELETE_PATTERN_GROUP_TABLE);
+            String column = matcher.group(DELETE_PATTERN_GROUP_COLUMN);
+            String operator = matcher.group(DELETE_PATTERN_GROUP_OPERATOR);
+            String literalValue = matcher.group(DELETE_PATTERN_GROUP_LITERAL_VALUE);
+
+            // Comprobar si es Int, Double o String
+            if (literalValue != null && !literalValue.isEmpty()) {
+                if (!literalValue.matches("-?\\d+(\\.\\d+)?")) { // No es DOUBLE ni INT
+                    literalValue = literalValue.replaceAll("'", ""); // Quitar el símbolo ' de la consulta
+                }
+            }
+            Condition condition = new Condition(column, operator, literalValue);
+
+            /*
             String conditionData = matcher.group(DELETE_PATTERN_GROUP_CONDITION);
             Condition condition = null;
             if (conditionData != null && !conditionData.isEmpty()) {
@@ -98,6 +140,8 @@ public class MiniSQLParser {
                     condition = new Condition(column, operator, literalValue);
                 }
             }
+             */
+
             return new Delete(table, condition);
         }
 
@@ -115,9 +159,13 @@ public class MiniSQLParser {
         if (matcher.find()) {
             String table = matcher.group(UPDATE_PATTERN_GROUP_TABLE);
             String literalValues = matcher.group(UPDATE_PATTERN_GROUP_VALUES);
-            String conditionData = matcher.group(UPDATE_PATTERN_GROUP_CONDITION);
+            String columna = matcher.group(UPDATE_PATTERN_GROUP_COLUMN);
+            String operator = matcher.group(UPDATE_PATTERN_GROUP_OPERATOR);
+            String literalValue = matcher.group(UPDATE_PATTERN_GROUP_LITERAL_VALUE);
 
             // Valores: hay que crear instancia de SetValue, no se puede pasar lista tal cual de String
+
+            /*
             List<SetValue> columns = new ArrayList<>();
             String[] parts = literalValues.split("\\s*,\\s*");
             for (String part : parts) {
@@ -127,6 +175,28 @@ public class MiniSQLParser {
                 }
             }
 
+             */
+            List<SetValue> columns = new ArrayList<>();
+            String[] parts = literalValues.split("\\s*,\\s*");
+            for (String part : parts) {
+                String[] keyValue = part.split("\\s*=\\s*");
+                if (keyValue.length == 2) {
+                    String column = keyValue[0];
+                    String value = keyValue[1].replaceAll("'", ""); // Eliminar comillas simples
+                    columns.add(new SetValue(column, value));
+                }
+            }
+
+            // Condiciones
+            // Comprobar si es Int, Double o Text
+            if (literalValue != null && !literalValue.isEmpty()) {
+                if (!literalValue.matches("-?\\d+(\\.\\d+)?")) { // No es DOUBLE ni INT
+                    literalValue = literalValue.replaceAll("'", ""); // Quitar el símbolo ' de la consulta
+                }
+            }
+            Condition condition = new Condition(columna, operator, literalValue);
+
+            /*
             // Condiciones
             Condition condition = null;
             if (conditionData != null && !conditionData.isEmpty()) {
@@ -139,6 +209,8 @@ public class MiniSQLParser {
                     condition = new Condition(column, operator, literalValue);
                 }
             }
+
+             */
 
             return new Update(table, columns, condition);
         }
