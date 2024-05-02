@@ -9,9 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMiniSQLParser {
 
-    //Test actuales solo comprueban que el parser funciona, que se crea la instancia correspondiente.
-    //Faltaría comprobar la ejecución una vez estén los métodos completos
-
     //TEST PARSER
     @Test
     public void testCreateTableParse() {

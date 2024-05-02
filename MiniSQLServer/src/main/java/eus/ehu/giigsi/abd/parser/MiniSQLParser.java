@@ -98,6 +98,7 @@ public class MiniSQLParser {
                 condition = new Condition(column, operator, literalValue);
             }
 
+
             /*
             Condition condition = null; // Podría no tener condición según el enunciado
             if (conditionString != null && !conditionString.isEmpty()) {
