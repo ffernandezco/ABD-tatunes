@@ -134,6 +134,11 @@ public class TestColumn {
         List<String> initialValues = new ArrayList<>();
         initialValues.addAll(Arrays.asList("1", "2", "3", "4", "5"));
         Column column = new Column(Column.DataType.INT, "Portales", initialValues);
+
+        column.deleteAt(5);
+        assertEquals(5, column.values.size());
+        assertEquals("5", column.values.get(4));
+
         column.deleteAt(2);
 
         assertEquals(4, column.values.size());
@@ -216,7 +221,7 @@ public class TestColumn {
     }
 
 
-    public static class TestColumn {
+    public static class TestColumn1 {
         @Test
         void testCreacionInicial() {
             //Creamos una instancia column con unos valores puestos por nosotros, verificamos que la inicialización de

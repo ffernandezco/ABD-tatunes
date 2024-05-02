@@ -18,15 +18,6 @@ public class TestCreateTable {
     @BeforeEach
     public void init() {
         database = new Database("database1", "admin", "admin");
-        database.save("database1");
-
-        /*
-        List<ColumnParameters> listaCP = new ArrayList<>();
-
-        listaCP.add(new ColumnParameters("str", Column.DataType.STRING));
-        listaCP.add(new ColumnParameters("dbl", Column.DataType.DOUBLE));
-        listaCP.add(new ColumnParameters("int", Column.DataType.INT));
-        */
 
         CreateTable ct = new CreateTable("testCT", null);
         ct.execute(database);
@@ -48,10 +39,24 @@ public class TestCreateTable {
     public void prueba2() {
         String result, expected;
 
-        CreateTable ct2 = new CreateTable("prueba2", null);
+        List<ColumnParameters> listaCP = new ArrayList<>();
+
+        listaCP.add(new ColumnParameters("str", Column.DataType.STRING));
+        listaCP.add(new ColumnParameters("dbl", Column.DataType.DOUBLE));
+        listaCP.add(new ColumnParameters("int", Column.DataType.INT));
+
+        CreateTable ct2 = new CreateTable("prueba2", listaCP);
+        CreateTable ct3 = new CreateTable("prueba3", null);
 
         expected = Constants.CREATE_TABLE_SUCCESS;
         result = ct2.execute(database);
+        ct3.execute(database);
+
+        assertEquals("prueba2", database.tables.get(1).name);
+        assertEquals("dbl", database.tables.get(1).columns.get(1).name);
+        assertEquals(Column.DataType.INT, database.tables.get(1).columns.get(2).type);
+
+        assertEquals("prueba3", database.tables.get(2).name);
 
         assertEquals(expected, result);
     }

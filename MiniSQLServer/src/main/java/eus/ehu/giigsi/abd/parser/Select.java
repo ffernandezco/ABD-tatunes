@@ -34,7 +34,8 @@ public class Select implements MiniSQLQuery{
     public String execute(Database database)
     {
         if (database.select(this.table, this.columns, this.where) != null) {
-            return "";
+            // Hay que preguntar sobre lo qued debería devolver
+            return Constants.CREATE_TABLE_SUCCESS;
         }
         return Constants.SYNTAX_ERROR;
     }

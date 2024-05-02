@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Database;
 import eus.ehu.giigsi.abd.structures.Table;
 import lombok.AccessLevel;
@@ -24,7 +25,10 @@ public class Insert implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        return "";
+        if (database.Insert(this.table, this.values)) {
+            return Constants.INSERT_SUCCESS;
+        }
+        return Constants.ERROR + "tabla o valores estan vacios";
     }
 
 }

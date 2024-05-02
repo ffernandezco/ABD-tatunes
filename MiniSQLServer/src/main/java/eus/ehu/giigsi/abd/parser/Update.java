@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,7 +28,10 @@ public class Update implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        return null;
+        if (database.update(table, columns, where)) {
+            return Constants.UPDATE_SUCCESS;
+        }
+        return Constants.ERROR;
     }
 
 }

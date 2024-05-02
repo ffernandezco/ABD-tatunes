@@ -56,6 +56,9 @@ public class Database {
 
     }
 
+    // COMPROBAR:
+    // ¿HACE FALTA QUE VERIFIQUE SI HAY BDs CON EL MISMO NOMBRE?
+    // ¿NO HARÍA FALTA CREAR LA CARPETA DE LA BD PORQUE LO HARÍA EL MKDIRS DE LA CLASE TABLA?
     public boolean save(String databaseName)
     {
         boolean exist = false;
@@ -77,40 +80,126 @@ public class Database {
             }
         }
 
-        // Solo creamos el directorio en caso de no encontrar ficheros con ese nombre
-        if(exist) {
+        try {
             int i = 0;
-            while (tables.get(i).load(databaseName) == true) {
-                return true;
+            if (exist) {
+                while (tables.get(i).save(databaseName) == true) {
+                    i++;
+                }
+            } else {
+                // Solo creamos el directorio en caso de no encontrar ficheros con ese nombre
+                File f = new File(path);
+                f.mkdirs();
+
+                while (tables.get(i).save(databaseName) == true) {
+                    i++;
+                }
             }
+
+            return true;
+        }
+        catch (Exception e) {
+            System.out.println(e.toString());
+            return false;
         }
 
-        File f = new File(path);
-        return f.mkdirs();
     }
 
     public Table select(String table, List<String> columns, Condition columnCondition) {
         Table t = tableByName(table);
 
         if(t != null) {
-            Boolean b = t.load(this.name);
 
+            Column c = t.columnByName(columnCondition.getColumn());
+            List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
 
+            List<Column> columnasSelect = new ArrayList<>();
+
+            // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
+            if (columns != null && !columns.isEmpty()) {
+
+                for (String nombreColumna : columns) {
+
+                    if (t.columnByName(nombreColumna) != null) {
+
+                        Column c1 = t.columnByName(nombreColumna);
+
+                        if (columnCondition != null) {
+                            List<String> valoresColumna = new ArrayList<>();
+
+                            // Guardamos los valores de las posiciones recogidas anteriormente en una lista
+                            for (int j : valoresIntroducir) {
+                                valoresColumna.add(c1.getValues().get(j));
+                            }
+
+                            // Insertamos la lista en la tabla
+                            Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                            columnasSelect.add(aux);
+                        }
+                        // Si no hay condición devolvemos las mismas columnas
+                        else {
+                            columnasSelect.add(c1);
+                        }
+                    }
+                }
+
+                Table select = new Table("Resultado", columnasSelect);
+                return select;
+            }
         }
 
         return null;
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
+        Table t = tableByName(tableName);
+
+        if (t != null) {
+
+            if (columnCondition != null) {
+
+                t.deleteWhere(columnCondition);
+                return true;
+            }
+        }
+
         return false;
     }
 
     public boolean update(String tableName, List<SetValue> columnNames, Condition columnCondition)
     {
+        Table table = tableByName(tableName);
+
+        if (table != null) {
+
+            if (columnNames != null && !columnNames.isEmpty()) {
+
+                if (columnCondition != null) {
+                    int i = 0;
+                    for (SetValue sv : columnNames) {
+
+                        Column c1 = table.columnByName(sv.getColumn());
+                        c1.updateWhere(columnCondition, sv.getValue());
+                    }
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
     public boolean Insert(String tableName, List<String> values) {
+        Table t = tableByName(tableName);
+
+        if (t != null) {
+
+            if (values != null && !values.isEmpty()) {
+
+                return t.insert(values);
+            }
+        }
+
         return false;
     }
 
@@ -172,7 +261,7 @@ public class Database {
             List<Column> columns = new ArrayList<>();
 
             // Convertimos cada ColumnParameter en Column
-            if(columnParameters != null) {
+            if(columnParameters != null && !columnParameters.isEmpty()) {
                 for (ColumnParameters c : columnParameters) {
                     Column.DataType type = c.getType();
                     String name = c.getName();
@@ -188,9 +277,7 @@ public class Database {
 
             addTable(table);
 
-            // Guardamos la tabla en nuestros ficheros
-            return table.save(this.name);
-
+            return tableByName(tableName) != null && tableByName(tableName).columns != null;
         }
 
         // En caso de existir no se crea la tabla

@@ -22,6 +22,10 @@ public class Table {
         this.columns = columns;
     }
 
+    public Table() {
+
+    }
+
     public boolean load(String path)
     {
         File f = new File(path);
@@ -33,14 +37,18 @@ public class Table {
     {
         String path = "databases" + File.separator + databaseName + File.separator + this.name;
 
-        try {
-            File f = new File(path);
-            return f.mkdirs();
+        File f = new File(path);
+        boolean b = f.mkdirs();
 
-        } catch (Exception e) {
-            System.out.println(Constants.ERROR + e.getMessage());
-            return false;
+        if (b) {
+            for (Column c : columns) {
+                c.Save(path);
+            }
+
+            return true;
         }
+
+        return false;
     }
 
     public Column columnByName(String column)
@@ -96,23 +104,19 @@ public class Table {
 
     public boolean insert(List<String> values)
     {
-        if (values.size() > columns.size()) {
+        // En caso de que no haya suficientes datos para cada columna devuelve error
+        if (values.size() != columns.size()) {
             return false;
         }
+
+        // Introduce los datos en las columnas en función del orden en el que estén
         for (int i = 0; i < columns.size(); i++) {
             Column columna = columns.get(i);
             String value = values.get(i);
-           // columna.values.add(value);
 
-            try {
-                FileWriter fileWriter = new FileWriter(this.name + ".txt");
-                String texto = value;
-                fileWriter.write(texto);
-                fileWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+           columna.values.add(value);
         }
+
         return true;
     }
 
