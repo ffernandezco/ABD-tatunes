@@ -111,48 +111,34 @@ public class Database {
         if(t != null) {
             List<Column> columnasSelect = new ArrayList<>();
 
-            if (columnCondition != null) {
-                Column c = t.columnByName(columnCondition.getColumn());
-                List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
+            Column c = t.columnByName(columnCondition.getColumn());
+            List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
 
-                // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
-                if (columns != null && !columns.isEmpty()) {
+            // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
+            if (columns != null && !columns.isEmpty()) {
 
-                    for (String nombreColumna : columns) {
+                for (String nombreColumna : columns) {
 
-                        if (t.columnByName(nombreColumna) != null) {
+                    if (t.columnByName(nombreColumna) != null) {
 
-                            Column c1 = t.columnByName(nombreColumna);
+                        Column c1 = t.columnByName(nombreColumna);
 
-                            List<String> valoresColumna = new ArrayList<>();
+                        List<String> valoresColumna = new ArrayList<>();
 
-                            // Guardamos los valores de las posiciones recogidas anteriormente en una lista
-                            for (int j : valoresIntroducir) {
-                                valoresColumna.add(c1.getValues().get(j));
-                            }
-
-                            // Insertamos la lista en la tabla
-                            Column aux = new Column(c1.type, c1.getName(), valoresColumna);
-                            columnasSelect.add(aux);
+                        // Guardamos los valores de las posiciones recogidas anteriormente en una lista
+                        for (int j : valoresIntroducir) {
+                            valoresColumna.add(c1.getValues().get(j));
                         }
+
+                        // Insertamos la lista en la tabla
+                        Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                        columnasSelect.add(aux);
                     }
                 }
-            }
-
-            // Si no hay condición devolvemos las mismas columnas
-            else {
-                if (columns != null && !columns.isEmpty()) {
-                    for (String nColumna : columns) {
-                        Column c1 = t.columnByName(nColumna);
-                        columnasSelect.add(c1);
-                    }
-                }
-
-                Table select = new Table("Resultado", columnasSelect);
+                Table select = new Table("Selected", columnasSelect);
                 return select;
             }
         }
-
         return null;
     }
 
