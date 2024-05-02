@@ -134,7 +134,6 @@ public class MiniSQLParser {
             String literalValue = matcher.group(DELETE_PATTERN_GROUP_LITERAL_VALUE);
 
 
-
             // Comprobar si es Int, Double o String
             if (literalValue != null && !literalValue.isEmpty()) {
                 if (!literalValue.matches("-?\\d+(\\.\\d+)?")) { // No es DOUBLE ni INT
