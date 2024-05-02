@@ -68,7 +68,7 @@ public class Column {
     public void deleteAt(int pos)
     {
         if (pos >= 0 && pos < values.size()) {
-            values.remove(pos);
+            values.remove(pos) ;
         }
     }
 
