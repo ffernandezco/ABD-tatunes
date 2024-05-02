@@ -1,10 +1,12 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,11 @@ public class CreateTable implements MiniSQLQuery{
         columnsParameters = columns;
     }
     public String execute(Database database) {
-        return null;
+
+        if(database.createTable(Table, columnsParameters)) {
+            return Constants.CREATE_TABLE_SUCCESS;
+        }
+
+        return "Cannot create table";
     }
 }

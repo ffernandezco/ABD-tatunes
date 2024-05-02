@@ -1,14 +1,11 @@
 package eus.ehu.giigsi.abd.parser;
 
-import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Database;
 import eus.ehu.giigsi.abd.structures.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
-import java.io.IOException;
 import java.util.List;
 
 public class Insert implements MiniSQLQuery{
@@ -25,14 +22,9 @@ public class Insert implements MiniSQLQuery{
         this.values = values;
     }
 
-    public String execute( Database database)
+    public String execute(Database database)
     {
-            Boolean resultado = database.Insert(table, values) ;
-            if (resultado== true){
-                return Constants.INSERT_SUCCESS;
-            }
-            return Constants.ERROR;
-
+        return "";
     }
 
 }

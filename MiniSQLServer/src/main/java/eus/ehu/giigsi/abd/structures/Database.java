@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
@@ -78,29 +79,30 @@ public class Database {
 
         // Solo creamos el directorio en caso de no encontrar ficheros con ese nombre
         if(exist) {
-            System.out.print("Ya existe una base de datos con ese nombre");
-            return false;
+            int i = 0;
+            while (tables.get(i).load(databaseName) == true) {
+                return true;
+            }
         }
-        else {
-            File f = new File(path);
-            return f.mkdirs();
-        }
+
+        File f = new File(path);
+        return f.mkdirs();
     }
-    public Table select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
-        String user = this.mUsername;
-        String password = this.mPassword;
-        FileReader fr = load(databaseName, user, password);
+
+    public Table select(String table, List<String> columns, Condition columnCondition) {
+        Table t = tableByName(table);
+
+        if(t != null) {
+            Boolean b = t.load(this.name);
+
+
+        }
+
         return null;
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
-       for (Table table: tables){
-           if (table.columnByName(tableName).equals(tableName));
-            table.deleteWhere(columnCondition);
-            return true;
-
-       }
-       return false;
+        return false;
     }
 
     public boolean update(String tableName, List<SetValue> columnNames, Condition columnCondition)
@@ -109,47 +111,10 @@ public class Database {
     }
 
     public boolean Insert(String tableName, List<String> values) {
-        /*String user = null;
-        String password = null;
-        FileReader fr = load(  this.name,user, password);
-        int numLine = findTable(tableName);
-        if(numLine != -1){
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            int currentLine=0;
-            while(true) {
-                try {
-                    if (!((line = reader.readLine()) != null && currentLine < numLine - 1)) break;
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                currentLine++;
-            }
-            int i=0;
-            while(i< values.size()){
-                FileWriter fw = null;
-                try {
-                    fw = new FileWriter("/archives/"+this.name+".txt");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                BufferedWriter writer = new BufferedWriter(fw);
-                try {
-                    writer.write(values.get(i) + "\n");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                i++;
-                currentLine++;
-            }
-        }
-        return false;*/
-        Table table = tableByName(tableName);
-        return table.insert(values);
+        return false;
     }
 
-    public String executeMiniSQLQuery(String query)
-    {
+    public String executeMiniSQLQuery(String query) {
         //Parse the query
         MiniSQLQuery miniSQLQuery = MiniSQLParser.parse(query);
 
@@ -176,38 +141,61 @@ public class Database {
         // En caso de no existir se devuelve null
         return null;
     }
-    public boolean dropTable(String tableName)
-    {
+    public boolean dropTable(String tableName) {
+        // Buscamos si existe la tabla que quiere borrarse
+        Table table = tableByName(tableName);
+
+        // Falta cambiar la ruta a relativa
+        String path = this.name + File.pathSeparator + tableName;
+
+        if (table != null) {
+            // Borramos la tabla de la lista
+            tables.remove(table);
+
+            // Borramos el directorio del equipo
+            File directorio = new File(path);
+            return directorio.delete();
+        }
+
+        System.out.print("No existe tabla con ese nombre");
         return false;
     }
     public void addTable(Table table)
     {
         tables.add(table);
     }
-    public boolean createTable(String database,String tableName, List<ColumnParameters> columnParameters) throws IOException {
+    public boolean createTable(String tableName, List<ColumnParameters> columnParameters) {
 
-        try{
-            FileReader fr = load(database,mUsername,mPassword);
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            while((line = reader.readLine())!=null){
-                if(line.contains(tableName)){
-                 System.out.println(Constants.TABLE_ALREADY_EXISTS_ERROR);
-                 return false;
+        // Verificamos si existe la tabla
+        // Recorremos el array de columnParameters para crear columnas y, posteriormente crear la tabla
+        if(tableByName(tableName) == null) {
+            List<Column> columns = new ArrayList<>();
+
+            // Convertimos cada ColumnParameter en Column
+            if(columnParameters != null) {
+                for (ColumnParameters c : columnParameters) {
+                    Column.DataType type = c.getType();
+                    String name = c.getName();
+
+                    Column column = new Column(type, name);
+
+                    columns.add(column);
                 }
             }
-            BufferedWriter writer = new BufferedWriter(new FileWriter("/archives/"+database+".txt",true));
-            writer.write(tableName+"\n");
-            for(int i=0; i<columnParameters.size();i++){
-                writer.write(columnParameters.get(i).name+" ");
-                writer.write(columnParameters.get(i).type.name()+", ");
-            }
-            System.out.println(Constants.CREATE_TABLE_SUCCESS);
-            return true;
-        }catch (IOException e){
-            System.out.println(Constants.ERROR);
-            return false;
+
+            // Creamos la tabla y la añadimos a la lista de la base de datos
+            Table table = new Table(tableName, columns);
+
+            addTable(table);
+
+            // Guardamos la tabla en nuestros ficheros
+            return table.save(this.name);
+
         }
+
+        // En caso de existir no se crea la tabla
+        System.out.print("Ya existe una tabla con ese nombre");
+        return false;
     }
 
     public boolean IsUserAdmin() throws IOException {
@@ -221,19 +209,4 @@ public class Database {
         }
         return false;
     }
-    public int findTable( String tableName) {
-          /*  BufferedReader reader = new BufferedReader(fr);
-            String line;
-            int lineNum=0;
-            while((line = reader.readLine()) != null){
-                lineNum++;
-                if(line.contains(tableName)){
-                    reader.close();
-                    return lineNum;
-                }
-            }
-                reader.close();
-                return -1;*/
-        return 0;
-        }
 }

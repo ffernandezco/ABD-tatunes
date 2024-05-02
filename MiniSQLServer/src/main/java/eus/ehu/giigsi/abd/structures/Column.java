@@ -32,6 +32,7 @@ public class Column {
         this.values = values;
     }
 
+
     public Column(DataType type, String name){
         this.type = type;
         this.name = name;
@@ -68,7 +69,9 @@ public class Column {
     public void deleteAt(int pos)
     {
         if (pos >= 0 && pos < values.size()) {
-            values.remove(pos) ;
+            values.remove(pos);
+        } else {
+            throw new IndexOutOfBoundsException("El índice indicado está fuera de rango");
         }
     }
 
