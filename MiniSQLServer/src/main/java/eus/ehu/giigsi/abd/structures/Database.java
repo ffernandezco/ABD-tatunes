@@ -109,22 +109,21 @@ public class Database {
         Table t = tableByName(table);
 
         if(t != null) {
-
-            Column c = t.columnByName(columnCondition.getColumn());
-            List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
-
             List<Column> columnasSelect = new ArrayList<>();
 
-            // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
-            if (columns != null && !columns.isEmpty()) {
+            if (columnCondition != null) {
+                Column c = t.columnByName(columnCondition.getColumn());
+                List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
 
-                for (String nombreColumna : columns) {
+                // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
+                if (columns != null && !columns.isEmpty()) {
 
-                    if (t.columnByName(nombreColumna) != null) {
+                    for (String nombreColumna : columns) {
 
-                        Column c1 = t.columnByName(nombreColumna);
+                        if (t.columnByName(nombreColumna) != null) {
 
-                        if (columnCondition != null) {
+                            Column c1 = t.columnByName(nombreColumna);
+
                             List<String> valoresColumna = new ArrayList<>();
 
                             // Guardamos los valores de las posiciones recogidas anteriormente en una lista
@@ -136,10 +135,16 @@ public class Database {
                             Column aux = new Column(c1.type, c1.getName(), valoresColumna);
                             columnasSelect.add(aux);
                         }
-                        // Si no hay condición devolvemos las mismas columnas
-                        else {
-                            columnasSelect.add(c1);
-                        }
+                    }
+                }
+            }
+
+            // Si no hay condición devolvemos las mismas columnas
+            else {
+                if (columns != null && !columns.isEmpty()) {
+                    for (String nColumna : columns) {
+                        Column c1 = t.columnByName(nColumna);
+                        columnasSelect.add(c1);
                     }
                 }
 

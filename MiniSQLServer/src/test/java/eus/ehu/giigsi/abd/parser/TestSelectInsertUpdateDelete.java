@@ -97,6 +97,28 @@ public class TestSelectInsertUpdateDelete {
 
         assertEquals(t1.columns.get(1).getValues().get(3), table.columns.get(1).getValues().get(3));
 
+        List<String> columnsSelect = new ArrayList<>();
+        columnsSelect.add("str");
+        columnsSelect.add("int");
+
+        Condition conditionOk = new Condition("dbl", "<", "4");
+        Condition conditionBad1 = new Condition("", "<", "4");
+        Condition conditionBad2 = new Condition("dbl", "", "4");
+        Condition conditionBad3 = new Condition("dbl", "<", "");
+        Condition conditionBad4 = new Condition("", "", "");
+
+
+        Select select = new Select(table.name, columnsSelect);
+        Table select1 = database.select(table.name, columnsSelect, null);
+        Table select2 = database.select(table.name, columnsSelect, conditionOk);
+        Table select3 = database.select(table.name, columnsSelect, conditionBad1);
+        Table select4 = database.select(table.name, columnsSelect, conditionBad2);
+        Table select5 = database.select(table.name, columnsSelect, conditionBad3);
+        Table select6 = database.select(table.name, columnsSelect, conditionBad4);
+
+        List<Column> listOk = new ArrayList<>();
+
+        Table ok = new Table("tabla1", null);
 
     }
 }

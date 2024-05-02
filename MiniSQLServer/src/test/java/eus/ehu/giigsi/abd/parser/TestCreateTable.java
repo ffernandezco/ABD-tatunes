@@ -52,9 +52,16 @@ public class TestCreateTable {
         result = ct2.execute(database);
         ct3.execute(database);
 
-        assertEquals("prueba2", database.tables.get(1).name);
-        assertEquals("dbl", database.tables.get(1).columns.get(1).name);
-        assertEquals(Column.DataType.INT, database.tables.get(1).columns.get(2).type);
+        List<Column> columnList = new ArrayList<>();
+        columnList.add(new Column(Column.DataType.STRING, "str"));
+        columnList.add(new Column(Column.DataType.DOUBLE, "dbl"));
+        columnList.add(new Column(Column.DataType.INT, "int"));
+
+        Table prueba2 = new Table("prueba2", columnList);
+
+        assertEquals(prueba2.name, database.tables.get(1).name);
+        assertEquals(prueba2.columns.get(1).name, database.tables.get(1).columns.get(1).name);
+        assertEquals(prueba2.columns.get(2).type, database.tables.get(1).columns.get(2).type);
 
         assertEquals("prueba3", database.tables.get(2).name);
 

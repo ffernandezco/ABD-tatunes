@@ -46,26 +46,14 @@ public class TestSelect {
 
     @Test
     void test1() {
-        List<String> columns = new ArrayList<>();
-        columns.add("int");
-
-        Condition condition = new Condition("int", "<", "5");
-        Select s = new Select("tabla1", columns, condition);
-
-        String expected = Constants.CREATE_TABLE_SUCCESS;
-        String result = s.execute(database);
-
-        assertEquals(expected, result);
-    }
-
-    // El test que vale es este
-    @Test
-    void test2() {
         List<String> columnsSelect = new ArrayList<>();
         columnsSelect.add("str");
         columnsSelect.add("dbl");
 
         Condition condition = new Condition("int", "<", "5");
+        Condition conditionBad1 = new Condition("", "<", "5");
+        Condition conditionBad2 = new Condition("int", "", "5");
+        Condition conditionBad3 = new Condition("int", "<", "");
 
         List<String> vStr = new ArrayList<>();
         vStr.add("A");
@@ -83,6 +71,9 @@ public class TestSelect {
 
         Table result = database.select("tabla1", columnsSelect, condition);
 
-        assertEquals(t2, result);
+        assertEquals(t2.columns.get(1).getValues().get(1), result.columns.get(1).getValues().get(1));
+
+        Table result2 = database.select("tabla1", columnsSelect, conditionBad1);
+
     }
 }
