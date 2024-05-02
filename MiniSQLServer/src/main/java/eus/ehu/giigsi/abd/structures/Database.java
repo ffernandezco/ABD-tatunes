@@ -123,16 +123,23 @@ public class Database {
                     if (t.columnByName(nombreColumna) != null) {
 
                         Column c1 = t.columnByName(nombreColumna);
-                        List<String> valoresColumna = new ArrayList<>();
 
-                        // Guardamos los valores de las posiciones recogidas anteriormente en una lista
-                        for (int j : valoresIntroducir) {
-                            valoresColumna.add(c1.getValues().get(j));
+                        if (columnCondition != null) {
+                            List<String> valoresColumna = new ArrayList<>();
+
+                            // Guardamos los valores de las posiciones recogidas anteriormente en una lista
+                            for (int j : valoresIntroducir) {
+                                valoresColumna.add(c1.getValues().get(j));
+                            }
+
+                            // Insertamos la lista en la tabla
+                            Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                            columnasSelect.add(aux);
                         }
-
-                        // Insertamos la lista en la tabla
-                        Column aux = new Column(c1.type, c1.getName(), valoresColumna);
-                        columnasSelect.add(aux);
+                        // Si no hay condición devolvemos las mismas columnas
+                        else {
+                            columnasSelect.add(c1);
+                        }
                     }
                 }
 
@@ -148,9 +155,12 @@ public class Database {
         Table t = tableByName(tableName);
 
         if (t != null) {
-            t.deleteWhere(columnCondition);
 
-            return true;
+            if (columnCondition != null) {
+
+                t.deleteWhere(columnCondition);
+                return true;
+            }
         }
 
         return false;
@@ -163,15 +173,17 @@ public class Database {
         if (table != null) {
 
             if (columnNames != null && !columnNames.isEmpty()) {
-                int i = 0;
-                for (SetValue sv : columnNames){
 
-                    Column c1 = table.columnByName(sv.getColumn());
-                    c1.updateWhere(columnCondition, sv.getValue());
+                if (columnCondition != null) {
+                    int i = 0;
+                    for (SetValue sv : columnNames) {
+
+                        Column c1 = table.columnByName(sv.getColumn());
+                        c1.updateWhere(columnCondition, sv.getValue());
+                    }
+                    return true;
                 }
             }
-
-            return true;
         }
 
         return false;
@@ -265,8 +277,7 @@ public class Database {
 
             addTable(table);
 
-            // Guardamos la tabla en nuestros ficheros
-            return table.save(this.name);
+            return tableByName(tableName) != null && tableByName(tableName).columns != null;
         }
 
         // En caso de existir no se crea la tabla
