@@ -135,7 +135,7 @@ public class Database {
                         columnasSelect.add(aux);
                     }
                 }
-                Table select = new Table("Selected", columnasSelect);
+                Table select = new Table(table, columnasSelect);
                 return select;
             }
         }
