@@ -18,8 +18,9 @@ public class Table {
 
     public Table(String name, List<Column> columns)
     {
+
         this.name = name;
-        this.columns = columns;
+        this.columns = new ArrayList<>(columns);
     }
 
 

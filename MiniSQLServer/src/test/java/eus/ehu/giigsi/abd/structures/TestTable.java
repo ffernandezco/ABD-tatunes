@@ -3,6 +3,7 @@ package eus.ehu.giigsi.abd.structures;
 import eus.ehu.giigsi.abd.parser.ColumnParameters;
 import eus.ehu.giigsi.abd.parser.Condition;
 import eus.ehu.giigsi.abd.parser.SetValue;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -132,6 +133,29 @@ public class TestTable {
 
         resultado = db.createTable("Persona", columns);
         assertFalse(resultado);
+    }
+    @Test
+    public void testTableConstructor() {
+        List<Column> columns = new ArrayList<>();
+        columns.add(new Column(Column.DataType.STRING, "1"));
+        columns.add(new Column(Column.DataType.INT, "2"));
+        columns.add(new Column(Column.DataType.DOUBLE, "3"));
+
+        Table table = new Table("tabla", columns);
+
+        assertEquals("tabla", table);
+
+        List<Column> tableColumns = table.columns;
+        assertEquals(3, tableColumns.size());
+
+        assertEquals("1", tableColumns.get(0).getName());
+        assertEquals(Column.DataType.STRING, tableColumns.get(0).type);
+
+        assertEquals("2", tableColumns.get(1).getName());
+        assertEquals(Column.DataType.INT, tableColumns.get(1).type);
+
+        assertEquals("3", tableColumns.get(2).getName());
+        assertEquals(Column.DataType.DOUBLE, tableColumns.get(2).type);
     }
 
 }

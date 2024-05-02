@@ -31,13 +31,10 @@ public class Database {
     public Manager securityManager;
 
     //This constructor is only used from Load (without needing to set a password for the user). It cannot be used from any other class
-    private Database()
-    {
-
-    }
 
     public Database(String pName,String adminUsername, String adminPassword)
     {
+        this.tables= new ArrayList<>();
         name = pName;
         mUsername = adminUsername;
         mPassword = adminPassword;
