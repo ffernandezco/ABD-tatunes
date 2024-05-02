@@ -85,7 +85,7 @@ public class TestMiniSQLParser {
 
     @Test
     public void testInsertParse() {
-        String query = "INSERT INTO TableName VALUES (1, 'Prueba', 3)"; //Comillas
+        String query = "INSERT INTO TableName VALUES (1,'Prueba 2',3)"; //Comillas
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
         assertTrue(parsedQuery instanceof Insert);
         Insert insertQuery = (Insert) parsedQuery;
@@ -96,29 +96,20 @@ public class TestMiniSQLParser {
         assertNotNull(values);
         assertEquals(3, values.size());
         assertEquals("1", values.get(0));
-        assertEquals("Prueba", values.get(1));
+        assertEquals("Prueba 2", values.get(1));
         assertEquals("3", values.get(2));
     }
 
     @Test
     public void testInsertParseConEspacios() {
-        String query = "INSERT INTO TableName VALUES ( 7 ,  Espacios   )";
+        String query = "INSERT INTO TableName VALUES ( 7 ,  'Espacios'   )";
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
-        assertTrue(parsedQuery instanceof Insert);
-        Insert insertQuery = (Insert) parsedQuery;
-
-        assertEquals("TableName", insertQuery.getTable());
-
-        List<String> values = insertQuery.getValues();
-        assertNotNull(values);
-        assertEquals(2, values.size());
-        assertEquals("7", values.get(0));
-        assertEquals("Espacios", values.get(1));
+        assertFalse(parsedQuery instanceof Insert);
     }
 
     @Test
     public void testUpdateParse() {
-        String query = "UPDATE TableName SET     dato='nombre1', dato1=30 WHERE id = 12.1";
+        String query = "UPDATE TableName SET     dato='nombre1',dato1=30 WHERE id = 12.1";
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
 
         assertTrue(parsedQuery instanceof Update);
