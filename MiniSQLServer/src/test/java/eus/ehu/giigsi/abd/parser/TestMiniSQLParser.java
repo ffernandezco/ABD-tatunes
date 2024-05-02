@@ -35,6 +35,7 @@ public class TestMiniSQLParser {
         assertEquals(Column.DataType.DOUBLE, columnParameters.get(2).getType());
     }
 
+
     @Test
     public void testDeleteParse() {
         String query = "DELETE FROM Table WHERE id > 11";
