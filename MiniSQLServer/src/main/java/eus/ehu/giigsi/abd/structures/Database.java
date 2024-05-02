@@ -261,6 +261,8 @@ public class Database {
 
                     columns.add(column);
                 }
+            }else{
+                return false;
             }
 
             // Creamos la tabla y la añadimos a la lista de la base de datos
@@ -272,7 +274,6 @@ public class Database {
         }
 
         // En caso de existir no se crea la tabla
-        System.out.print("Ya existe una tabla con ese nombre");
         return false;
     }
 

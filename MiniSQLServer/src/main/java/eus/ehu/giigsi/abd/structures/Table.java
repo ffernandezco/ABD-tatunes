@@ -3,6 +3,7 @@ package eus.ehu.giigsi.abd.structures;
 import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.parser.Condition;
 import eus.ehu.giigsi.abd.parser.SetValue;
+import lombok.Getter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +15,7 @@ import java.util.Scanner;
 
 public class Table {
     public List<Column> columns;
+    @Getter
     public String name = null;
 
     public Table(String name, List<Column> columns)

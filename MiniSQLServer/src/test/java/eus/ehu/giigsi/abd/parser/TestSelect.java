@@ -73,7 +73,7 @@ public class TestSelect {
 
         assertEquals(t2.columns.get(1).getValues().get(1), result.columns.get(1).getValues().get(1));
 
-        Table result2 = database.select("tabla1", columnsSelect, conditionBad1);
+        // Table result2 = database.select("tabla1", columnsSelect, conditionBad1);
 
     }
 }

@@ -18,8 +18,19 @@ public class TestCreateTable {
     @BeforeEach
     public void init() {
         database = new Database("database1", "admin", "admin");
+        database.tables.clear();
 
-        CreateTable ct = new CreateTable("testCT", null);
+        List<ColumnParameters> listaCP = new ArrayList<>();
+
+        listaCP.add(new ColumnParameters("str", Column.DataType.STRING));
+        listaCP.add(new ColumnParameters("dbl", Column.DataType.DOUBLE));
+        listaCP.add(new ColumnParameters("int", Column.DataType.INT));
+
+        CreateTable ct2 = new CreateTable("prueba2", listaCP);
+        CreateTable ct3 = new CreateTable("prueba3", null);
+        CreateTable ct4 = new CreateTable("", listaCP);
+
+        CreateTable ct = new CreateTable("testCT", listaCP);
         ct.execute(database);
     }
 
@@ -27,9 +38,19 @@ public class TestCreateTable {
     public void prueba1() {
         String result, expected;
 
-        CreateTable ct1 = new CreateTable("testCT", null);
+        List<ColumnParameters> listaCP = new ArrayList<>();
 
-        expected = "Cannot create table";
+        listaCP.add(new ColumnParameters("str", Column.DataType.STRING));
+        listaCP.add(new ColumnParameters("dbl", Column.DataType.DOUBLE));
+        listaCP.add(new ColumnParameters("int", Column.DataType.INT));
+
+        CreateTable ct2 = new CreateTable("prueba2", listaCP);
+        CreateTable ct3 = new CreateTable("prueba3", null);
+        CreateTable ct4 = new CreateTable("", listaCP);
+
+        CreateTable ct1 = new CreateTable("testCT", listaCP);
+
+        expected = "Ya existe una tabla con ese nombre";
         result = ct1.execute(database);
 
         assertEquals(expected, result);
@@ -47,10 +68,12 @@ public class TestCreateTable {
 
         CreateTable ct2 = new CreateTable("prueba2", listaCP);
         CreateTable ct3 = new CreateTable("prueba3", null);
+        CreateTable ct4 = new CreateTable("", listaCP);
 
         expected = Constants.CREATE_TABLE_SUCCESS;
         result = ct2.execute(database);
-        ct3.execute(database);
+        String r2 = ct3.execute(database);
+        String r3 = ct4.execute(database);
 
         List<Column> columnList = new ArrayList<>();
         columnList.add(new Column(Column.DataType.STRING, "str"));
@@ -63,7 +86,8 @@ public class TestCreateTable {
         assertEquals(prueba2.columns.get(1).name, database.tables.get(1).columns.get(1).name);
         assertEquals(prueba2.columns.get(2).type, database.tables.get(1).columns.get(2).type);
 
-        assertEquals("prueba3", database.tables.get(2).name);
+        assertEquals("No se puede crear una tabla sin columnas", r2);
+        assertEquals("No se ha creado la tabla, falta el nombre", r3);
 
         assertEquals(expected, result);
     }
