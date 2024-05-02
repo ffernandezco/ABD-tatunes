@@ -37,7 +37,7 @@ public class TestMiniSQLParser {
 
     @Test
     public void testDeleteParse() {
-        String query = "DELETE FROM Table    WHERE id > -11.2";
+        String query = "DELETE FROM Table    WHERE id>-3.2";
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
         assertTrue(parsedQuery instanceof Delete);
         Delete deleteQuery = (Delete) parsedQuery;
@@ -48,12 +48,28 @@ public class TestMiniSQLParser {
         assertNotNull(whereCondition);
         assertEquals("id", whereCondition.getColumn());
         assertEquals(">", whereCondition.getOperator());
-        assertEquals("-11.2", whereCondition.getLiteralValue());
+        assertEquals("-3.2", whereCondition.getLiteralValue());
+    }
+
+    @Test
+    public void testDeleteParseInt() {
+        String query = "DELETE FROM Table WHERE id<17";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+        assertTrue(parsedQuery instanceof Delete);
+        Delete deleteQuery = (Delete) parsedQuery;
+
+        assertEquals("Table", deleteQuery.getTable());
+
+        Condition whereCondition = deleteQuery.getWhere();
+        assertNotNull(whereCondition);
+        assertEquals("id", whereCondition.getColumn());
+        assertEquals("<", whereCondition.getOperator());
+        assertEquals("17", whereCondition.getLiteralValue());
     }
 
     @Test
     public void testDeleteParseText() {
-        String query = "DELETE     FROM Table WHERE nombre='Asier'";
+        String query = "DELETE     FROM Table WHERE nombre='abc def'";
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
         assertTrue(parsedQuery instanceof Delete);
         Delete deleteQuery = (Delete) parsedQuery;
@@ -64,12 +80,12 @@ public class TestMiniSQLParser {
         assertNotNull(whereCondition);
         assertEquals("nombre", whereCondition.getColumn());
         assertEquals("=", whereCondition.getOperator());
-        assertEquals("Asier", whereCondition.getLiteralValue());
+        assertEquals("abc def", whereCondition.getLiteralValue());
     }
 
     @Test
     public void testInsertParse() {
-        String query = "INSERT INTO TableName VALUES (1, Prueba, 3);";
+        String query = "INSERT INTO TableName VALUES (1, Prueba, 3);"; //Comillas
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
         assertTrue(parsedQuery instanceof Insert);
         Insert insertQuery = (Insert) parsedQuery;

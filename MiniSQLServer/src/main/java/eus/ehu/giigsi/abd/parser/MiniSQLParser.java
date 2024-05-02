@@ -12,12 +12,14 @@ public class MiniSQLParser {
     public static final Pattern CREATE_TABLE_PATTERN = Pattern.compile("CREATE\\s+TABLE\\s+(?<table>[a-zA-Z]+)\\s*\\((?<columns>[^)]+)\\)");
     public static final Pattern DROP_TABLE_PATTERN = Pattern.compile("DROP\\s+TABLE\\s+(?<table>[a-zA-Z]+)");
     //public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z0-9]+(?:\\s*,\\s*[a-zA-Z0-9]+)*)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<condition>.+))?");
-    public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z0-9]+(?:\\s*,\\s*[a-zA-Z0-9]+)*)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*'?(?<literalValue>[^'\\s]+)'?)?");
+    public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z0-9]+(?:\\s*,\\s*[a-zA-Z0-9]+)*)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*(?<literalValue>(-?\\d+|-?\\d+\\.\\d+|'(.*)')))?$");
     //public static final Pattern DELETE_PATTERN = Pattern.compile("DELETE\\s+FROM\\s+(?<table>[a-zA-Z]+)\\s+WHERE\\s+(?<condition>.+)");
-    public static final Pattern DELETE_PATTERN = Pattern.compile("DELETE\\s+FROM\\s+(?<table>[a-zA-Z]+)\\s+WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*'?(?<literalValue>[^'\\s]+)'?");
+    //public static final Pattern DELETE_PATTERN = Pattern.compile("DELETE\\s+FROM\\s+(?<table>[a-zA-Z]+)\\s+WHERE\\s+(?<column>[a-zA-Z0-9]+)(?<operator>[=<>])'?(?<literalValue>.*)'?");
+    public static final Pattern DELETE_PATTERN = Pattern.compile("DELETE\\s+FROM\\s+(?<table>[a-zA-Z]+)\\s+WHERE\\s+(?<column>[a-zA-Z0-9]+)(?<operator>[=<>])(?<literalValue>(-?\\d+|-?\\d+\\.\\d+|'(.*)'))$");
+    //public static final Pattern DELETE_PATTERN = Pattern.compile("DELETE\\s+FROM\\s+(?<table>[a-zA-Z]+)\\s+WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*(?:'(?<literalValueString>(?:[^'\\\\]|\\\\.)+)'|(?<literalValueNumeric>-?\\d*\\.?\\d+))");
     public static final Pattern INSERT_PATTERN = Pattern.compile("INSERT\\s+INTO\\s+(?<table>[a-zA-Z]+)\\s+VALUES\\s*\\((?<literalValues>[^)]+)\\)");
     //public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<conditions>.+)");
-    public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*'?(?<literalValue>[^'\\s]+)'?");
+    public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*(?<literalValue>(-?\\d+|-?\\d+\\.\\d+|'(.*)'))$");
 
     public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 2;
     public static final int CREATE_TABLE_PATTERN_GROUP_NAME = 1;
@@ -36,6 +38,7 @@ public class MiniSQLParser {
     public static final int DELETE_PATTERN_GROUP_COLUMN = 2;
     public static final int DELETE_PATTERN_GROUP_OPERATOR = 3;
     public static final int DELETE_PATTERN_GROUP_LITERAL_VALUE = 4;
+
     public static final int INSERT_PATTERN_GROUP_TABLE = 1;
     public static final int INSERT_PATTERN_GROUP_VALUES = 2;
     public static final int UPDATE_PATTERN_GROUP_TABLE = 1;
@@ -119,6 +122,8 @@ public class MiniSQLParser {
             String column = matcher.group(DELETE_PATTERN_GROUP_COLUMN);
             String operator = matcher.group(DELETE_PATTERN_GROUP_OPERATOR);
             String literalValue = matcher.group(DELETE_PATTERN_GROUP_LITERAL_VALUE);
+
+
 
             // Comprobar si es Int, Double o String
             if (literalValue != null && !literalValue.isEmpty()) {
