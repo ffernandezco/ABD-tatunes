@@ -1,13 +1,15 @@
 package eus.ehu.giigsi.abd.structures;
 
+import eus.ehu.giigsi.abd.parser.ColumnParameters;
 import eus.ehu.giigsi.abd.parser.Condition;
 import eus.ehu.giigsi.abd.parser.SetValue;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestTable {
@@ -115,6 +117,21 @@ public class TestTable {
 
         // Comprobar que se ha actualizado por el nuevo valoe especificado
         assertEquals("nuevoValor1", table.columns.get(0).getValues().get(0));
+    }
+
+    @Test
+    public void testCrearTable(){
+        Database db = null;
+       /* List<ColumnParameters> columns = Arrays.asList(
+                new Column(Column.DataType.STRING ,"name")
+                //new Column(Column.DataType.INT, "age")
+        );*/
+        List<ColumnParameters> columns = null;
+        boolean resultado = db.createTable("Persona",columns);
+        assertTrue(resultado);
+
+        resultado = db.createTable("Persona", columns);
+        assertFalse(resultado);
     }
 
 }

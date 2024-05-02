@@ -22,9 +22,6 @@ public class Table {
         this.columns = columns;
     }
 
-    public Table() {
-
-    }
 
     public boolean load(String path)
     {
