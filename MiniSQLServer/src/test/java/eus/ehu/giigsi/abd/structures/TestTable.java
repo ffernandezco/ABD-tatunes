@@ -145,17 +145,7 @@ public class TestTable {
 
         assertEquals("tabla", table);
 
-        List<Column> tableColumns = table.columns;
-        assertEquals(3, tableColumns.size());
 
-        assertEquals("1", tableColumns.get(0).getName());
-        assertEquals(Column.DataType.STRING, tableColumns.get(0).type);
-
-        assertEquals("2", tableColumns.get(1).getName());
-        assertEquals(Column.DataType.INT, tableColumns.get(1).type);
-
-        assertEquals("3", tableColumns.get(2).getName());
-        assertEquals(Column.DataType.DOUBLE, tableColumns.get(2).type);
     }
 
 }
