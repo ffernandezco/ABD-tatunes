@@ -17,7 +17,7 @@ public class TestCreateTable {
     Database database;
     @BeforeEach
     public void init() {
-        database = new Database("database1", "admin", "admin");
+        database = new Database("admin", "admin");
         database.tables.clear();
 
         List<ColumnParameters> listaCP = new ArrayList<>();

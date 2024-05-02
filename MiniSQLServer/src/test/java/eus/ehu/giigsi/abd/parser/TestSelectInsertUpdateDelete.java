@@ -17,7 +17,7 @@ public class TestSelectInsertUpdateDelete {
 
     @BeforeEach
     public void init() {
-        database = new Database("database", "admin", "admin");
+        database = new Database("admin", "admin");
 
         List<ColumnParameters> listaCP = new ArrayList<>();
 

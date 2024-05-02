@@ -21,7 +21,7 @@ public class TestDelete {
 
     @BeforeEach
     public void setUp(){
-        db = new Database("database", "user",  "user");
+        db = new Database("user",  "user");
 
         List<String> vInt = new ArrayList<>();
         vInt.add("1");

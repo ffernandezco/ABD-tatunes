@@ -19,7 +19,7 @@ public class TestInsert {
 
     @BeforeEach
     public void init () {
-        database = new Database("database", "user",  "user");
+        database = new Database("user",  "user");
 
         List<String> vInt = new ArrayList<>();
         vInt.add("1");

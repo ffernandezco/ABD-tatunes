@@ -18,7 +18,7 @@ public class TestSelect {
 
     @BeforeEach
     void init() {
-        database = new Database("database", "admin", "admin");
+        database = new Database("admin", "admin");
 
         List<String> vInt = new ArrayList<>();
         vInt.add("1");
