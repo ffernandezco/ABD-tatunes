@@ -51,9 +51,9 @@ public class TestSelect {
         columnsSelect.add("dbl");
 
         Condition condition = new Condition("int", "<", "5");
-        Condition conditionBad1 = new Condition("", "<", "5");
-        Condition conditionBad2 = new Condition("int", "", "5");
-        Condition conditionBad3 = new Condition("int", "<", "");
+        // Condition conditionBad1 = new Condition("", "<", "5");
+        // Condition conditionBad2 = new Condition("int", "", "5");
+        // Condition conditionBad3 = new Condition("int", "<", "");
 
         List<String> vStr = new ArrayList<>();
         vStr.add("A");
@@ -73,7 +73,10 @@ public class TestSelect {
 
         assertEquals(t2.columns.get(1).getValues().get(1), result.columns.get(1).getValues().get(1));
 
-        // Table result2 = database.select("tabla1", columnsSelect, conditionBad1);
+        String st = new Select(null, columnsSelect, condition).execute(database);
+        assertEquals("ERROR: tabla o valores estan vacios", st);
 
+        st = new Select("tabla1", null, condition).execute(database);
+        assertEquals("ERROR: tabla o valores estan vacios", st);
     }
 }

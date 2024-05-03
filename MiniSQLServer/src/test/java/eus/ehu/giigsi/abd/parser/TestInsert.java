@@ -50,7 +50,7 @@ public class TestInsert {
     public void TestInsert (){
 
         List<String> values = Arrays.asList("20", "Julen", "1.88");
-        Insert insert = new Insert(table.name,values);
+        Insert insert = new Insert(table.name, values);
 
         String resultado = insert.execute(database);
 
@@ -61,6 +61,15 @@ public class TestInsert {
         assertEquals("1.88", table.columnByName("dbl").getValues().get(3));
 
         assertEquals(Constants.INSERT_SUCCESS, resultado);
+
+        insert = new Insert(table.name, null);
+        resultado = insert.execute(database);
+        assertEquals("ERROR: tabla o valores estan vacios", resultado);
+
+        insert = new Insert(null, values);
+        resultado = insert.execute(database);
+        assertEquals("ERROR: tabla o valores estan vacios", resultado);
+
     }
 
     @Test
