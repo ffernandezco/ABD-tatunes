@@ -28,10 +28,23 @@ public class Update implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        if (database.update(table, columns, where)) {
-            return Constants.UPDATE_SUCCESS;
+        if (table == null) {
+            return "Se necesita introducir una tabla";
+
+        } else if (columns == null) {
+            return "Se necesitan especificar columnas";
+
+        } else if (where == null) {
+            return "Se necesita especificar condición";
+
         }
-        return Constants.ERROR;
+        else {
+            if (database.update(table, columns, where)) {
+                return Constants.UPDATE_SUCCESS;
+            }
+
+            return Constants.ERROR;
+        }
     }
 
 }

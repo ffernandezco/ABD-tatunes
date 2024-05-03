@@ -60,9 +60,23 @@ public class TestUpdate {
 
 
         result = new Update(table.name, sv, c).execute(database);
-
         expected = Constants.UPDATE_SUCCESS;
+        assertEquals(expected, result);
 
+        result = new Update(table.name, sv, null).execute(database);
+        expected = "Se necesita especificar condición";
+        assertEquals(expected, result);
+
+        result = new Update(table.name, null, c).execute(database);
+        expected = "Se necesitan especificar columnas";
+        assertEquals(expected, result);
+
+        result = new Update(null, sv, c).execute(database);
+        expected = "Se necesita introducir una tabla";
+        assertEquals(expected, result);
+
+        result = new Update("", sv, c).execute(database);
+        expected = Constants.ERROR;
         assertEquals(expected, result);
     }
 }

@@ -54,45 +54,16 @@ public class Database {
 
 
     }
-
-    // COMPROBAR:
-    // ¿HACE FALTA QUE VERIFIQUE SI HAY BDs CON EL MISMO NOMBRE?
-    // ¿NO HARÍA FALTA CREAR LA CARPETA DE LA BD PORQUE LO HARÍA EL MKDIRS DE LA CLASE TABLA?
     public boolean save(String databaseName)
     {
-        boolean exist = false;
-
         // Guardaremos en una ruta relativa para evitarnos problemas en caso de disponer diferentes SO
         // Falta cambiar la ruta a relativa
         String path = "databases" + File.separator + databaseName; // File.separator
 
-        // Recuperamos los ficheros que encontramos en esa ruta
-        File[] databases = new File(path).listFiles();
-
-        // Comparamos los ficheros con el nombre de nuestra BD para evitarnos guardar una BD ya creada anteriormente
-        if(databases != null) {
-            for (File db : databases) {
-                if (db.getName().equals(databaseName)) {
-                    exist = true;
-                    break;
-                }
-            }
-        }
-
         try {
             int i = 0;
-            if (exist) {
-                while (tables.get(i).save(databaseName) == true) {
+            while (tables.get(i).save(databaseName) == true) {
                     i++;
-                }
-            } else {
-                // Solo creamos el directorio en caso de no encontrar ficheros con ese nombre
-                File f = new File(path);
-                f.mkdirs();
-
-                while (tables.get(i).save(databaseName) == true) {
-                    i++;
-                }
             }
 
             return true;
@@ -166,12 +137,28 @@ public class Database {
 
                 if (columnCondition != null) {
                     int i = 0;
+
+                    Column c = table.columnByName(columnCondition.column);
+
+                    List<Integer> indices = c.indicesWhereIsTrue(columnCondition);
+
+                    for (SetValue sv : columnNames) {
+                        for (int k : indices) {
+                            Column c1 = table.columnByName(sv.getColumn());
+                            c1.SetValue(k, sv.getValue());
+                        }
+                    }
+                    return true;
+
+                    /*
                     for (SetValue sv : columnNames) {
 
                         Column c1 = table.columnByName(sv.getColumn());
                         c1.updateWhere(columnCondition, sv.getValue());
                     }
                     return true;
+                    */
+
                 }
             }
         }
