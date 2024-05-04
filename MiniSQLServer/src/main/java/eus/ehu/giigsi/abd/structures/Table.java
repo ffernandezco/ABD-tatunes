@@ -92,17 +92,17 @@ public class Table {
     }
 
     public void deleteWhere(Condition condition) {
+        List<Integer> indices = columnByName(condition.column).indicesWhereIsTrue(condition);
+
         for (Column columna : columns) {
-            if (columna.name.equals(condition.column)) {
-                List<Integer> indices = columna.indicesWhereIsTrue(condition);
-                for (int i = indices.size()-1; i>=0; i--) {
-                    int index = indices.get(i);
-                    columna.deleteAt(index);
-                }
+
+            for (int i = indices.size()-1; i>=0; i--) {
+
+                int index = indices.get(i);
+                columna.deleteAt(index);
             }
         }
     }
-
 
     public boolean insert(List<String> values)
     {
@@ -116,7 +116,7 @@ public class Table {
             Column columna = columns.get(i);
             String value = values.get(i);
 
-           columna.values.add(value);
+            columna.values.add(value);
         }
 
         return true;

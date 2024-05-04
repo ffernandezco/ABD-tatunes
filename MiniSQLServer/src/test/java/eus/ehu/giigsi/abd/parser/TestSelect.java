@@ -72,6 +72,7 @@ public class TestSelect {
         Table result = database.select("tabla1", columnsSelect, condition);
 
         assertEquals(t2.columns.get(1).getValues().get(1), result.columns.get(1).getValues().get(1));
+        assertEquals(t2.columns.get(0).type, result.columns.get(0).type);
 
         String st = new Select(null, columnsSelect, condition).execute(database);
         assertEquals("ERROR: tabla o valores estan vacios", st);

@@ -43,7 +43,7 @@ public class TestDelete {
         column.add(new Column(Column.DataType.STRING, "str", vStr));
         column.add(new Column(Column.DataType.DOUBLE, "dbl", vDbl));
 
-        String nombreTabla = "usuarios";
+        String nombreTabla = "table1";
         table1 = new Table(nombreTabla, column);
         this.db.addTable(table1);
     }
@@ -56,11 +56,26 @@ public class TestDelete {
 
         String resultado= delete.execute(db);
 
-        assertEquals("2", table1.columnByName("str").values.size());
+        assertEquals(2, table1.columnByName("str").values.size());
         assertEquals("A", table1.columnByName("str").getValues().get(0));
         assertEquals("D", table1.columnByName("str").getValues().get(1));
+        assertEquals("1", table1.columnByName("int").getValues().get(0));
+        assertEquals("5", table1.columnByName("int").getValues().get(1));
+        assertEquals("1.99", table1.columnByName("dbl").getValues().get(0));
+        assertEquals("5.99", table1.columnByName("dbl").getValues().get(1));
+
+
 
         assertEquals(Constants.DELETE_SUCCESS, resultado);
+
+        List<Column> columns = new ArrayList<>();
+        columns.add(new Column(Column.DataType.INT, "int", List.of("1", "5")));
+        columns.add(new Column(Column.DataType.STRING, "str", List.of("A", "D")));
+        columns.add(new Column(Column.DataType.DOUBLE, "dbl", List.of("1.99", "5.99")));
+
+        Table t = new Table("table1", columns);
+
+        assertEquals(t.toString(), table1.toString());
     }
 
     /*
