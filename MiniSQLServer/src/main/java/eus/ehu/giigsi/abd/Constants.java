@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd;
 
+
 public class Constants {
     public static final String ERROR = "ERROR: ";
 
