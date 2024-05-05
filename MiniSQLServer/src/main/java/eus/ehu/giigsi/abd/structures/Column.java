@@ -75,7 +75,6 @@ public class Column {
 
     public boolean Save(String directory)
     {
-        /*
         try(PrintWriter writer = new PrintWriter(new FileWriter(directory))) {
             writer.println(type.toString());
             writer.println(name);
@@ -84,12 +83,11 @@ public class Column {
                 writer.println(value);
             }
             return true;
+
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
-        */
-        return true;
     }
 
     public static Column Load(String file)
