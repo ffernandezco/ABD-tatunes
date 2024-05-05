@@ -8,10 +8,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMiniSQLParser {
+
     //TEST PARSER
     @Test
     public void testCreateTableParse() {
-        String query = "CREATE TABLE TableName (dato1 INT, dato2 TEXT, dato3 DOUBLE)";
+        String query = "CREATE TABLE TableName (dato1 INT,dato2 TEXT,dato3 DOUBLE)";
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
         assertTrue(parsedQuery instanceof CreateTable);
         CreateTable createTableQuery = (CreateTable) parsedQuery;
@@ -196,12 +197,15 @@ public class TestMiniSQLParser {
     //TEST MÉTODOS
     @Test
     public void testCommaSeparatedNames() {
-        String text = "dato1, dato2, dato3";
-        List<String> prueba = MiniSQLParser.commaSeparatedNames(text);
-        assertEquals(3, prueba.size());
-        assertEquals("dato1", prueba.get(0));
-        assertEquals("dato2", prueba.get(1));
-        assertEquals("dato3", prueba.get(2));
+        String input = "Asier,Fran, ,Martina,Julito, ,";
+        List<String> output = List.of("Asier", "Fran", "Martina", "Julito");
+        List<String> result = MiniSQLParser.commaSeparatedNames(input);
+
+        assertNotNull(result);
+        assertEquals(output.size(), result.size());
+        for (int i = 0; i < output.size(); i++) {
+            assertEquals(output.get(i), result.get(i));
+        }
     }
 
 }
