@@ -51,8 +51,6 @@ public class Database {
             System.out.println(Constants.DATABASE_DOES_NOT_EXIST_ERROR);
             return null;
         }
-
-
     }
     public boolean save(String databaseName)
     {
