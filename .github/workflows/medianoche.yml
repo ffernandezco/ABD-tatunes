@@ -47,7 +47,7 @@ jobs:
         run: sha256sum target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar > target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.sha256
 
       - name: Crear release
-        uses: actions/create-release@v3
+        uses: actions/create-release
         with:
           tag_name: "develop-${{ steps.get_date.outputs.date }}"
           release_name: "tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}"
