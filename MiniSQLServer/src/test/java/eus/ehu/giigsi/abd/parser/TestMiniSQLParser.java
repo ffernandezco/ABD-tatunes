@@ -200,7 +200,6 @@ public class TestMiniSQLParser {
         String input = "Asier,Fran, ,Martina,Julito, ,";
         List<String> output = List.of("Asier", "Fran", "Martina", "Julito");
         List<String> result = MiniSQLParser.commaSeparatedNames(input);
-
         assertNotNull(result);
         assertEquals(output.size(), result.size());
         for (int i = 0; i < output.size(); i++) {

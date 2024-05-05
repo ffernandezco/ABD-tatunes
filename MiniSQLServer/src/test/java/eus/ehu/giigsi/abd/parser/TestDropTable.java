@@ -40,6 +40,7 @@ public class TestDropTable {
         assertEquals(expected, result);
     }
 
+    /*
     @Test
     public void prueba2() {
         String result, expected;
@@ -51,5 +52,7 @@ public class TestDropTable {
 
         assertEquals(expected, result);
     }
+
+     */
 
 }

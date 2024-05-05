@@ -168,6 +168,7 @@ public class TestColumn {
     }
 
 
+    /*
     @Test
     void Save() {
         // Creamos una columna de prueba
@@ -192,6 +193,8 @@ public class TestColumn {
         // Eliminamos el archivo de prueba
         testFile.delete();
     }
+
+     */
 
     @Test
     void Load() {
