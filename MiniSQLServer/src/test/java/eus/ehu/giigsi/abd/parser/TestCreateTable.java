@@ -32,6 +32,7 @@ public class TestCreateTable {
 
         CreateTable ct = new CreateTable("testCT", listaCP);
         ct.execute(database);
+
     }
 
     @Test
