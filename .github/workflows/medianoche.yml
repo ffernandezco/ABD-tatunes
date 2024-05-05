@@ -1,0 +1,59 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Medianoche
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build con Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Ejecutar tests
+        run: mvn test
+
+      - name: Obtener fecha
+        id: get_date
+        run: |
+          now=$(date +'%Y%m%d')
+          echo "::set-output name=date::$now"
+
+      - name: Cambiar nombre .jar
+        run: mv target/MiniSQLServer.jar target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar
+
+      - name: Generar hash
+        run: sha256sum target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar > target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.sha256
+
+      - name: Crear release
+        uses: actions/create-release
+        with:
+          tag_name: "develop-${{ steps.get_date.outputs.date }}"
+          release_name: "tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}"
+          body: |
+            Release automático ${{ steps.get_date.outputs.date }}
+
+          assets: |
+            target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar
+            target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.sha256
