@@ -12,7 +12,7 @@ public class TestDropTable {
     Database database;
     @BeforeEach
     void init() {
-        database = new Database("database1", "admin", "admin");
+        database = new Database("admin", "admin");
         database.save("database1");
 
         /*

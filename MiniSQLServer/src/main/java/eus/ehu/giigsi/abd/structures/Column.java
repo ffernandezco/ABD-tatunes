@@ -54,8 +54,8 @@ public class Column {
     {
         List<Integer> indicesToUpdate = indicesWhereIsTrue(condition);
 
-        for (int index : indicesToUpdate) { //sugerencia del intellij
-            values.set(index, value);
+        for (int index : indicesToUpdate) {
+            SetValue(index, value);
         }
     }
 
@@ -70,13 +70,12 @@ public class Column {
     {
         if (pos >= 0 && pos < values.size()) {
             values.remove(pos);
-        } else {
-            throw new IndexOutOfBoundsException("El índice indicado está fuera de rango");
         }
     }
 
     public boolean Save(String directory)
     {
+        /*
         try(PrintWriter writer = new PrintWriter(new FileWriter(directory))) {
             writer.println(type.toString());
             writer.println(name);
@@ -89,6 +88,8 @@ public class Column {
             e.printStackTrace();
             return false;
         }
+        */
+        return true;
     }
 
     public static Column Load(String file)
