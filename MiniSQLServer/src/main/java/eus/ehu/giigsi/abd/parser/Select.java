@@ -38,12 +38,13 @@ public class Select implements MiniSQLQuery{
         Table resultado = database.tableByName(table);
         Table datosEsperados = database.select(this.table, this.columns, this.where);
 
+
         if (columns != null || columns.size() ==1 && columns.get(0).equals("*") ){
 
             if (resultado == null){
                 return Constants.TABLE_DOES_NOT_EXIST_ERROR;
-            }
-            return resultado.toString();
+            }else{
+            return resultado.toString();}
 
         }
 
