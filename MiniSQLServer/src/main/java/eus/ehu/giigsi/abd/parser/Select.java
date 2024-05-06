@@ -59,12 +59,16 @@ public class Select implements MiniSQLQuery{
                 return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
             }
         }
-            if (database.select(this.table, this.columns, this.where) != null) {
+
+
+         Table datosEsperados = database.select(this.table, this.columns, this.where);
+        if (datosEsperados != null) {
                 // Hay que preguntar sobre lo qued debería devolver
-                return database.select(this.table, this.columns, this.where).toString();
-            }
+                return datosEsperados.toString();
+        }else{
 
             return Constants.SYNTAX_ERROR;
+        }
         }
 
 }
