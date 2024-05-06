@@ -25,7 +25,6 @@ public class TestTable {
         assertEquals(columns, table.columns);
     }
 
-
     @Test
     public void testInicioVacio() {
         String name = "Test";
