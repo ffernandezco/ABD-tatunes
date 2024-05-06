@@ -25,15 +25,15 @@ public class Insert implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        if (table == null || values == null) {
-            return Constants.ERROR + "tabla o valores estan vacios";
+        if (database.Insert(this.table, this.values)) {
+            return Constants.INSERT_SUCCESS;
 
         } else {
-            if (database.Insert(this.table, this.values)) {
-                return Constants.INSERT_SUCCESS;
+            if (database.tableByName(table) == null) {
+                return Constants.TABLE_DOES_NOT_EXIST_ERROR;
             }
 
-            return Constants.ERROR + "tabla o valores estan vacios";
+            return Constants.ERROR;
         }
     }
 
