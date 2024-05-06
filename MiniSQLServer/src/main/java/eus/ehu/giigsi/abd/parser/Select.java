@@ -36,6 +36,7 @@ public class Select implements MiniSQLQuery{
     public String execute(Database database)
     {
         Table resultado = database.tableByName(table);
+        Table datosEsperados = database.select(this.table, this.columns, this.where);
 
         if (columns != null || columns.size() ==1 && columns.get(0).equals("*") ){
 
@@ -47,7 +48,7 @@ public class Select implements MiniSQLQuery{
         }
 
 
-        for (String columna : columns){
+       for (String columna : columns){
             boolean existeColumna = false;
             for (Column columnaTabla : resultado.columns){
                 if(columnaTabla.getName().equals(columna)){
@@ -61,7 +62,8 @@ public class Select implements MiniSQLQuery{
         }
 
 
-         Table datosEsperados = database.select(this.table, this.columns, this.where);
+
+
         if (datosEsperados != null) {
                 // Hay que preguntar sobre lo qued debería devolver
                 return datosEsperados.toString();
