@@ -14,4 +14,12 @@ public class SetValue {
         this.column = column;
         this.value = value;
     }
+
+    public String getColumn() {
+        return column;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

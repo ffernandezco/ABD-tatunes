@@ -19,4 +19,12 @@ public class ColumnParameters {
         this.name = name;
         this.type = type;
     }
+
+    public Column.DataType getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

@@ -58,4 +58,8 @@ public class Condition {
         }
         return false;
     }
+
+    public String getColumn() {
+        return column;
+    }
 }

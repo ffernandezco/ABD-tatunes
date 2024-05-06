@@ -230,7 +230,6 @@ public class Database {
         tables.add(table);
     }
     public boolean createTable(String tableName, List<ColumnParameters> columnParameters) {
-
         // Verificamos si existe la tabla
         // Recorremos el array de columnParameters para crear columnas y, posteriormente crear la tabla
         if(tableByName(tableName) == null) {

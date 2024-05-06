@@ -37,4 +37,11 @@ public class Insert implements MiniSQLQuery{
         }
     }
 
+    public String getTable() {
+        return table;
+    }
+
+    public List<String> getValues() {
+        return values;
+    }
 }
