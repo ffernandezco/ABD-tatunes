@@ -24,7 +24,6 @@ public class DropTable implements MiniSQLQuery{
             return Constants.DROP_TABLE_SUCCESS;
         }
 
-
         return "Cannot delete table";
     }
 }
