@@ -132,7 +132,7 @@ public class TestTable {
         assertTrue(resultado);
 
         resultado = db.createTable("Persona", columns);
-        assertFalse(resultado);
+        assertFalse(resultado) ;
     }
     @Test
     public void testTableConstructor() {
