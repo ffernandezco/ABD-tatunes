@@ -1,6 +1,7 @@
 package eus.ehu.giigsi.abd.parser;
 
 import eus.ehu.giigsi.abd.Constants;
+import eus.ehu.giigsi.abd.structures.Column;
 import eus.ehu.giigsi.abd.structures.Database;
 import eus.ehu.giigsi.abd.structures.Table;
 import lombok.AccessLevel;
@@ -34,22 +35,20 @@ public class Select implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        if (table == null ){
-            return Constants.TABLE_DOES_NOT_EXIST_ERROR;
+        Table resultado = database.tableByName(table);
+        List <String> columnaresultado = getColumns();
 
-        }
         if (columns != null || columns.size() ==1 && columns.get(0).equals("*") ){
 
-            Table resultado = database.tableByName(table);
             if (resultado == null){
                 return Constants.TABLE_DOES_NOT_EXIST_ERROR;
             }
             return resultado.toString();
 
         }
-        Table resultado = database.tableByName(table);
-        if (resultado == null){
-            return Constants.TABLE_DOES_NOT_EXIST_ERROR;
+
+        if(columnaresultado == null) {
+            return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
         }
         else {
             if (database.select(this.table, this.columns, this.where) != null) {
