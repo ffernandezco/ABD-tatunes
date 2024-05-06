@@ -1,82 +1,122 @@
 package eus.ehu.giigsi.abd.parser;
 
-import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Column;
-import eus.ehu.giigsi.abd.structures.Database;
-import eus.ehu.giigsi.abd.structures.Table;
-import org.junit.jupiter.api.BeforeEach;
+import eus.ehu.giigsi.abd.structures.*;
 import org.junit.jupiter.api.Test;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestUpdate {
 
-    Database database;
-    Table table;
-
-    @BeforeEach
-    void init() {
-        database = new Database("admin", "admin");
-
-        List<String> vInt = new ArrayList<>();
-        vInt.add("1");
-        vInt.add("3");
-        vInt.add("5");
-
-        List<String> vStr = new ArrayList<>();
-        vStr.add("A");
-        vStr.add("C");
-        vStr.add("D");
-
-        List<String> vDbl = new ArrayList<>();
-        vDbl.add("1.99");
-        vDbl.add("3.99");
-        vDbl.add("5.99");
-
-        List<Column> column = new ArrayList<>();
-        column.add(new Column(Column.DataType.INT, "int", vInt));
-        column.add(new Column(Column.DataType.STRING, "str", vStr));
-        column.add(new Column(Column.DataType.DOUBLE, "dbl", vDbl));
-
-        table = new Table("tabla1", column);
-        database.addTable(table);
-    }
-
     @Test
-    void test1() {
-        String expected, result;
+    public void Update() {
 
-        List<SetValue> sv = new ArrayList<>();
+        Database db  = new Database("admin", "admin");
+        List<Column> columnsTable1 = new ArrayList<>();
+        columnsTable1.add(new Column(Column.DataType.STRING, "Nombres"));
+        columnsTable1.add(new Column(Column.DataType.STRING, "LDAP"));
+        Table estudiantes = new Table("Estudiantes", columnsTable1);
 
-        sv.add(new SetValue("str", "hola"));
-        sv.add(new SetValue("int", "4"));
-        sv.add(new SetValue("dbl", "4.99"));
+        List<Column> columnsTable2 = new ArrayList<>();
+        columnsTable2.add(new Column(Column.DataType.STRING, "LDAP"));
+        columnsTable2.add(new Column(Column.DataType.STRING, "Asignatura"));
+        columnsTable2.add(new Column(Column.DataType.STRING, "Nota"));
+        columnsTable2.add(new Column(Column.DataType.STRING, "NotaTexto"));
+        Table notas = new Table("notas", columnsTable2);
 
-        Condition c = new Condition("str", "<", "D");
+        // Agregar las tablas a la lista de tablas de la base de datos
+        db.addTable(estudiantes);
+        db.addTable(notas);
+
+        // Insertar alumnos a la bd
+        List<String> estu1 = new ArrayList<>();
+        estu1.add("Martina Gioiello");
+        estu1.add("1007012");
+        estudiantes.insert(estu1);
+
+        List<String> estu2 = new ArrayList<>();
+        estu2.add("Asier Montero");
+        estu2.add("1407292");
+        estudiantes.insert(estu2);
+
+        List<String> estu3 = new ArrayList<>();
+        estu3.add("Francisco Fernandez");
+        estu3.add("1293715");
+        estudiantes.insert(estu3);
+
+        // Insertar calificaciones
+        List<String> nota1 = new ArrayList<>();
+        nota1.add("1007012");
+        nota1.add("Calculo");
+        nota1.add("9.2");
+        notas.insert(nota1);
+
+        List<String> nota2 = new ArrayList<>();
+        nota2.add("1007012");
+        nota2.add("Diseño de Bases de Datos");
+        nota2.add("4.3");
+        notas.insert(nota2);
+
+        List<String> nota3 = new ArrayList<>();
+        nota3.add("1007012");
+        nota3.add("Investigación Operativa");
+        nota3.add("7.2");
+        notas.insert(nota3);
+
+        List<String> nota4 = new ArrayList<>();
+        nota4.add("1407292");
+        nota4.add("Cálculo");
+        nota4.add("6.0");
+        notas.insert(nota4);
+
+        List<String> nota5 = new ArrayList<>();
+        nota5.add("1407292");
+        nota5.add("Diseño de Bases de Datos");
+        nota5.add("8.5");
+        notas.insert(nota5);
+
+        List<String> nota6 = new ArrayList<>();
+        nota6.add("1407292");
+        nota6.add("Investigación Operativa");
+        nota6.add("8.0");
+        notas.insert(nota6);
+
+        List<String> nota7 = new ArrayList<>();
+        nota7.add("1293715");
+        nota7.add("Cálculo");
+        nota7.add("5.2");
+        notas.insert(nota7);
+
+        List<String> nota8 = new ArrayList<>();
+        nota8.add("1293715");
+        nota8.add("Diseño de Bases de Datos");
+        nota8.add("6.4");
+        notas.insert(nota8);
+
+        List<String> nota9 = new ArrayList<>();
+        nota9.add("1293715");
+        nota9.add("Investigación Operativa");
+        nota9.add("4.3");
+        notas.insert(nota9);
 
 
-        result = new Update(table.name, sv, c).execute(database);
-        expected = Constants.UPDATE_SUCCESS;
-        assertEquals(expected, result);
+        // Crear condiciones para la actualización
+        Condition condition = new Condition("Nota", ">", "8.9");
+        Condition condition1 = new Condition("Nota", "<", "5.0");
 
-        result = new Update(table.name, sv, null).execute(database);
-        expected = "Se necesita especificar condición";
-        assertEquals(expected, result);
+        // Crear una lista de cambios
+        List<SetValue> sobresaliente = new ArrayList<>();
+        sobresaliente.add(new SetValue("NotaTexto", "Sobresaliente"));
 
-        result = new Update(table.name, null, c).execute(database);
-        expected = "Se necesitan especificar columnas";
-        assertEquals(expected, result);
+        List<SetValue> suspenso = new ArrayList<>();
+        suspenso.add(new SetValue("NotaTexto", "Suspenso"));
 
-        result = new Update(null, sv, c).execute(database);
-        expected = "Se necesita introducir una tabla";
-        assertEquals(expected, result);
+        boolean result = db.update("notas", sobresaliente, condition);
+        boolean result1 = db.update("notas", suspenso, condition1);
 
-        result = new Update("", sv, c).execute(database);
-        expected = Constants.ERROR;
-        assertEquals(expected, result);
+        assertTrue(result);
+        assertTrue(result1);
+
     }
 }
