@@ -36,7 +36,6 @@ public class Select implements MiniSQLQuery{
     public String execute(Database database)
     {
         Table resultado = database.tableByName(table);
-        List <String> columnaresultado = getColumns();
 
         if (columns != null || columns.size() ==1 && columns.get(0).equals("*") ){
 
@@ -47,10 +46,19 @@ public class Select implements MiniSQLQuery{
 
         }
 
-        if(columnaresultado == null) {
-            return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
+
+        for (String columna : columns){
+            boolean existeColumna = false;
+            for (Column columnaTabla : resultado.columns){
+                if(columnaTabla.getName().equals(columna)){
+                    existeColumna = true;
+                    break;
+                }
+            }
+            if (!existeColumna){
+                return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
+            }
         }
-        else {
             if (database.select(this.table, this.columns, this.where) != null) {
                 // Hay que preguntar sobre lo qued debería devolver
                 return database.select(this.table, this.columns, this.where).toString();
@@ -58,5 +66,5 @@ public class Select implements MiniSQLQuery{
 
             return Constants.SYNTAX_ERROR;
         }
-    }
+
 }
