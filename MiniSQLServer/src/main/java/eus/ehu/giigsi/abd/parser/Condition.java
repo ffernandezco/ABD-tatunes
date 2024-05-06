@@ -9,6 +9,7 @@ public class Condition {
     @Getter
     @Setter(AccessLevel.PRIVATE)
     public String column;
+
     @Getter
     @Setter(AccessLevel.PRIVATE)
     public String operator;

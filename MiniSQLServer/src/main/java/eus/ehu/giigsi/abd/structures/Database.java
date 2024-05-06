@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
@@ -35,9 +36,8 @@ public class Database {
 
     }
 
-    public Database(String pName,String adminUsername, String adminPassword)
+    public Database(String adminUsername, String adminPassword)
     {
-        name = pName;
         mUsername = adminUsername;
         mPassword = adminPassword;
     }
@@ -51,64 +51,134 @@ public class Database {
             System.out.println(Constants.DATABASE_DOES_NOT_EXIST_ERROR);
             return null;
         }
-
-
     }
-
     public boolean save(String databaseName)
     {
-        return false;
+        // Guardaremos en una ruta relativa para evitarnos problemas en caso de disponer diferentes SO
+        // Falta cambiar la ruta a relativa
+        String path = "databases" + File.separator + databaseName; // File.separator
+
+        try {
+            int i = 0;
+            while (tables.get(i).save(databaseName) == true) {
+                    i++;
+            }
+
+            return true;
+        }
+        catch (Exception e) {
+            System.out.println(e.toString());
+            return false;
+        }
+
     }
-    public Table select(String databaseName,String table, List<String> columns, Condition columnCondition) throws IOException {
-        String user = this.mUsername;
-        String password = this.mPassword;
-        FileReader fr = load(databaseName, user, password);
+
+    public Table select(String table, List<String> columns, Condition columnCondition) {
+        Table t = tableByName(table);
+
+        if(t != null) {
+            List<Column> columnasSelect = new ArrayList<>();
+
+            Column c = t.columnByName(columnCondition.getColumn());
+            List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
+
+            // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
+            if (columns != null && !columns.isEmpty()) {
+
+                for (String nombreColumna : columns) {
+
+                    if (t.columnByName(nombreColumna) != null) {
+
+                        Column c1 = t.columnByName(nombreColumna);
+
+                        List<String> valoresColumna = new ArrayList<>();
+
+                        // Guardamos los valores de las posiciones recogidas anteriormente en una lista
+                        for (int j : valoresIntroducir) {
+                            valoresColumna.add(c1.getValues().get(j));
+                        }
+
+                        // Insertamos la lista en la tabla
+                        Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                        columnasSelect.add(aux);
+                    }
+                }
+                Table select = new Table(table, columnasSelect);
+                return select;
+            }
+        }
         return null;
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
+        Table t = tableByName(tableName);
+
+        if (t != null) {
+
+            if (columnCondition != null) {
+
+                t.deleteWhere(columnCondition);
+                return true;
+            }
+        }
+
         return false;
     }
 
     public boolean update(String tableName, List<SetValue> columnNames, Condition columnCondition)
     {
-        boolean found = false;
-        for( Table table : tables) {
-            if (table.name.equals(tableName)) {
-                table.update(columnNames, columnCondition);
-                found = true;
-            }
-        }
-        return found;
-    }
+        Table table = tableByName(tableName);
 
-    public boolean Insert(String databaseName,String tableName, List<String> values) throws IOException
-    {
-        String user = null;
-        String password = null;
-        FileReader fr = load(databaseName, user, password);
-        int numLine = findTable(fr, tableName);
-        if(numLine != -1){
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            int currentLine=0;
-            while((line = reader.readLine()) != null && currentLine < numLine - 1) {
-                currentLine++;
-            }
-            int i=0;
-            while(i< values.size()){
-                FileWriter fw = new FileWriter("/archives/"+databaseName+".txt");
-                BufferedWriter writer = new BufferedWriter(fw);
-                writer.write(values.get(i) + "\n");
-                i++;
-                currentLine++;
+        if (table != null) {
+
+            if (columnNames != null && !columnNames.isEmpty()) {
+
+                if (columnCondition != null) {
+                    int i = 0;
+
+                    Column c = table.columnByName(columnCondition.column);
+
+                    List<Integer> indices = c.indicesWhereIsTrue(columnCondition);
+
+                    for (SetValue sv : columnNames) {
+                        for (int k : indices) {
+                            Column c1 = table.columnByName(sv.getColumn());
+                            c1.SetValue(k, sv.getValue());
+                        }
+                    }
+                    return true;
+
+                    /*
+                    for (SetValue sv : columnNames) {
+
+                        Column c1 = table.columnByName(sv.getColumn());
+                        c1.updateWhere(columnCondition, sv.getValue());
+                    }
+                    return true;
+                    */
+
+                }
             }
         }
+
         return false;
     }
 
-    public String executeMiniSQLQuery(String query)
-    {
+    public boolean Insert(String tableName, List<String> values) {
+        Table t = tableByName(tableName);
+
+        if (t != null) {
+
+            if (values != null && !values.isEmpty()) {
+
+                return t.insert(values);
+            }
+        }
+
+        return false;
+    }
+
+    public String executeMiniSQLQuery(String query) {
         //Parse the query
         MiniSQLQuery miniSQLQuery = MiniSQLParser.parse(query);
 
@@ -120,40 +190,75 @@ public class Database {
 
     public Table tableByName(String tableName)
     {
+        int i = 0;
+
+        // Buscamos en cada vector del array tables y si coinciden se devuelve el item
+        while(i < tables.size()) {
+            if(tables.get(i).name == tableName) {
+                return tables.get(i);
+            }
+            else {
+                i++;
+            }
+        }
+
+        // En caso de no existir se devuelve null
         return null;
     }
-    public boolean dropTable(String tableName)
-    {
+    public boolean dropTable(String tableName) {
+        // Buscamos si existe la tabla que quiere borrarse
+        Table table = tableByName(tableName);
+
+        // Falta cambiar la ruta a relativa
+        String path = this.name + File.pathSeparator + tableName;
+
+        if (table != null) {
+            // Borramos la tabla de la lista
+            tables.remove(table);
+
+            // Borramos el directorio del equipo
+            File directorio = new File(path);
+            return directorio.delete();
+        }
+
+        System.out.print("No existe tabla con ese nombre");
         return false;
     }
     public void addTable(Table table)
     {
-
+        tables.add(table);
     }
-    public boolean createTable(String database,String tableName, List<ColumnParameters> columnParameters) throws IOException {
+    public boolean createTable(String tableName, List<ColumnParameters> columnParameters) {
 
-        try{
-            FileReader fr = load(database,mUsername,mPassword);
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            while((line = reader.readLine())!=null){
-                if(line.contains(tableName)){
-                 System.out.println(Constants.TABLE_ALREADY_EXISTS_ERROR);
-                 return false;
+        // Verificamos si existe la tabla
+        // Recorremos el array de columnParameters para crear columnas y, posteriormente crear la tabla
+        if(tableByName(tableName) == null) {
+            List<Column> columns = new ArrayList<>();
+
+            // Convertimos cada ColumnParameter en Column
+            if(columnParameters != null && !columnParameters.isEmpty()) {
+                for (ColumnParameters c : columnParameters) {
+                    Column.DataType type = c.getType();
+                    String name = c.getName();
+
+                    Column column = new Column(type, name);
+
+                    columns.add(column);
                 }
+            }else{
+                return false;
             }
-            BufferedWriter writer = new BufferedWriter(new FileWriter("/archives/"+database+".txt",true));
-            writer.write(tableName+"\n");
-            for(int i=0; i<columnParameters.size();i++){
-                writer.write(columnParameters.get(i).name+" ");
-                writer.write(columnParameters.get(i).type.name()+", ");
-            }
-            System.out.println(Constants.CREATE_TABLE_SUCCESS);
-            return true;
-        }catch (IOException e){
-            System.out.println(Constants.ERROR);
-            return false;
+
+            // Creamos la tabla y la añadimos a la lista de la base de datos
+            Table table = new Table(tableName, columns);
+
+            addTable(table);
+
+            return tableByName(tableName) != null && tableByName(tableName).columns != null;
         }
+
+        // En caso de existir no se crea la tabla
+        return false;
     }
 
     public boolean IsUserAdmin() throws IOException {
@@ -167,18 +272,4 @@ public class Database {
         }
         return false;
     }
-    public int findTable(FileReader fr, String tableName) throws IOException{
-            BufferedReader reader = new BufferedReader(fr);
-            String line;
-            int lineNum=0;
-            while((line = reader.readLine()) != null){
-                lineNum++;
-                if(line.contains(tableName)){
-                    reader.close();
-                    return lineNum;
-                }
-            }
-                reader.close();
-                return -1;
-        }
 }

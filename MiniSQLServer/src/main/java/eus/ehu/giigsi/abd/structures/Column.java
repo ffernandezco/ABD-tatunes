@@ -32,6 +32,7 @@ public class Column {
         this.values = values;
     }
 
+
     public Column(DataType type, String name){
         this.type = type;
         this.name = name;
@@ -53,8 +54,8 @@ public class Column {
     {
         List<Integer> indicesToUpdate = indicesWhereIsTrue(condition);
 
-        for (int index : indicesToUpdate) { //sugerencia del intellij
-            values.set(index, value);
+        for (int index : indicesToUpdate) {
+            SetValue(index, value);
         }
     }
 
@@ -82,6 +83,7 @@ public class Column {
                 writer.println(value);
             }
             return true;
+
         } catch (IOException e) {
             e.printStackTrace();
             return false;

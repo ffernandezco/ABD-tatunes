@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,7 +33,16 @@ public class Select implements MiniSQLQuery{
 
     public String execute(Database database)
     {
+        if (table == null || columns == null) {
+            return Constants.ERROR + "tabla o valores estan vacios";
 
-        return null;
+        } else {
+            if (database.select(this.table, this.columns, this.where) != null) {
+                // Hay que preguntar sobre lo qued debería devolver
+                return database.select(this.table, this.columns, this.where).toString();
+            }
+
+            return Constants.SYNTAX_ERROR;
+        }
     }
 }

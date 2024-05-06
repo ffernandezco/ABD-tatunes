@@ -1,16 +1,21 @@
 package eus.ehu.giigsi.abd.structures;
 
+import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.parser.Condition;
 import eus.ehu.giigsi.abd.parser.SetValue;
+import lombok.Getter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Table {
     public List<Column> columns;
+    @Getter
     public String name = null;
 
     public Table(String name, List<Column> columns)
@@ -19,28 +24,38 @@ public class Table {
         this.columns = columns;
     }
 
+    public Table() {
+
+    }
+
     public boolean load(String path)
     {
-        try ( Scanner entrada = new Scanner(new File(path))){
-            while (entrada.hasNext()){
-                //TODO
-            }
-        } catch ( FileNotFoundException e ) {
+        File f = new File(path);
 
-            System.err.println("Fichero no encontrado");
-
-        }
         return false;
     }
 
     public boolean save(String databaseName)
     {
-            //TODO
+        String path = "databases" + File.separator + databaseName + File.separator + this.name;
+
+        File f = new File(path);
+        boolean b = f.mkdirs();
+
+        if (b) {
+            for (Column c : columns) {
+                c.Save(path);
+            }
+
+            return true;
+        }
+
         return false;
     }
 
     public Column columnByName(String column)
     {
+
         for(Column columna : columns) {
             if (columna.getName().equals(column)) {
                 return columna;
@@ -68,34 +83,42 @@ public class Table {
     {
         String salida = "Tabla " + name + "\n" + "Contenido: \n";
         for (Column columna : columns) {
-            salida = salida + "- " + columna.toString() + "\n";
+            salida = salida + "\t Columna: " + columna.getName() + "\n";
+            for (String valor : columna.getValues()) {
+                salida = salida + "\t \t" + valor + "\n";
+            }
         }
         return salida;
     }
 
     public void deleteWhere(Condition condition) {
+        List<Integer> indices = columnByName(condition.column).indicesWhereIsTrue(condition);
+
         for (Column columna : columns) {
-            if (columna.name.equals(condition.column)) {
-                List<Integer> indices = columna.indicesWhereIsTrue(condition);
-                for (int i = indices.size()-1; i>=0; i--) {
-                    int index = indices.get(i);
-                    columna.deleteAt(index);
-                }
+
+            for (int i = indices.size()-1; i>=0; i--) {
+
+                int index = indices.get(i);
+                columna.deleteAt(index);
             }
         }
     }
 
-
     public boolean insert(List<String> values)
     {
-        if (values.size() > columns.size()) {
+        // En caso de que no haya suficientes datos para cada columna devuelve error
+        if (values.size() != columns.size()) {
             return false;
         }
+
+        // Introduce los datos en las columnas en función del orden en el que estén
         for (int i = 0; i < columns.size(); i++) {
             Column columna = columns.get(i);
             String value = values.get(i);
+
             columna.values.add(value);
         }
+
         return true;
     }
 
@@ -115,3 +138,4 @@ public class Table {
         return errorMessage;
     }
 }
+
