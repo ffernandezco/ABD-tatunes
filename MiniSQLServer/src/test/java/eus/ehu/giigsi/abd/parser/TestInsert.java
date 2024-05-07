@@ -96,9 +96,12 @@ public class TestInsert {
     }
 
     @Test
-    public void SelectColumnaNoExiste() {
+    public void CreateTableInsertAndSelectWhereVacio() {
         Database database = new Database("admin", "adminPassword");
         assertEquals("MSG: Table created", database.executeMiniSQLQuery("CREATE TABLE MyTable (Name TEXT,Age INT,Address TEXT)"));
-        assertEquals("ERROR: Column does not exist", database.executeMiniSQLQuery("SELECT Salary FROM MyTable"));
+        assertEquals("ERROR: Table does not exist", database.executeMiniSQLQuery("INSERT INTO MyTable VALUES ('Eva',18,'Calle Los Herran 16 2 Vitoria')"));
+        assertEquals("MSG: Tuple added", database.executeMiniSQLQuery("INSERT INTO MyTable VALUES ('Ramon',26,'Larratxo kalea 23')"));
+        assertEquals("MSG: Tuple added", database.executeMiniSQLQuery("INSERT INTO MyTable VALUES ('Miren',26,'Larratxo kalea 23')"));
+        assertEquals("['Name','Age']", database.executeMiniSQLQuery("SELECT Name,Age FROM MyTable WHERE Age=18"));
     }
 }
