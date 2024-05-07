@@ -105,22 +105,26 @@ public class Database {
                             columnasSelect.add(aux);
                         }
                     }
+
                     Table select = new Table(table, columnasSelect);
                     return select;
 
+                } else if (columns == null || columns.size() == 0) {
+                    return null;
+
                 } else if (columns.get(0).equals("*")) {
-                    for (Column c1 : t.columns) {
+                    for (Column c2 : t.columns) {
 
-                        List<String> valoresColumna = new ArrayList<>();
+                            List<String> valoresColumna = new ArrayList<>();
 
-                        // Guardamos los valores de las posiciones recogidas anteriormente en una lista
-                        for (int j : valoresIntroducir) {
-                            valoresColumna.add(c1.getValues().get(j));
-                        }
+                            // Guardamos los valores de las posiciones recogidas anteriormente en una lista
+                            for (int j : valoresIntroducir) {
+                                valoresColumna.add(c2.getValues().get(j));
+                            }
 
-                        // Insertamos la lista en la tabla
-                        Column aux = new Column(c1.type, c1.getName(), valoresColumna);
-                        columnasSelect.add(aux);
+                            // Insertamos la lista en la tabla
+                            Column aux = new Column(c2.type, c2.getName(), valoresColumna);
+                            columnasSelect.add(aux);
                     }
 
                     Table select = new Table(table, columnasSelect);
@@ -148,21 +152,22 @@ public class Database {
                             columnasSelect.add(aux);
                         }
                     }
+
                     Table select = new Table(table, columnasSelect);
                     return select;
 
                 } else if (columns.get(0).equals("*")) {
-                    for (Column c1 : t.columns) {
+                    for (Column c2 : t.columns) {
 
                         List<String> valoresColumna = new ArrayList<>();
 
                         // Guardamos los valores de las posiciones recogidas anteriormente en una lista
-                        for (int j = 0; j < c1.values.size(); j++) {
-                            valoresColumna.add(c1.getValues().get(j));
+                        for (int j = 0; j < c2.values.size(); j++) {
+                            valoresColumna.add(c2.getValues().get(j));
                         }
 
                         // Insertamos la lista en la tabla
-                        Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                        Column aux = new Column(c2.type, c2.getName(), valoresColumna);
                         columnasSelect.add(aux);
                     }
 
@@ -172,7 +177,6 @@ public class Database {
             }
         }
         return null;
-
     }
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
