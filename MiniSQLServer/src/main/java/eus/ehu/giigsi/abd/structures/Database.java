@@ -109,6 +109,9 @@ public class Database {
                     Table select = new Table(table, columnasSelect);
                     return select;
 
+                } else if (columns == null || columns.size() == 0) {
+                    return null;
+
                 } else if (columns.get(0).equals("*")) {
                     for (Column c2 : t.columns) {
 
