@@ -53,14 +53,18 @@ public class Table {
         return false;
     }
 
-    public Column columnByName(String column)
-    {
+    public Column columnByName(String columnName) {
+        int i = 0;
 
-        for(Column columna : columns) {
-            if (columna.getName().equals(column)) {
-                return columna;
+        // Buscamos en cada vector del array tables y si coinciden se devuelve el item
+        while (i < columns.size()) {
+            if (columns.get(i).name.equals(columnName)) {
+                return columns.get(i);
+            } else {
+                i++;
             }
         }
+        // En caso de no existir se devuelve null
         return null;
     }
 
@@ -82,23 +86,23 @@ public class Table {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        // Obtener nombres de columnas y colocarlos entre corchetes
+        // Colocar columnas entre corchetes
         builder.append("[");
         for (int i = 0; i < columns.size(); i++) {
             builder.append("'").append(columns.get(i).getName()).append("'");
-            // Gestionar varios valores, separados con coma
+            // Gestión de múltiples columnas
             if (i < columns.size() - 1) {
                 builder.append(",");
             }
         }
         builder.append("]");
 
-        // Obtener resultados y colocar entre llaves
+        // Colocar respuestas en llaves
         for (int i = 0; i < columns.get(0).getValues().size(); i++) {
             builder.append("{");
             for (int j = 0; j < columns.size(); j++) {
                 builder.append("'").append(columns.get(j).getValues().get(i)).append("'");
-                // Gestionar comas
+                // Gestión de múltiples resultados
                 if (j < columns.size() - 1) {
                     builder.append(",");
                 }
@@ -107,6 +111,8 @@ public class Table {
         }
         return builder.toString();
     }
+
+
 
     public void deleteWhere(Condition condition) {
         List<Integer> indices = columnByName(condition.column).indicesWhereIsTrue(condition);
