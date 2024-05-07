@@ -231,7 +231,14 @@ public class Database {
     }
     public boolean createTable(String tableName, List<ColumnParameters> columnParameters) {
 
-        // Verificamos si existe la tabla
+        if (tableByName(tableName) != null) {
+            lastErrorMessage = Constants.TABLE_ALREADY_EXISTS_ERROR;
+            return false;  // Return false immediately after setting error message
+        } else if (columnParameters == null || columnParameters.isEmpty()) {
+            lastErrorMessage = Constants.SYNTAX_ERROR; // New error message
+            return false;
+        }
+
         // Recorremos el array de columnParameters para crear columnas y, posteriormente crear la tabla
         if(tableByName(tableName) == null) {
             List<Column> columns = new ArrayList<>();
@@ -246,20 +253,19 @@ public class Database {
 
                     columns.add(column);
                 }
+
+                Table table = new Table(tableName, columns);
+                addTable(table);
+                lastErrorMessage = Constants.CREATE_TABLE_SUCCESS;
+                return true;
             }else{
-                return false;
+                return tableByName(tableName) == null && columnParameters != null && !columnParameters.isEmpty();
             }
-
-            // Creamos la tabla y la añadimos a la lista de la base de datos
-            Table table = new Table(tableName, columns);
-
-            addTable(table);
-
-            return tableByName(tableName) != null && tableByName(tableName).columns != null;
         }
 
         // En caso de existir no se crea la tabla
-        return false;
+        lastErrorMessage = Constants.TABLE_ALREADY_EXISTS_ERROR;
+        return tableByName(tableName) != null && tableByName(tableName).columns != null;
     }
 
     public boolean IsUserAdmin() throws IOException {

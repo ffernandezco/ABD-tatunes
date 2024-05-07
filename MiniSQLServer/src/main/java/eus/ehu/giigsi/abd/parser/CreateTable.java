@@ -31,11 +31,11 @@ public class CreateTable implements MiniSQLQuery {
         }
 
         else {
-            boolean b = database.createTable(Table, columnsParameters);
-            if (b) {
+            boolean created = database.createTable(Table, columnsParameters);
+            if (created) {
                 return Constants.CREATE_TABLE_SUCCESS;
             } else {
-                return "Ya existe una tabla con ese nombre";
+                return Constants.TABLE_ALREADY_EXISTS_ERROR;  // Use specific error message
             }
         }
     }
