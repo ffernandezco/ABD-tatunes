@@ -51,7 +51,7 @@ public class TestCreateTable {
 
         CreateTable ct1 = new CreateTable("testCT", listaCP);
 
-        expected = "Ya existe una tabla con ese nombre";
+        expected = "ERROR: Table exists already";
         result = ct1.execute(database);
 
         assertEquals(expected, result);
@@ -87,10 +87,17 @@ public class TestCreateTable {
         assertEquals(prueba2.columns.get(1).name, database.tables.get(1).columns.get(1).name);
         assertEquals(prueba2.columns.get(2).type, database.tables.get(1).columns.get(2).type);
 
-        assertEquals("No se puede crear una tabla sin columnas", r2);
-        assertEquals("No se ha creado la tabla, falta el nombre", r3);
+        assertEquals("ERROR: Cannot create table without columns", r2);
+        assertEquals("ERROR: Syntactical error", r3);
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void CreateTableExistente() {
+        Database database = new Database("admin", "admin");
+        assertEquals("MSG: Table created", database.executeMiniSQLQuery("CREATE TABLE tabla (entero INT,texto TEXT,decimal DOUBLE)"));
+        assertEquals("ERROR: Table exists already", database.executeMiniSQLQuery("CREATE TABLE tabla (entero INT,texto TEXT,decimal DOUBLE)"));
     }
 
 }

@@ -10,7 +10,7 @@ name: Pull request en main
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "23-workflows" ]
 
 jobs:
   build:
@@ -30,15 +30,19 @@ jobs:
 
       - name: Build con Maven
         run: mvn -B package --file pom.xml
+        working-directory: MiniSQLServer
 
       - name: Ejecutar tests
         run: mvn test
+        working-directory: MiniSQLServer
 
       - name: Cambiar nombre .jar
         run: mv target/MiniSQLServer.jar target/tatunes-MiniSQLServer-v${{ github.event.release.tag_name }}.jar
+        working-directory: MiniSQLServer
 
       - name: Generar hash
         run: sha256sum target/tatunes-MiniSQLServer-v${{ github.event.release.tag_name }}.jar > target/tatunes-MiniSQLServer-v${{ github.event.release.tag_name }}.sha256
+        working-directory: MiniSQLServer
 
       - name: Crear release
         uses: actions/create-release@v1

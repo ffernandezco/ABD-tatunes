@@ -45,10 +45,8 @@ public class Database {
     public static FileReader load(String databaseName, String username, String password) {
         File file = new File("/archives/" + databaseName + ".txt");
         try (FileReader fr = new FileReader(file)) {
-            System.out.println("Database loaded successfully");
             return fr;
         } catch (IOException e) {
-            System.out.println(Constants.DATABASE_DOES_NOT_EXIST_ERROR);
             return null;
         }
 
@@ -62,7 +60,7 @@ public class Database {
         try {
             int i = 0;
             while (tables.get(i).save(databaseName) == true) {
-                    i++;
+                i++;
             }
 
             return true;
@@ -80,32 +78,110 @@ public class Database {
         if(t != null) {
             List<Column> columnasSelect = new ArrayList<>();
 
-            Column c = t.columnByName(columnCondition.getColumn());
-            List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
+            if (columnCondition != null) {
+                Column c = t.columnByName(columnCondition.getColumn());
+                List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
 
-            // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
-            if (columns != null && !columns.isEmpty()) {
+                // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
+                if (columns != null && !columns.isEmpty()) {
 
-                for (String nombreColumna : columns) {
+                    for (String nombreColumna : columns) {
 
-                    if (t.columnByName(nombreColumna) != null) {
+                        if (t.columnByName(nombreColumna) != null) {
 
-                        Column c1 = t.columnByName(nombreColumna);
+                            Column c1 = t.columnByName(nombreColumna);
+
+                            List<String> valoresColumna = new ArrayList<>();
+
+                            // Guardamos los valores de las posiciones recogidas anteriormente en una lista
+                            for (int j : valoresIntroducir) {
+                                valoresColumna.add(c1.getValues().get(j));
+                            }
+
+                            // Insertamos la lista en la tabla
+                            Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                            columnasSelect.add(aux);
+
+                        } else {
+                            lastErrorMessage = Constants.COLUMN_DOES_NOT_EXIST_ERROR;
+                            return null;
+                        }
+
+                    }
+
+                    Table select = new Table(table, columnasSelect);
+                    return select;
+
+                } else if (columns == null || columns.size() == 0) {
+                    return null;
+
+                } else if (columns.get(0).equals("*")) {
+                    for (Column c2 : t.columns) {
 
                         List<String> valoresColumna = new ArrayList<>();
 
                         // Guardamos los valores de las posiciones recogidas anteriormente en una lista
                         for (int j : valoresIntroducir) {
-                            valoresColumna.add(c1.getValues().get(j));
+                            valoresColumna.add(c2.getValues().get(j));
                         }
 
                         // Insertamos la lista en la tabla
-                        Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                        Column aux = new Column(c2.type, c2.getName(), valoresColumna);
                         columnasSelect.add(aux);
                     }
+
+                    Table select = new Table(table, columnasSelect);
+                    return select;
                 }
-                Table select = new Table(table, columnasSelect);
-                return select;
+
+            } else {
+                if (columns != null && !columns.isEmpty()) {
+
+                    for (String nombreColumna : columns) {
+
+                        if (t.columnByName(nombreColumna) != null) {
+
+                            Column c1 = t.columnByName(nombreColumna);
+
+                            List<String> valoresColumna = new ArrayList<>();
+
+                            // Guardamos los valores de las posiciones recogidas anteriormente en una lista
+                            for (int j = 0; j < c1.values.size(); j++) {
+                                valoresColumna.add(c1.getValues().get(j));
+                            }
+
+                            // Insertamos la lista en la tabla
+                            Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                            columnasSelect.add(aux);
+
+                        } else {
+                            lastErrorMessage = Constants.COLUMN_DOES_NOT_EXIST_ERROR;
+                            return null;
+                        }
+
+                    }
+
+                    Table select = new Table(table, columnasSelect);
+                    return select;
+                } else if (columns.get(0).equals("*")) {
+                    for (Column c2 : t.columns) {
+
+                        List<String> valoresColumna = new ArrayList<>();
+
+                        // Guardamos los valores de las posiciones recogidas anteriormente en una lista
+                        for (int j = 0; j < c2.values.size(); j++) {
+                            valoresColumna.add(c2.getValues().get(j));
+                        }
+
+                        // Insertamos la lista en la tabla
+                        Column aux = new Column(c2.type, c2.getName(), valoresColumna);
+                        columnasSelect.add(aux);
+                    }
+
+                    Table select = new Table(table, columnasSelect);
+                    return select;
+                }
+                return null;
             }
         }
         return null;
@@ -195,7 +271,7 @@ public class Database {
 
         // Buscamos en cada vector del array tables y si coinciden se devuelve el item
         while(i < tables.size()) {
-            if(tables.get(i).name == tableName) {
+            if(tables.get(i).name.equals(tableName)) {
                 return tables.get(i);
             }
             else {
@@ -210,28 +286,19 @@ public class Database {
         // Buscamos si existe la tabla que quiere borrarse
         Table table = tableByName(tableName);
 
-        // Falta cambiar la ruta a relativa
-        String path = this.name + File.pathSeparator + tableName;
-
         if (table != null) {
             // Borramos la tabla de la lista
-            tables.remove(table);
+            return tables.remove(table);
 
-            // Borramos el directorio del equipo
-            File directorio = new File(path);
-            return directorio.delete();
+        } else {
+            return false;
         }
-
-        System.out.print("No existe tabla con ese nombre");
-        return false;
     }
     public void addTable(Table table)
     {
         tables.add(table);
     }
     public boolean createTable(String tableName, List<ColumnParameters> columnParameters) {
-
-        // Verificamos si existe la tabla
         // Recorremos el array de columnParameters para crear columnas y, posteriormente crear la tabla
         if(tableByName(tableName) == null) {
             List<Column> columns = new ArrayList<>();
@@ -246,20 +313,21 @@ public class Database {
 
                     columns.add(column);
                 }
-            }else{
+
+                Table table = new Table(tableName, columns);
+                addTable(table);
+                lastErrorMessage = Constants.CREATE_TABLE_SUCCESS;
+                return true;
+
+            } else {
+                lastErrorMessage = Constants.DATABASE_CREATED_WITHOUT_COLUMNS_ERROR;
                 return false;
             }
 
-            // Creamos la tabla y la añadimos a la lista de la base de datos
-            Table table = new Table(tableName, columns);
-
-            addTable(table);
-
-            return tableByName(tableName) != null && tableByName(tableName).columns != null;
+        } else {
+            lastErrorMessage = Constants.TABLE_ALREADY_EXISTS_ERROR;
+            return false;
         }
-
-        // En caso de existir no se crea la tabla
-        return false;
     }
 
     public boolean IsUserAdmin() throws IOException {

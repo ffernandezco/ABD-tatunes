@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestSelect {
     Database database;
     Table table;
-
     @BeforeEach
     void init() {
         database = new Database("admin", "admin");
@@ -50,6 +49,7 @@ public class TestSelect {
         columnsSelect.add("str");
         columnsSelect.add("dbl");
 
+
         Condition condition = new Condition("int", "<", "5");
         // Condition conditionBad1 = new Condition("", "<", "5");
         // Condition conditionBad2 = new Condition("int", "", "5");
@@ -75,9 +75,14 @@ public class TestSelect {
         assertEquals(t2.columns.get(0).type, result.columns.get(0).type);
 
         String st = new Select(null, columnsSelect, condition).execute(database);
-        assertEquals("ERROR: tabla o valores estan vacios", st);
+        assertEquals(Constants.TABLE_DOES_NOT_EXIST_ERROR, st);
 
         st = new Select("tabla1", null, condition).execute(database);
-        assertEquals("ERROR: tabla o valores estan vacios", st);
+        assertEquals(Constants.COLUMN_DOES_NOT_EXIST_ERROR, st);
+
+        List<String> columnsSelect2 = new ArrayList<>();
+        columnsSelect.add("holacaracola");
+        st = new Select("tabla1", columnsSelect2, condition).execute(database);
+        assertEquals(Constants.COLUMN_DOES_NOT_EXIST_ERROR, st);
     }
 }

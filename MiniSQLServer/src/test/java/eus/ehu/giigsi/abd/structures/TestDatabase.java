@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TestDatabase {
 
@@ -56,4 +57,5 @@ public class TestDatabase {
         Table table1 = new Table("prueba2", columns);
         assertEquals(table1.toString(), database.tableByName("prueba2").toString());
     }
+
 }

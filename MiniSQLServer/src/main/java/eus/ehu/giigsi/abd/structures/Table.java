@@ -79,16 +79,33 @@ public class Table {
 
 
     @Override
-    public String toString()
-    {
-        String salida = "Tabla " + name + "\n" + "Contenido: \n";
-        for (Column columna : columns) {
-            salida = salida + "\t Columna: " + columna.getName() + "\n";
-            for (String valor : columna.getValues()) {
-                salida = salida + "\t \t" + valor + "\n";
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        // Obtener nombres de columnas y colocarlos entre corchetes
+        builder.append("[");
+        for (int i = 0; i < columns.size(); i++) {
+            builder.append("'").append(columns.get(i).getName()).append("'");
+            // Gestionar varios valores, separados con coma
+            if (i < columns.size() - 1) {
+                builder.append(",");
             }
         }
-        return salida;
+        builder.append("]");
+
+        // Obtener resultados y colocar entre llaves
+        for (int i = 0; i < columns.get(0).getValues().size(); i++) {
+            builder.append("{");
+            for (int j = 0; j < columns.size(); j++) {
+                builder.append("'").append(columns.get(j).getValues().get(i)).append("'");
+                // Gestionar comas
+                if (j < columns.size() - 1) {
+                    builder.append(",");
+                }
+            }
+            builder.append("}");
+        }
+        return builder.toString();
     }
 
     public void deleteWhere(Condition condition) {
