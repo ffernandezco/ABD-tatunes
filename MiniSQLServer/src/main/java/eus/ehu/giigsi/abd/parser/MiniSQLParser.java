@@ -169,7 +169,7 @@ public class MiniSQLParser {
             List<String> values = commaSeparatedNames(literalValues); //Crea una lista a partir de los valores literales dados con la función dada
 
             if(values == null){
-                return new Insert(table, null);
+                return null;
             }
 
             List<String> valuesUpdated = new ArrayList<>();
