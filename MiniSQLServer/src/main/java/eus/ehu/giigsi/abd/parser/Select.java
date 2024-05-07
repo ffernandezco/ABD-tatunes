@@ -37,32 +37,37 @@ public class Select implements MiniSQLQuery{
     {
         Table resultado = database.tableByName(table);
         Table datosEsperados = database.select(this.table, this.columns, this.where);
+        boolean existeColumna = false;
+
+       if (columns != null) {
+           if (columns != null || columns.size() == 1 && columns.get(0).equals("*")) {
+
+               if (resultado == null) {
+                   return Constants.TABLE_DOES_NOT_EXIST_ERROR;
+               } else {
+                   return resultado.toString();
+               }
+
+           }
 
 
-        if (columns != null || columns.size() ==1 && columns.get(0).equals("*") ){
+           for (String columna : columns) {
+               //boolean existeColumna = false;
+               for (Column columnaTabla : resultado.columns) {
+                   if (columnaTabla.getName().equals(columna)) {
+                       existeColumna = true;
+                       break;
+                   }
+               }
+              /* if (!existeColumna) {
+                   return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
+               }*/
+           }
 
-            if (resultado == null){
-                return Constants.TABLE_DOES_NOT_EXIST_ERROR;
-            }else{
-            return resultado.toString();}
-
+       }
+        if (!existeColumna) {
+            return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
         }
-
-
-       for (String columna : columns){
-            boolean existeColumna = false;
-            for (Column columnaTabla : resultado.columns){
-                if(columnaTabla.getName().equals(columna)){
-                    existeColumna = true;
-                    break;
-                }
-            }
-            if (!existeColumna){
-                return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
-            }
-        }
-
-
 
 
         if (datosEsperados != null) {
