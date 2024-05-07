@@ -35,74 +35,36 @@ public class Select implements MiniSQLQuery{
 
     public String execute(Database database)
     {
+        Table resultado = database.tableByName(table);
         Table datosEsperados = database.select(this.table, this.columns, this.where);
-       /* Table resultado = database.tableByName(table);
-        Table datosEsperados = database.select(this.table, this.columns, this.where);
-        boolean existeColumna = false;
-
-       if (columns != null) {
-           if (columns != null || columns.size() == 1 && columns.get(0).equals("*")) {
-
-               if (resultado == null) {
-                   return Constants.TABLE_DOES_NOT_EXIST_ERROR;
-               } else {
-                   return resultado.toString();
-               }
-
-           }
 
 
-           for (String columna : columns) {
-               //boolean existeColumna = false;
-               for (Column columnaTabla : resultado.columns) {
-                   if (columnaTabla.getName().equals(columna)) {
-                       existeColumna = true;
-                       break;
-                   }
-               }
-              /* if (!existeColumna) {
-                   return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
-               }
-           }
+        if (columns != null || columns.size() ==1 && columns.get(0).equals("*") ){
 
-       }
-        else  {
-            return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
+            if (resultado == null){
+                return Constants.TABLE_DOES_NOT_EXIST_ERROR;
+            }else{
+            return resultado.toString();}
+
         }
 
+
+       for (String columna : columns){
+            boolean existeColumna = false;
+            for (Column columnaTabla : resultado.columns){
+                if(columnaTabla.getName().equals(columna)){
+                    existeColumna = true;
+                    break;
+                }
+            }
+            if (!existeColumna){
+                return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
+            }
+        }
 
         if (datosEsperados != null) {
                 // Hay que preguntar sobre lo qued debería devolver
                 return datosEsperados.toString();
-        }else{
-
-            return Constants.SYNTAX_ERROR;
-        }*/
-        Table table = database.tableByName(this.table);
-
-        if (table == null) {
-            return Constants.TABLE_DOES_NOT_EXIST_ERROR;
-        }
-
-       if (columns != null) {
-           for (String column : columns) {
-               boolean columnExists = false;
-               for (Column tableColumn : datosEsperados.columns) {
-                   if (tableColumn.getName().equals(column)) {
-                       columnExists = true;
-                       break;
-                   }
-               }
-               if (!columnExists) {
-                   return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
-               }
-           }
-       }else{
-           return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
-       }
-        if (datosEsperados != null) {
-            // Hay que preguntar sobre lo qued debería devolver
-            return datosEsperados.toString();
         }else{
 
             return Constants.SYNTAX_ERROR;

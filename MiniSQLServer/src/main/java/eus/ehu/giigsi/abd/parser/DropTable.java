@@ -17,7 +17,10 @@ public class DropTable implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        if(database.dropTable(table)) {
+        if (database.tableByName(table) == null) {
+            return Constants.TABLE_DOES_NOT_EXIST_ERROR;
+        }
+        if (database.dropTable(table)) {
             return Constants.DROP_TABLE_SUCCESS;
         }
 

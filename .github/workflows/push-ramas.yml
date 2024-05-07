@@ -30,5 +30,7 @@ jobs:
         cache: maven
     - name: Build con Maven
       run: mvn -B package --file pom.xml
+      working-directory: MiniSQLServer
     - name: Ejecutar tests
       run: mvn test
+      working-directory: MiniSQLServer

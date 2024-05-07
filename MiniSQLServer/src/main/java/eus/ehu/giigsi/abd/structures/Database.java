@@ -77,39 +77,38 @@ public class Database {
     public Table select(String table, List<String> columns, Condition columnCondition) {
         Table t = tableByName(table);
 
-        if(t != null) {
+        if(t != null && columnCondition != null) {
+            System.out.println("Columns specified in query: " + columns);
             List<Column> columnasSelect = new ArrayList<>();
 
-            Column c = t.columnByName(columnCondition.getColumn());
-            List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
+            // Recorremos todas las columnas a mostrar para guardar solo las especificadas en 'columns'
+            for (String nombreColumna : columns) {
+                if (t.columnByName(nombreColumna) != null) {
+                    Column c1 = t.columnByName(nombreColumna);
 
-            // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
-            if (columns != null && !columns.isEmpty()) {
-
-                for (String nombreColumna : columns) {
-
-                    if (t.columnByName(nombreColumna) != null) {
-
-                        Column c1 = t.columnByName(nombreColumna);
-
-                        List<String> valoresColumna = new ArrayList<>();
-
-                        // Guardamos los valores de las posiciones recogidas anteriormente en una lista
-                        for (int j : valoresIntroducir) {
-                            valoresColumna.add(c1.getValues().get(j));
-                        }
-
-                        // Insertamos la lista en la tabla
-                        Column aux = new Column(c1.type, c1.getName(), valoresColumna);
-                        columnasSelect.add(aux);
+                    // Guardamos los valores que cumplen la condición de la columna especificada
+                    List<String> valoresColumna = new ArrayList<>();
+                    List<Integer> indicesCumplenCondicion = c1.indicesWhereIsTrue(columnCondition);
+                    for (int indice : indicesCumplenCondicion) {
+                        valoresColumna.add(c1.getValues().get(indice));
                     }
+
+                    // Insertamos la lista en la tabla
+                    Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                    columnasSelect.add(aux);
                 }
-                Table select = new Table(table, columnasSelect);
-                return select;
             }
+
+            System.out.println("Selected columns after processing: " + columnasSelect);
+
+            // Crear una nueva tabla con las columnas seleccionadas
+            Table select = new Table(table, columnasSelect);
+            return select;
         }
         return null;
     }
+
+
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
         Table t = tableByName(tableName);
@@ -195,7 +194,7 @@ public class Database {
 
         // Buscamos en cada vector del array tables y si coinciden se devuelve el item
         while(i < tables.size()) {
-            if(tables.get(i).name == tableName) {
+            if(tables.get(i).name.equals(tableName)) {
                 return tables.get(i);
             }
             else {
@@ -231,11 +230,17 @@ public class Database {
     }
     public boolean createTable(String tableName, List<ColumnParameters> columnParameters) {
 
-        // Verificamos si existe la tabla
+        if (tableByName(tableName) != null) {
+            lastErrorMessage = Constants.TABLE_ALREADY_EXISTS_ERROR;
+            return false;  // Return false immediately after setting error message
+        } else if (columnParameters == null || columnParameters.isEmpty()) {
+            lastErrorMessage = Constants.DATABASE_CREATED_WITHOUT_COLUMNS_ERROR; // New error message
+            return false;
+        }
+
         // Recorremos el array de columnParameters para crear columnas y, posteriormente crear la tabla
         if(tableByName(tableName) == null) {
             List<Column> columns = new ArrayList<>();
-
             // Convertimos cada ColumnParameter en Column
             if(columnParameters != null && !columnParameters.isEmpty()) {
                 for (ColumnParameters c : columnParameters) {
@@ -246,20 +251,19 @@ public class Database {
 
                     columns.add(column);
                 }
+
+                Table table = new Table(tableName, columns);
+                addTable(table);
+                lastErrorMessage = Constants.CREATE_TABLE_SUCCESS;
+                return true;
             }else{
-                return false;
+                return tableByName(tableName) == null && columnParameters != null && !columnParameters.isEmpty();
             }
-
-            // Creamos la tabla y la añadimos a la lista de la base de datos
-            Table table = new Table(tableName, columns);
-
-            addTable(table);
-
-            return tableByName(tableName) != null && tableByName(tableName).columns != null;
         }
 
         // En caso de existir no se crea la tabla
-        return false;
+        lastErrorMessage = Constants.TABLE_ALREADY_EXISTS_ERROR;
+        return tableByName(tableName) != null && tableByName(tableName).columns != null;
     }
 
     public boolean IsUserAdmin() throws IOException {
