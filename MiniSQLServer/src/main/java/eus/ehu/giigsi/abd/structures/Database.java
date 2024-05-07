@@ -242,7 +242,6 @@ public class Database {
         // Recorremos el array de columnParameters para crear columnas y, posteriormente crear la tabla
         if(tableByName(tableName) == null) {
             List<Column> columns = new ArrayList<>();
-
             // Convertimos cada ColumnParameter en Column
             if(columnParameters != null && !columnParameters.isEmpty()) {
                 for (ColumnParameters c : columnParameters) {
