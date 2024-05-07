@@ -46,23 +46,23 @@ public class Select implements MiniSQLQuery {
             } else if (columns != null || columns.size() == 1 && columns.get(0).equals("*")) {
                 if (resultado == null) {
                     return Constants.TABLE_DOES_NOT_EXIST_ERROR;
+                }
 
-                } else {
-                    for (String columna : columns) {
-                        boolean existeColumna = false;
-                        for (Column columnaTabla : resultado.columns) {
-                            if (columnaTabla.getName().equals(columna)) {
-                                existeColumna = true;
-                                break;
-                            }
+            } else {
+                for (String columna : columns) {
+                    boolean existeColumna = false;
+                    for (Column columnaTabla : resultado.columns) {
+                        if (columnaTabla.getName().equals(columna)) {
+                            existeColumna = true;
+                            break;
                         }
-                        if (!existeColumna) {
-                            return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
-                        }
+                    }
+                    if (!existeColumna) {
+                        return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
                     }
                 }
             }
         }
-        return Constants.ERROR;
+        return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
     }
 }
