@@ -112,8 +112,6 @@ public class Table {
         return builder.toString();
     }
 
-
-
     public void deleteWhere(Condition condition) {
         List<Integer> indices = columnByName(condition.column).indicesWhereIsTrue(condition);
 
