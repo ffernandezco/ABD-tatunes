@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestInsert {
     Database database;
@@ -94,4 +95,10 @@ public class TestInsert {
         assertEquals(Constants.ERROR, resultado);
     }
 
+    @Test
+    public void SelectColumnaNoExiste() {
+        Database database = new Database("admin", "adminPassword");
+        assertEquals("MSG: Table created", database.executeMiniSQLQuery("CREATE TABLE MyTable (Name TEXT,Age INT,Address TEXT)"));
+        assertEquals("ERROR: Column does not exist", database.executeMiniSQLQuery("SELECT Salary FROM MyTable"));
+    }
 }

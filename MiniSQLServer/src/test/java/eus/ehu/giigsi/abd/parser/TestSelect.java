@@ -79,5 +79,10 @@ public class TestSelect {
 
         st = new Select("tabla1", null, condition).execute(database);
         assertEquals(Constants.COLUMN_DOES_NOT_EXIST_ERROR, st);
+
+        List<String> columnsSelect2 = new ArrayList<>();
+        columnsSelect.add("holacaracola");
+        st = new Select("tabla1", columnsSelect2, condition).execute(database);
+        assertEquals(Constants.COLUMN_DOES_NOT_EXIST_ERROR, st);
     }
 }
