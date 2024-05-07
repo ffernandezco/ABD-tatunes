@@ -49,6 +49,7 @@ public class TestSelect {
         columnsSelect.add("str");
         columnsSelect.add("dbl");
 
+
         Condition condition = new Condition("int", "<", "5");
         // Condition conditionBad1 = new Condition("", "<", "5");
         // Condition conditionBad2 = new Condition("int", "", "5");
