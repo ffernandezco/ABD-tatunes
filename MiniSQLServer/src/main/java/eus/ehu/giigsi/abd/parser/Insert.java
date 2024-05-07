@@ -31,6 +31,7 @@ public class Insert implements MiniSQLQuery{
         } else {
             if (database.tableByName(table) == null) {
                 return Constants.TABLE_DOES_NOT_EXIST_ERROR;
+
             }
 
             return Constants.ERROR;
