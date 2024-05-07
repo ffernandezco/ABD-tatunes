@@ -24,10 +24,10 @@ public class CreateTable implements MiniSQLQuery {
 
     public String execute(Database database) {
         if (Table == null || Table.trim() == "") {
-            return "No se ha creado la tabla, falta el nombre";
+            return Constants.SYNTAX_ERROR;
 
         } else if (columnsParameters == null || columnsParameters.isEmpty()) {
-            return "No se puede crear una tabla sin columnas";
+            return Constants.DATABASE_CREATED_WITHOUT_COLUMNS_ERROR;
         }
 
         else {

@@ -195,7 +195,7 @@ public class Database {
 
         // Buscamos en cada vector del array tables y si coinciden se devuelve el item
         while(i < tables.size()) {
-            if(tables.get(i).name == tableName) {
+            if(tables.get(i).name.equals(tableName)) {
                 return tables.get(i);
             }
             else {
@@ -235,7 +235,7 @@ public class Database {
             lastErrorMessage = Constants.TABLE_ALREADY_EXISTS_ERROR;
             return false;  // Return false immediately after setting error message
         } else if (columnParameters == null || columnParameters.isEmpty()) {
-            lastErrorMessage = Constants.SYNTAX_ERROR; // New error message
+            lastErrorMessage = Constants.DATABASE_CREATED_WITHOUT_COLUMNS_ERROR; // New error message
             return false;
         }
 
