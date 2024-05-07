@@ -34,7 +34,7 @@ public class TestDropTable {
 
         DropTable dt1 = new DropTable("prueba1");
 
-        expected = "Cannot delete table";
+        expected = "ERROR: Table does not exist";
         result = dt1.execute(database);
 
         assertEquals(expected, result);
