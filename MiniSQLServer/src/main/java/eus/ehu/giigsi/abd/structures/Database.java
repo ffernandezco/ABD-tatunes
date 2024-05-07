@@ -62,7 +62,7 @@ public class Database {
         try {
             int i = 0;
             while (tables.get(i).save(databaseName) == true) {
-                    i++;
+                i++;
             }
 
             return true;
@@ -77,38 +77,39 @@ public class Database {
     public Table select(String table, List<String> columns, Condition columnCondition) {
         Table t = tableByName(table);
 
-        if(t != null && columnCondition != null) {
-            System.out.println("Columns specified in query: " + columns);
+        if(t != null) {
             List<Column> columnasSelect = new ArrayList<>();
 
-            // Recorremos todas las columnas a mostrar para guardar solo las especificadas en 'columns'
-            for (String nombreColumna : columns) {
-                if (t.columnByName(nombreColumna) != null) {
-                    Column c1 = t.columnByName(nombreColumna);
+            Column c = t.columnByName(columnCondition.getColumn());
+            List<Integer> valoresIntroducir = c.indicesWhereIsTrue(columnCondition);
 
-                    // Guardamos los valores que cumplen la condición de la columna especificada
-                    List<String> valoresColumna = new ArrayList<>();
-                    List<Integer> indicesCumplenCondicion = c1.indicesWhereIsTrue(columnCondition);
-                    for (int indice : indicesCumplenCondicion) {
-                        valoresColumna.add(c1.getValues().get(indice));
+            // Recorremos todas las columnas a mostrar para guardar solo los valores que cumplen de la condición
+            if (columns != null && !columns.isEmpty()) {
+
+                for (String nombreColumna : columns) {
+
+                    if (t.columnByName(nombreColumna) != null) {
+
+                        Column c1 = t.columnByName(nombreColumna);
+
+                        List<String> valoresColumna = new ArrayList<>();
+
+                        // Guardamos los valores de las posiciones recogidas anteriormente en una lista
+                        for (int j : valoresIntroducir) {
+                            valoresColumna.add(c1.getValues().get(j));
+                        }
+
+                        // Insertamos la lista en la tabla
+                        Column aux = new Column(c1.type, c1.getName(), valoresColumna);
+                        columnasSelect.add(aux);
                     }
-
-                    // Insertamos la lista en la tabla
-                    Column aux = new Column(c1.type, c1.getName(), valoresColumna);
-                    columnasSelect.add(aux);
                 }
+                Table select = new Table(table, columnasSelect);
+                return select;
             }
-
-            System.out.println("Selected columns after processing: " + columnasSelect);
-
-            // Crear una nueva tabla con las columnas seleccionadas
-            Table select = new Table(table, columnasSelect);
-            return select;
         }
         return null;
     }
-
-
 
     public boolean deleteWhere(String tableName, Condition columnCondition) {
         Table t = tableByName(tableName);

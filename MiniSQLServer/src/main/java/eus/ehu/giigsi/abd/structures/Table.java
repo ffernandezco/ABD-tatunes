@@ -53,18 +53,14 @@ public class Table {
         return false;
     }
 
-    public Column columnByName(String columnName) {
-        int i = 0;
+    public Column columnByName(String column)
+    {
 
-        // Buscamos en cada vector del array tables y si coinciden se devuelve el item
-        while (i < columns.size()) {
-            if (columns.get(i).name.equals(columnName)) {
-                return columns.get(i);
-            } else {
-                i++;
+        for(Column columna : columns) {
+            if (columna.getName().equals(column)) {
+                return columna;
             }
         }
-        // En caso de no existir se devuelve null
         return null;
     }
 
@@ -86,23 +82,23 @@ public class Table {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        // Colocar columnas entre corchetes
+        // Obtener nombres de columnas y colocarlos entre corchetes
         builder.append("[");
         for (int i = 0; i < columns.size(); i++) {
             builder.append("'").append(columns.get(i).getName()).append("'");
-            // Gestión de múltiples columnas
+            // Gestionar varios valores, separados con coma
             if (i < columns.size() - 1) {
                 builder.append(",");
             }
         }
         builder.append("]");
 
-        // Colocar respuestas en llaves
+        // Obtener resultados y colocar entre llaves
         for (int i = 0; i < columns.get(0).getValues().size(); i++) {
             builder.append("{");
             for (int j = 0; j < columns.size(); j++) {
                 builder.append("'").append(columns.get(j).getValues().get(i)).append("'");
-                // Gestión de múltiples resultados
+                // Gestionar comas
                 if (j < columns.size() - 1) {
                     builder.append(",");
                 }
