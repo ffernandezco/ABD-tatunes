@@ -57,9 +57,6 @@ public class Select implements MiniSQLQuery {
 
                 if (datosEsperados != null) {
                     return datosEsperados.toString();
-
-                } else {
-                    return Constants.SYNTAX_ERROR;
                 }
             }
         }
