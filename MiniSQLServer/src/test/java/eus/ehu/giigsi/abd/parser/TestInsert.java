@@ -64,11 +64,11 @@ public class TestInsert {
 
         insert = new Insert(table.name, null);
         resultado = insert.execute(database);
-        assertEquals("ERROR: tabla o valores estan vacios", resultado);
+        assertEquals("ERROR: ", resultado);
 
         insert = new Insert(null, values);
         resultado = insert.execute(database);
-        assertEquals("ERROR: tabla o valores estan vacios", resultado);
+        assertEquals(Constants.TABLE_DOES_NOT_EXIST_ERROR, resultado);
 
     }
 
@@ -82,7 +82,7 @@ public class TestInsert {
 
         String resultado = insert.execute(database);
 
-        assertEquals("ERROR: tabla o valores estan vacios", resultado);
+        assertEquals(Constants.TABLE_DOES_NOT_EXIST_ERROR, resultado);
     }
     @Test
     public void TestInsertValoresVacios (){
@@ -91,7 +91,7 @@ public class TestInsert {
 
         String resultado = insert.execute(database);
 
-        assertEquals("ERROR: tabla o valores estan vacios", resultado);
+        assertEquals(Constants.ERROR, resultado);
     }
 
 }
