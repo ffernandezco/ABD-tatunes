@@ -278,20 +278,13 @@ public class Database {
         // Buscamos si existe la tabla que quiere borrarse
         Table table = tableByName(tableName);
 
-        // Falta cambiar la ruta a relativa
-        String path = this.name + File.pathSeparator + tableName;
-
         if (table != null) {
             // Borramos la tabla de la lista
-            tables.remove(table);
+            return tables.remove(table);
 
-            // Borramos el directorio del equipo
-            File directorio = new File(path);
-            return directorio.delete();
+        } else {
+            return false;
         }
-
-        System.out.print("No existe tabla con ese nombre");
-        return false;
     }
     public void addTable(Table table)
     {
