@@ -65,7 +65,7 @@ public class Select implements MiniSQLQuery{
            }
 
        }
-        if (!existeColumna) {
+        else  {
             return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
         }
 
