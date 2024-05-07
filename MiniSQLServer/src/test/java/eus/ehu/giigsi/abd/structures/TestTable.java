@@ -65,13 +65,10 @@ public class TestTable {
         String name = "Test";
         List<Column> columns = new ArrayList<>();
         List<String> valores = List.of("Valor1","Valor2","Valor3");
-        columns.add(new Column(Column.DataType.STRING, "Columna", valores));
+        columns.add(new Column(Column.DataType.STRING, "Columna1", valores));
+        columns.add(new Column(Column.DataType.STRING, "Columna2", valores));
         Table table = new Table(name, columns);
-        assertEquals("Tabla Test\n" +
-                "Contenido: \n" + "\t Columna: Columna\n" +
-                "\t \tValor1\n" +
-                "\t \tValor2\n" +
-                "\t \tValor3\n", table.toString());
+        assertEquals("['Columna1','Columna2']{'Valor1','Valor1'}{'Valor2','Valor2'}{'Valor3','Valor3'}", table.toString());
     }
 
     @Test
