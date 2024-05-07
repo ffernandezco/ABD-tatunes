@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Column;
 
 import java.util.ArrayList;
@@ -168,7 +169,7 @@ public class MiniSQLParser {
             List<String> values = commaSeparatedNames(literalValues); //Crea una lista a partir de los valores literales dados con la función dada
 
             if(values == null){
-                return null;
+                return new Insert(table, null);
             }
 
             List<String> valuesUpdated = new ArrayList<>();

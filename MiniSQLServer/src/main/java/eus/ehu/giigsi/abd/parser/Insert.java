@@ -34,7 +34,7 @@ public class Insert implements MiniSQLQuery{
 
             }
 
-            return Constants.ERROR;
+            return Constants.ERROR + "tabla o valores estan vacios";
         }
     }
 
