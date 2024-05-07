@@ -259,18 +259,11 @@ public class Database {
         //Parse the query
         MiniSQLQuery miniSQLQuery = MiniSQLParser.parse(query);
 
-        //if (miniSQLQuery == null)
-        //    return Constants.SYNTAX_ERROR;
+        if (miniSQLQuery == null)
+            return Constants.SYNTAX_ERROR;
 
-        String result = miniSQLQuery.execute(this);
-
-        if (result.equals(Constants.DATABASE_CREATED_WITHOUT_COLUMNS_ERROR)) {
-            return Constants.DATABASE_CREATED_WITHOUT_COLUMNS_ERROR;
-        }
-
-        return result;
+        return miniSQLQuery.execute(this);
     }
-
 
     public Table tableByName(String tableName)
     {
@@ -346,7 +339,6 @@ public class Database {
                 return true;
             }
         }
-
         return false;
     }
 }

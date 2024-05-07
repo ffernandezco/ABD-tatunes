@@ -97,12 +97,15 @@ public class TestMiniSQLParser {
         assertEquals("3", values.get(2));
     }
 
+
     @Test
     public void testInsertParseConEspacios() {
         String query = "INSERT INTO TableName VALUES ( 7 ,  'Espacios'   )";
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
         assertFalse(parsedQuery instanceof Insert);
     }
+
+
 
     @Test
     public void testUpdateParse() {
