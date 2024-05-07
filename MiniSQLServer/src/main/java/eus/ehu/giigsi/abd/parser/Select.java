@@ -10,7 +10,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-public class Select implements MiniSQLQuery{
+public class Select implements MiniSQLQuery {
     @Getter
     @Setter(AccessLevel.PRIVATE)
     public String table;
@@ -21,57 +21,48 @@ public class Select implements MiniSQLQuery{
     @Setter(AccessLevel.PRIVATE)
     public Condition where;
 
-    public Select(String table, List<String> columns, Condition where)
-    {
+    public Select(String table, List<String> columns, Condition where) {
         this.table = table;
         this.columns = columns;
         this.where = where;
     }
 
-    public Select(String table, List<String> columns)
-    {
-        this(table,columns,null);
+    public Select(String table, List<String> columns) {
+        this(table, columns, null);
     }
 
-    public String execute(Database database)
-    {
+    public String execute(Database database) {
         Table resultado = database.tableByName(table);
         Table datosEsperados = database.select(this.table, this.columns, this.where);
 
+        if (columns != null || columns.size() == 1 && columns.get(0).equals("*")) {
 
-        if (columns != null || columns.size() ==1 && columns.get(0).equals("*") ){
-
-            if (resultado == null){
+            if (resultado == null) {
                 return Constants.TABLE_DOES_NOT_EXIST_ERROR;
-            }else{
-            return resultado.toString();}
 
-        }
+            } else {
+                for (String columna : columns) {
+                    boolean existeColumna = false;
+                    for (Column columnaTabla : resultado.columns) {
+                        if (columnaTabla.getName().equals(columna)) {
+                            existeColumna = true;
+                            break;
+                        }
+                    }
 
+                    if (!existeColumna) {
+                        return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
+                    }
+                }
 
-       for (String columna : columns){
-            boolean existeColumna = false;
-            for (Column columnaTabla : resultado.columns){
-                if(columnaTabla.getName().equals(columna)){
-                    existeColumna = true;
-                    break;
+                if (datosEsperados != null) {
+                    return datosEsperados.toString();
+
+                } else {
+                    return Constants.SYNTAX_ERROR;
                 }
             }
-            if (!existeColumna){
-                return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
-            }
         }
-
-
-
-
-        if (datosEsperados != null) {
-                // Hay que preguntar sobre lo qued debería devolver
-                return datosEsperados.toString();
-        }else{
-
-            return Constants.SYNTAX_ERROR;
-        }
-        }
-
+        return Constants.ERROR;
+    }
 }
