@@ -62,9 +62,6 @@ public class Select implements MiniSQLQuery{
             }
         }
 
-
-
-
         if (datosEsperados != null) {
                 // Hay que preguntar sobre lo qued debería devolver
                 return datosEsperados.toString();
