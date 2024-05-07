@@ -1,7 +1,9 @@
 package eus.ehu.giigsi.abd.parser;
 
 import eus.ehu.giigsi.abd.Constants;
+import eus.ehu.giigsi.abd.structures.Column;
 import eus.ehu.giigsi.abd.structures.Database;
+import eus.ehu.giigsi.abd.structures.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,16 +35,43 @@ public class Select implements MiniSQLQuery{
 
     public String execute(Database database)
     {
-        if (table == null || columns == null) {
-            return Constants.ERROR + "tabla o valores estan vacios";
+        Table resultado = database.tableByName(table);
+        Table datosEsperados = database.select(this.table, this.columns, this.where);
 
-        } else {
-            if (database.select(this.table, this.columns, this.where) != null) {
-                // Hay que preguntar sobre lo qued debería devolver
-                return database.select(this.table, this.columns, this.where).toString();
+
+        if (columns != null || columns.size() ==1 && columns.get(0).equals("*") ){
+
+            if (resultado == null){
+                return Constants.TABLE_DOES_NOT_EXIST_ERROR;
+            }else{
+            return resultado.toString();}
+
+        }
+
+
+       for (String columna : columns){
+            boolean existeColumna = false;
+            for (Column columnaTabla : resultado.columns){
+                if(columnaTabla.getName().equals(columna)){
+                    existeColumna = true;
+                    break;
+                }
             }
+            if (!existeColumna){
+                return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
+            }
+        }
+
+
+
+
+        if (datosEsperados != null) {
+                // Hay que preguntar sobre lo qued debería devolver
+                return datosEsperados.toString();
+        }else{
 
             return Constants.SYNTAX_ERROR;
         }
-    }
+        }
+
 }
