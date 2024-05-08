@@ -47,7 +47,7 @@ jobs:
       - name: Cambiar nombre .jar
         run: |
           ls -ls target/
-          mv target/MiniSQLServer.jar target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar
+          mv target/MiniSQLServer-1.0-SNAPSHOT.jar target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar
         working-directory: MiniSQLServer
 
       - name: Generar hash
