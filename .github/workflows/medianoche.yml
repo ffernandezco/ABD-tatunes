@@ -59,7 +59,7 @@ jobs:
       - name: Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "/target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar,/target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.sha256"
+          artifacts: "MiniSQLServer/target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar,MiniSQLServer/target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.sha256"
           name: "tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}"
           tag: "develop-${{ steps.get_date.outputs.date }}"
           token: ${{ secrets.GITHUB_TOKEN }}
