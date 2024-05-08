@@ -46,7 +46,7 @@ jobs:
 
       - name: Cambiar nombre .jar
         run: |
-          ls -ls
+          ls -ls target/
           mv target/MiniSQLServer.jar target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar
         working-directory: MiniSQLServer
 
