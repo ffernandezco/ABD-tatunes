@@ -17,6 +17,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
@@ -54,16 +56,11 @@ jobs:
         run: sha256sum target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar > target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.sha256
         working-directory: MiniSQLServer
 
-      - name: Crear release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: "develop-${{ steps.get_date.outputs.date }}"
-          release_name: "tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}"
-          body: |
-            Release automático ${{ steps.get_date.outputs.date }}
-
-          assets: |
-            target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar
-            target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.sha256
+          artifacts: "target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.jar,target/tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}.sha256"
+          name: "tatunes-MiniSQLServer-${{ steps.get_date.outputs.date }}"
+          tag: "develop-${{ steps.get_date.outputs.date }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generateReleaseNotes: true
