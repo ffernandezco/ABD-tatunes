@@ -20,7 +20,6 @@ public class Database {
     public List<Table> tables = new ArrayList<>();
     public String name = null;
     private String mUsername;
-    private String mPassword;
 
     @Getter
     @Setter(AccessLevel.PRIVATE)
@@ -39,7 +38,6 @@ public class Database {
     public Database(String adminUsername, String adminPassword)
     {
         mUsername = adminUsername;
-        mPassword = adminPassword;
     }
 
     public static FileReader load(String databaseName, String username, String password) {

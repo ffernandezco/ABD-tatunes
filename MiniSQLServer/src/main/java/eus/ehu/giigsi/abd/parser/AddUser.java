@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd.parser;
 
+
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.AccessLevel;
 import lombok.Getter;
