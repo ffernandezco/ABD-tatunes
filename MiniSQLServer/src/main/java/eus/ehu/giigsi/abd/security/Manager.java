@@ -8,24 +8,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Manager {
+    String uName;
     @Getter
     @Setter(AccessLevel.PRIVATE)
     public List<Profile> profiles = new ArrayList<>();
 
+
     public Manager(String username)
     {
-
+        uName = username;
     }
 
     public boolean isUserAdmin()
     {
-        return true;
+        Profile profile = profileByUser(uName);
+
+        if (profile.name.equals("Admin")) return true;
+        return false;
     }
 
     public boolean isPasswordCorrect(String username, String password)
     {
-
-        return true;
+        for (Profile p : profiles) {
+            for (User u : p.users) {
+                if (u.username.equals(username)) {
+                    if (Encryption.encrypt(password).equals(u.encryptedPassword)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void grantPrivilege(String profileName, String table, Privilege privilege)
@@ -46,32 +59,43 @@ public class Manager {
 
     public void addProfile(Profile profile)
     {
-
-        return;
+        profiles.add(profile);
     }
 
     public User userByName(String username)
     {
-
+        for (Profile p : profiles) {
+            for (User u : p.users) {
+                if (u.username.equals(username)) return u;
+            }
+        }
         return null;
     }
 
     public Profile profileByName(String profileName)
     {
-
+        for (Profile p : profiles) {
+            if (p.name.equals(profileName)) return p;
+        }
         return null;
     }
 
     public Profile profileByUser(String username)
     {
-
+        for (Profile p : profiles) {
+            for (User u : p.users) {
+                if (u.username.equals(username)) {
+                    return p;
+                }
+            }
+        }
         return null;
     }
 
     public boolean removeProfile(String profileName)
     {
-
-        return true;
+        Profile p = profileByName(profileName);
+        return profiles.remove(p);
     }
 
     public static Manager load(String databaseName, String username)

@@ -24,10 +24,7 @@ public class Profile {
     @Setter(AccessLevel.PRIVATE)
     public Map<String, List<Privilege>> privilegesOn  = new HashMap<>();
 
-    public boolean grantPrivilege(String table, Privilege privilege)
-    {
-        return false;
-    }
+    public boolean grantPrivilege(String table, Privilege privilege) { return false; }
 
     public boolean revokePrivilege(String table, Privilege privilege)
     {
