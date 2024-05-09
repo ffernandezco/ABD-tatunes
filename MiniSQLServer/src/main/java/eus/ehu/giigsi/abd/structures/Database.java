@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.Type;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
@@ -42,14 +43,13 @@ public class Database {
         mPassword = adminPassword;
     }
 
-    public static FileReader load(String databaseName, String username, String password) {
-        File file = new File("/archives/" + databaseName + ".txt");
-        try (FileReader fr = new FileReader(file)) {
-            return fr;
-        } catch (IOException e) {
-            return null;
+    public static Database load(String databaseName, String username, String password)
+    {
+        Database database = new Database(username, password);
+        if (database.IsUserAdmin()) {
+            // FALTA RECUPERAR LA BD MEDIANTE LA RUTA, QUE LA OBTENEMOS DEL String databaseName
         }
-
+        return null;
     }
     public boolean save(String databaseName)
     {
@@ -330,15 +330,10 @@ public class Database {
         }
     }
 
-    public boolean IsUserAdmin() throws IOException {
-        FileReader fr = new FileReader("/archives/admin.txt");
-        BufferedReader reader = new BufferedReader(fr);
-        String line;
-        while((line = reader.readLine())!=null){
-            if(line.contains(mUsername)){
-                return true;
-            }
-        }
-        return false;
+    public boolean IsUserAdmin() {
+        securityManager = new Manager(mUsername);
+
+        if (securityManager.isPasswordCorrect(mUsername, mPassword)) return securityManager.isUserAdmin();
+        else return false;
     }
 }
