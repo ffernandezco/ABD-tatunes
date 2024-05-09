@@ -54,8 +54,8 @@ public class Manager {
 
     public boolean isGrantedPrivilege(String username, String table, Privilege privilege)
     {
-
-        return true;
+        Profile profile = profileByUser(username);
+        return profile.IsGrantedPrivilege(table, privilege);
     }
 
     public void addProfile(Profile profile)

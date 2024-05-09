@@ -65,6 +65,12 @@ public class Profile {
 
     public boolean IsGrantedPrivilege(String table, Privilege privilege)
     {
-        return false;
+        List<Privilege> privilegies = privilegesOn.get(table);
+        // Comprobamos que la lista de privilegios no está vacía para evitar NullPointerException
+        if(privilegies != null){
+            return privilegies.contains(privilege);
+        }else {
+            return false;
+        }
     }
 }
