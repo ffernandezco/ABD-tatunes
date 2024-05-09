@@ -20,6 +20,7 @@ public class CreateSecurityProfile implements MiniSQLQuery {
     public String execute(Database database)
     {
       Profile profile = new Profile();
+      profile.setName(profileName);
 
         if (profileName == null ) {
             return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
