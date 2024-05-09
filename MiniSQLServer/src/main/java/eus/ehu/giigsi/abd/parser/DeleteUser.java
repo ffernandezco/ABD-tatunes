@@ -1,9 +1,15 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
+import eus.ehu.giigsi.abd.security.Manager;
+import eus.ehu.giigsi.abd.security.Profile;
+import eus.ehu.giigsi.abd.security.User;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 public class DeleteUser implements MiniSQLQuery{
     @Getter
@@ -16,6 +22,21 @@ public class DeleteUser implements MiniSQLQuery{
     }
     public String execute(Database database)
     {
-        return null;
+        Manager sm = database.getSecurityManager();
+        List<Profile> pf = sm.getProfiles();
+        if(username == null || username.equalsIgnoreCase(""))  {
+            return "Nombre de usuario no válido";
+        }
+        else{
+            for(int i=0; i<pf.size();i++){
+                for(int j=0;j<pf.get(i).getUsers().size();j++){
+                    if(pf.get(i).getUsers().get(j).getUsername().equalsIgnoreCase(username)){
+                        pf.get(i).getUsers().remove(j);
+                        return Constants.DELETE_USER_SUCCESS;
+                    }
+                }
+            }
+            return Constants.USER_DOES_NOT_EXIST_ERROR;
+        }
     }
 }
