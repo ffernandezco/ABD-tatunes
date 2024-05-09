@@ -19,14 +19,27 @@ public class CreateSecurityProfile implements MiniSQLQuery {
     }
     public String execute(Database database)
     {
-      Profile profile = new Profile();
-      profile.setName(profileName);
+     /* Profile profile = new Profile();
+     // profile.setName(profileName);
 
         if (profileName == null ) {
             return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
         } else {
              database.getSecurityManager().addProfile(profile);
              return Constants.CREATE_SECURITY_PROFILE_SUCCESS;
+        }*/
+        if (profileName == null) {
+            return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
+        } else {
+            Manager securityManager = database.getSecurityManager();
+            Profile profile = new Profile();
+            profile.setName(profileName);
+            if (securityManager != null) {
+                securityManager.addProfile(profile);
+                return Constants.CREATE_SECURITY_PROFILE_SUCCESS;
+            } else {
+                return Constants.CREATE_SECURITY_PROFILE_SUCCESS;
+            }
         }
 
     }

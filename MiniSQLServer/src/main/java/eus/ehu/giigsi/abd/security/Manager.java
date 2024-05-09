@@ -20,7 +20,6 @@ public class Manager {
 
     public boolean isUserAdmin()
     {
-
         return true;
     }
 
