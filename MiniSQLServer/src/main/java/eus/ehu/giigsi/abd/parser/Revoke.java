@@ -1,5 +1,6 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.security.Manager;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,8 @@ public class Revoke implements MiniSQLQuery{
     }
     public String execute(Database database)
     {
+        Manager sm = database.getSecurityManager();
+        sm.revokePrivilege();
         return null;
     }
 

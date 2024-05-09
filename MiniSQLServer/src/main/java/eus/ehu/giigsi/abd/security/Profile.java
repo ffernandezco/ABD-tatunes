@@ -12,6 +12,7 @@ import java.util.Map;
 public class Profile {
     public static final String AdminProfileName = "Admin";
 
+
     @Getter
     @Setter
     public String name;
