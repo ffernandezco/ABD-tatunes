@@ -46,7 +46,9 @@ public class Database {
     public static Database load(String databaseName, String username, String password)
     {
         Database database = new Database(username, password);
-        database.IsUserAdmin();
+        if (database.IsUserAdmin()) {
+            // FALTA RECUPERAR LA BD MEDIANTE LA RUTA, QUE LA OBTENEMOS DEL String databaseName
+        }
         return null;
     }
     public boolean save(String databaseName)
