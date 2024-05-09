@@ -108,8 +108,11 @@ public class Manager {
 
     public boolean removeProfile(String profileName)
     {
-        Profile p = profileByName(profileName);
-        return profiles.remove(p);
+        if(isUserAdmin()) {
+            Profile p = profileByName(profileName);
+            return profiles.remove(p);
+        }
+        return false;
     }
 
     public static Manager load(String databaseName, String username)

@@ -65,6 +65,11 @@ public class Profile {
 
     public boolean IsGrantedPrivilege(String table, Privilege privilege)
     {
+        // Si es administrador, tendrá privilegios
+        if(name.equals(AdminProfileName)){
+            return true;
+        }
+
         List<Privilege> privilegies = privilegesOn.get(table);
         // Comprobamos que la lista de privilegios no está vacía para evitar NullPointerException
         if(privilegies != null){
