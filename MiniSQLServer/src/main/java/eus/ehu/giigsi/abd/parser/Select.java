@@ -84,10 +84,16 @@ public class Select implements MiniSQLQuery{
             return Constants.TABLE_DOES_NOT_EXIST_ERROR;
         }
 
-       if (columns != null) {
-           for (String column : columns) {
+       if (columns == null || columns.isEmpty()) {
+
+           return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
+
+
+       } else{
+                for (String column : columns) {
                boolean columnExists = false;
                for (Column tableColumn : datosEsperados.columns) {
+
                    if (tableColumn.getName().equals(column)) {
                        columnExists = true;
                        break;
@@ -97,16 +103,15 @@ public class Select implements MiniSQLQuery{
                    return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
                }
            }
-       }else{
-           return Constants.COLUMN_DOES_NOT_EXIST_ERROR;
        }
-        if (datosEsperados != null) {
-            // Hay que preguntar sobre lo qued debería devolver
-            return datosEsperados.toString();
-        }else{
 
-            return Constants.SYNTAX_ERROR;
-        }
-        }
+       if (datosEsperados != null) {
+            // Hay que preguntar sobre lo qued debería devolver
+              return datosEsperados.toString();
+       }else{
+
+               return Constants.SYNTAX_ERROR;
+       }
+    }
 
 }
