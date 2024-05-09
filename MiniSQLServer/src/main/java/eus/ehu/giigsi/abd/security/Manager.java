@@ -32,6 +32,13 @@ public class Manager {
 
     public void grantPrivilege(String profileName, String table, Privilege privilege)
     {
+        if (isUserAdmin()){
+            for (Profile profile : profiles){
+                if(profile.getName() == profileName) {
+                    profile.grantPrivilege(table, privilege);
+                }
+            }
+        }
 
     }
 
