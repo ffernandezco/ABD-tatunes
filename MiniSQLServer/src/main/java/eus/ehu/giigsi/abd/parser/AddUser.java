@@ -1,5 +1,8 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
+import eus.ehu.giigsi.abd.security.Manager;
+import eus.ehu.giigsi.abd.security.User;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,7 +29,15 @@ public class AddUser implements MiniSQLQuery{
     }
     public String execute(Database database)
     {
-        return null;
+        Manager sm = database.getSecurityManager();
+            for (int i = 0; i < sm.profiles.size(); i++) {
+                if(sm.getProfiles().get(i).getName().equalsIgnoreCase(profileName)) {
+                   User us = new User(username,password);
+                   sm.getProfiles().get(i).getUsers().add(us);
+                   return Constants.ADD_USER_SUCCESS;
+                }
+            }
+            return null;
     }
 
 }
