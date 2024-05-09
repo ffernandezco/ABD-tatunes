@@ -71,7 +71,9 @@ public class Manager {
 
     public void addProfile(Profile profile)
     {
-        profiles.add(profile);
+        if(isUserAdmin()) {
+            profiles.add(profile);
+        }
     }
 
     public User userByName(String username)
