@@ -39,7 +39,6 @@ public class Manager {
                 }
             }
         }
-
     }
 
     public void revokePrivilege(String profileName, String table, Privilege privilege)
