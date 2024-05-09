@@ -43,7 +43,13 @@ public class Manager {
 
     public void revokePrivilege(String profileName, String table, Privilege privilege)
     {
-
+        if (isUserAdmin()){
+            for (Profile profile : profiles){
+                if(profile.getName() == profileName) {
+                    profile.revokePrivilege(table, privilege);
+                }
+            }
+        }
     }
 
     public boolean isGrantedPrivilege(String username, String table, Privilege privilege)

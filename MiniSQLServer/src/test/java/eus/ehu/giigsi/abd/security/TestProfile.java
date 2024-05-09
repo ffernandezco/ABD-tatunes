@@ -37,4 +37,34 @@ public class TestProfile {
         List<Privilege> privileges = profile.privilegesOn.get(table);
         assertNull(privileges);
     }
+
+    @Test
+    public void testRevokePrivilege() {
+        Profile profile = new Profile();
+        profile.setName(Profile.AdminProfileName);
+        String table = "table";
+        Privilege privilege = Privilege.DELETE;
+
+        //Otorgar privilegio
+        profile.grantPrivilege(table, privilege);
+        assertTrue(profile.privilegesOn.containsKey(table));
+        List<Privilege> privileges = profile.privilegesOn.get(table);
+        assertNotNull(privileges);
+        assertTrue(privileges.contains(privilege));
+
+        // Revocar privilegio
+        boolean revoked = profile.revokePrivilege(table, privilege);
+        assertTrue(revoked);
+        assertFalse(profile.privilegesOn.containsKey(table));
+    }
+    @Test
+    public void testRevokePrivilegeNotAdmin() {
+        Profile profile = new Profile();
+        profile.setName("fran");
+        String table = "table";
+
+        // Revocar privilegio
+        boolean revoked = profile.revokePrivilege(table, Privilege.UPDATE);
+        assertFalse(revoked);
+    }
 }

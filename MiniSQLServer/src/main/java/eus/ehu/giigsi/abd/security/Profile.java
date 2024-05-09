@@ -47,6 +47,19 @@ public class Profile {
 
     public boolean revokePrivilege(String table, Privilege privilege)
     {
+        //Comprobar usuario admin
+        if (name.equals(AdminProfileName)){
+            List<Privilege> privilegies = privilegesOn.get(table);
+            if(privilegies != null) {
+                boolean removed = privilegies.remove(privilege);
+                if (removed == true){
+                    if(privilegies.isEmpty()){
+                        privilegesOn.remove(table);
+                    }
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
