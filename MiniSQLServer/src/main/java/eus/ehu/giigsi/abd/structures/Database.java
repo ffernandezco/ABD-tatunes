@@ -332,6 +332,8 @@ public class Database {
 
     public boolean IsUserAdmin() {
         securityManager = new Manager(mUsername);
-        return securityManager.isUserAdmin();
+
+        if (securityManager.isPasswordCorrect(mUsername, mPassword)) return securityManager.isUserAdmin();
+        else return false;
     }
 }

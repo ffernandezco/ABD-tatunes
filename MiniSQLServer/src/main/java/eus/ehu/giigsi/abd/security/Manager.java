@@ -29,7 +29,6 @@ public class Manager {
 
     public boolean isPasswordCorrect(String username, String password)
     {
-        // NO LO TENGO MUY CLARO
         for (Profile p : profiles) {
             for (User u : p.users) {
                 if (u.username.equals(username)) {
