@@ -24,10 +24,6 @@ public class DeleteUser implements MiniSQLQuery{
     {
         Manager sm = database.getSecurityManager();
         List<Profile> pf = sm.getProfiles();
-        if(username == null || username.equalsIgnoreCase(""))  {
-            return "Nombre de usuario no válido";
-        }
-        else{
             for(int i=0; i<pf.size();i++){
                 for(int j=0;j<pf.get(i).getUsers().size();j++){
                     if(pf.get(i).getUsers().get(j).getUsername().equalsIgnoreCase(username)){
@@ -37,6 +33,5 @@ public class DeleteUser implements MiniSQLQuery{
                 }
             }
             return Constants.USER_DOES_NOT_EXIST_ERROR;
-        }
     }
 }

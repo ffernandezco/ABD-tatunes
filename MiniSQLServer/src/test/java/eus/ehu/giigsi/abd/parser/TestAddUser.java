@@ -21,9 +21,7 @@ public class TestAddUser {
         Manager mg = new Manager("manager");
         db.securityManager = mg;
         au = new AddUser("testUser", "testPass", "Admin");
-        au2= new AddUser(null,"testPass","Admin");
-        au3= new AddUser("testUser2",null,"Admin");
-        au4= new AddUser("testUser2","testPass",null);
+        au2= new AddUser("testuser","testPass","AdminNo");
     }
     @Test
     public void prueba1(){
@@ -40,10 +38,6 @@ public class TestAddUser {
     @Test
     public void prueba2(){
         String result = au2.execute(db);
-        assertEquals("Usuario no agregado correctamente", result);
-        result = au3.execute(db);
-        assertEquals("Usuario no agregado correctamente", result);
-        result = au4.execute(db);
-        assertEquals("Usuario no agregado correctamente", result);
+        assertEquals(null, result);
     }
 }

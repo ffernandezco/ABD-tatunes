@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestDeleteUser {
     private Database db;
-    private DeleteUser du,du2,du3,du4;
+    private DeleteUser du,du2;
 
     @BeforeEach
     public void init() {
@@ -20,9 +20,7 @@ public class TestDeleteUser {
         Manager mg = new Manager("manager");
         db.securityManager = mg;
         du = new DeleteUser("user1");
-        du2 = new DeleteUser(null);
-        du3 = new DeleteUser("");
-        du4 = new DeleteUser("user10");
+        du2 = new DeleteUser("user10");
         Profile adminProfile = new Profile();
         adminProfile.setName("adminProfileName");
         Profile pf2 = new Profile();
@@ -42,16 +40,6 @@ public class TestDeleteUser {
     @Test
     public void prueba2(){
         String result = du2.execute(db);
-        assertEquals("Nombre de usuario no válido", result);
-    }
-    @Test
-    public void prueba3(){
-        String result = du3.execute(db);
-        assertEquals("Nombre de usuario no válido", result);
-    }
-    @Test
-    public void prueba4(){
-        String result = du4.execute(db);
         assertEquals(Constants.USER_DOES_NOT_EXIST_ERROR,result);
     }
 }

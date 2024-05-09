@@ -12,7 +12,6 @@ public class Manager {
     @Setter(AccessLevel.PRIVATE)
     public List<Profile> profiles = new ArrayList<>();
 
-
     public Manager(String username)
     {
 
@@ -20,7 +19,6 @@ public class Manager {
 
     public boolean isUserAdmin()
     {
-
         return true;
     }
 

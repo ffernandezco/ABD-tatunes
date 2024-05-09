@@ -30,18 +30,14 @@ public class AddUser implements MiniSQLQuery{
     public String execute(Database database)
     {
         Manager sm = database.getSecurityManager();
-        if(profileName == null || username == null || password == null)  {
-            return "Usuario no agregado correctamente";
-        }
-        else{
             for (int i = 0; i < sm.profiles.size(); i++) {
                 if(sm.getProfiles().get(i).getName().equalsIgnoreCase(profileName)) {
                    User us = new User(username,password);
                    sm.getProfiles().get(i).getUsers().add(us);
+                   return Constants.ADD_USER_SUCCESS;
                 }
             }
-                   return Constants.ADD_USER_SUCCESS;
-        }
+            return null;
     }
 
 }

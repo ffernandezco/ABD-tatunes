@@ -38,6 +38,4 @@ public class Profile {
     {
         return false;
     }
-
-
 }
