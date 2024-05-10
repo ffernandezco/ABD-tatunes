@@ -7,10 +7,7 @@ import lombok.Setter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Manager {
     @Getter
@@ -129,15 +126,101 @@ public class Manager {
 
     public static Manager load(String databaseName, String username)
     {
+        String path = "databases" + File.separator + databaseName + File.separator + "Manager";
 
-        return null;
+        File file = new File(path);
+
+        Manager manager = new Manager(username);
+
+        try {
+
+            File[] listFiles = file.listFiles();
+
+            List<Profile> listProfiles = new ArrayList<>();
+
+
+            for (int i = 0; i < listFiles.length; i++) {
+
+                Profile profile = new Profile();
+                profile.setName(listFiles[i].getName());
+
+                List<String> listUsers = new ArrayList<>();
+                List<String> listPasswords = new ArrayList<>();
+                List<String> listTables = new ArrayList<>();
+
+                List<List<Privilege>> listPrivileges = new ArrayList<>();
+
+                Scanner scanner = new Scanner(listFiles[i]);
+
+                if (listFiles[i].getName().equals("Users.txt")) {
+
+                    while (scanner.hasNextLine()) {
+                        String nombreUser = scanner.nextLine();
+
+                        listUsers.add(nombreUser);
+                    }
+
+                } else if (listFiles[i].getName().equals("Passwords.txt")) {
+
+                    while (scanner.hasNextLine()) {
+                        String contraUser = scanner.nextLine();
+
+                        listPasswords.add(contraUser);
+                    }
+
+                } else if (listFiles[i].getName().equals("Tables.txt")) {
+
+                    while (scanner.hasNextLine()) {
+                        String table = scanner.nextLine();
+
+                        listTables.add(table);
+                    }
+
+                } else {
+
+                    while (scanner.hasNext()) {
+
+                        String p = scanner.next();
+                        List<Privilege> privs = new ArrayList<>();
+
+                        while (!p.equals(";")) {
+
+                            privs.add(Privilege.valueOf(p));
+                            p = scanner.next();
+                        }
+
+                        listPrivileges.add(privs);
+                    }
+                }
+
+                for (int x = 0; x < listUsers.size(); x++) {
+                    User user = new User(listUsers.get(x), listPasswords.get(x));
+                    profile.users.add(user);
+                }
+
+                for (int y = 0; y < listTables.size(); y++) {
+                    profile.privilegesOn.put(listTables.get(y), listPrivileges.get(y));
+                }
+
+                manager.profiles.add(profile);
+
+            }
+
+            return manager;
+
+
+        } catch (IOException e) {
+
+            return null;
+        }
     }
 
     public void save(String databaseName) {
-        String path = databaseName + File.separator + "Manager";
+        String path = "databases" + File.separator + databaseName + File.separator + "Manager";
+        new File(path).mkdirs();
 
         for (Profile p : profiles) {
-            String pathProfile = path + p.name;
+            String pathProfile = path + File.separator + p.name;
 
             File file = new File(pathProfile);
             file.mkdirs();
@@ -158,9 +241,11 @@ public class Manager {
                 privilegios.createNewFile();
                 writePrivileges(p, privilegios);
 
-            } catch (IOException exception) {}
+            } catch (IOException exception) {
+            }
         }
     }
+
 
     public void writeUsers(Profile profile, File file) {
         try {
@@ -233,32 +318,38 @@ public class Manager {
         try {
             FileWriter fileWriter = new FileWriter(file);
 
-            for (int i = 0; i < profile.privilegesOn.size(); i++) {
+            if (! profile.privilegesOn.isEmpty()) {
 
-                if (i < profile.privilegesOn.size() - 1) {
-                    Set nombreTablas = profile.privilegesOn.keySet();
+                for (int i = 0; i < profile.privilegesOn.size(); i++) {
 
-                    Iterator iterator = nombreTablas.iterator();
+                    if (i < profile.privilegesOn.size() - 1) {
+                        Set nombreTablas = profile.privilegesOn.keySet();
 
-                    while (iterator.hasNext()) {
+                        Iterator iterator = nombreTablas.iterator();
 
-                        List<Privilege> privileges = profile.privilegesOn.get(iterator.next());
+                        while (iterator.hasNext()) {
 
-                        for (int j = 0; i < privileges.size(); j++) {
+                            List<Privilege> privileges = profile.privilegesOn.get(iterator.next());
 
-                            if (j < privileges.size() - 1)  fileWriter.write(privileges.get(j) + ", ");
+                            if (! privileges.isEmpty()) {
 
-                            else fileWriter.write(privileges.get(j) + "\n");
+                                for (int j = 0; j < privileges.size(); j++) {
+
+                                    if (j < privileges.size() - 1) fileWriter.write(privileges.get(j) + " ");
+
+                                    else fileWriter.write(privileges.get(j) + ";\n");
+                                }
+                            }
                         }
-                    }
 
-                } else {
-                    Set nombreTablas = profile.privilegesOn.keySet();
+                    } else {
+                        Set nombreTablas = profile.privilegesOn.keySet();
 
-                    Iterator iterator = nombreTablas.iterator();
+                        Iterator iterator = nombreTablas.iterator();
 
-                    while (iterator.hasNext()) {
-                        fileWriter.write((String) iterator.next());
+                        while (iterator.hasNext()) {
+                            fileWriter.write((String) iterator.next());
+                        }
                     }
                 }
             }
