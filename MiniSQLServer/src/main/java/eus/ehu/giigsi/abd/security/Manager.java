@@ -136,6 +136,8 @@ public class Manager {
 
             File[] listFiles = file.listFiles();
 
+            if (listFiles!=null){
+
             List<Profile> listProfiles = new ArrayList<>();
 
 
@@ -203,6 +205,8 @@ public class Manager {
                 }
 
                 manager.profiles.add(profile);
+
+            }
 
             }
 
