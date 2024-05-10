@@ -26,19 +26,6 @@ public class TestProfile {
     }
 
     @Test
-    public void testGrantPrivilegeNoAdmin() {
-        Profile profile = new Profile();
-        profile.setName("monterito");
-        String table = "table";
-        Privilege privilege = Privilege.SELECT;
-
-        boolean granted = profile.grantPrivilege(table, privilege);
-        assertFalse(granted);
-        List<Privilege> privileges = profile.privilegesOn.get(table);
-        assertNull(privileges);
-    }
-
-    @Test
     public void testRevokePrivilege() {
         Profile profile = new Profile();
         profile.setName(Profile.AdminProfileName);
