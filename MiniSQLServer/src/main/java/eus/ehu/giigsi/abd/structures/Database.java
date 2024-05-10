@@ -55,21 +55,26 @@ public class Database {
     {
 
         Database database = new Database(username, password);
-        database.securityManager.setUName(username);
-        if (database.IsUserAdmin()) {
-            String path = "databases" + File.separator + databaseName;
 
-            File file = new File(path);
+        database.securityManager = Manager.load(databaseName, username);
 
-            File[] listFiles = file.listFiles();
+        if (database.securityManager != null && database.securityManager.isPasswordCorrect(username, password)) {
 
-            for (File f : listFiles) {
-                Table table = new Table("name", new ArrayList<Column>());
+            if (database.IsUserAdmin()) {
+                String path = "databases" + File.separator + databaseName;
 
-                if (table.load(f.getPath())) database.addTable(table);
+                File file = new File(path);
+
+                File[] listFiles = file.listFiles();
+
+                for (File f : listFiles) {
+                    Table table = new Table("name", new ArrayList<Column>());
+
+                    if (table.load(f.getPath())) database.addTable(table);
+                }
+
+                return database;
             }
-
-            return database;
         }
 
         return null;
@@ -85,10 +90,15 @@ public class Database {
         if (file.exists()) deleteFolder(path);
 
         try {
-            int i = 0;
-            while (tables.get(i).save(databaseName) == true) {
-                i++;
+            if (! tables.isEmpty()) {
+                int i = 0;
+                while (i < tables.size() && tables.get(i).save(databaseName) == true) {
+
+                    i++;
+                }
             }
+
+            securityManager.save(databaseName);
 
             return true;
         }
@@ -357,7 +367,6 @@ public class Database {
     }
 
     public boolean IsUserAdmin() {
-        securityManager = new Manager(mUsername);
         if (securityManager.isPasswordCorrect(mUsername, mPassword)) return securityManager.isUserAdmin();
         else return false;
 

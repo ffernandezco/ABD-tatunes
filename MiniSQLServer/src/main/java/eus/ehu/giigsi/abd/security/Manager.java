@@ -5,12 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Manager {
     @Getter
@@ -129,15 +127,118 @@ public class Manager {
 
     public static Manager load(String databaseName, String username)
     {
+        String path = "databases" + File.separator + databaseName + File.separator + "Manager";
+
+        File file = new File(path);
+
+        Manager manager = new Manager(username);
+
+        try {
+
+            File[] listFiles = file.listFiles();
+
+            if (listFiles != null) {
+
+                List<Profile> listProfiles = new ArrayList<>();
+
+
+                for (File f : listFiles) {
+
+                    Profile profile = new Profile();
+                    profile.setName(f.getName());
+
+                    List<String> listUsers = new ArrayList<>();
+                    List<String> listPasswords = new ArrayList<>();
+                    List<String> listTables = new ArrayList<>();
+
+                    List<List<Privilege>> listPrivileges = new ArrayList<>();
+
+                    for (File f1 : f.listFiles()) {
+
+                        Scanner scanner = new Scanner(f1);
+
+                        if (f1.getName().equals("Users.txt")) {
+
+                            while (scanner.hasNextLine()) {
+                                String nombreUser = scanner.nextLine();
+
+                                listUsers.add(nombreUser);
+                            }
+
+                        } else if (f1.getName().equals("Passwords.txt")) {
+
+                            while (scanner.hasNextLine()) {
+                                String contraUser = scanner.nextLine();
+
+                                listPasswords.add(contraUser);
+                            }
+
+                        } else if (f1.getName().equals("Tables.txt")) {
+
+                            while (scanner.hasNextLine()) {
+                                String table = scanner.nextLine();
+
+                                listTables.add(table);
+                            }
+
+                        } else {
+
+                            while (scanner.hasNext()) {
+
+                                String p = scanner.next();
+                                List<Privilege> privs = new ArrayList<>();
+
+                                while (!p.equals("$")) {
+
+                                    privs.add(Privilege.valueOf(p));
+                                    p = scanner.next();
+                                }
+
+                                listPrivileges.add(privs);
+                            }
+                        }
+
+                        if (listUsers.size() == listPasswords.size()) {
+                            for (int x = 0; x < listUsers.size(); x++) {
+                                User user = new User(listUsers.get(x), listPasswords.get(x));
+                                profile.users.add(user);
+                            }
+                        }
+
+                        if (listTables.size() == listPrivileges.size()) {
+                            for (int y = 0; y < listTables.size(); y++) {
+                                profile.privilegesOn.put(listTables.get(y), listPrivileges.get(y));
+                            }
+                        }
+
+                        manager.profiles.add(profile);
+
+                    }
+                }
+
+                return manager;
+
+            }
+
+        } catch (IOException e) {
+
+            return null;
+        }
 
         return null;
     }
 
     public void save(String databaseName) {
-        String path = databaseName + File.separator + "Manager";
+        String path = "databases" + File.separator + databaseName + File.separator + "Manager";
+
+        File existFile = new File(path);
+
+        if (existFile.exists()) deleteFolder(path);
+
+        existFile.mkdirs();
 
         for (Profile p : profiles) {
-            String pathProfile = path + p.name;
+            String pathProfile = path + File.separator + p.name;
 
             File file = new File(pathProfile);
             file.mkdirs();
@@ -158,9 +259,11 @@ public class Manager {
                 privilegios.createNewFile();
                 writePrivileges(p, privilegios);
 
-            } catch (IOException exception) {}
+            } catch (IOException exception) {
+            }
         }
     }
+
 
     public void writeUsers(Profile profile, File file) {
         try {
@@ -217,7 +320,7 @@ public class Manager {
                     Iterator iterator = nombreTablas.iterator();
 
                     while (iterator.hasNext()) {
-                        fileWriter.write((String) iterator.next());
+                        fileWriter.write((String) iterator.next() + "\n");
                     }
                 }
             }
@@ -233,32 +336,48 @@ public class Manager {
         try {
             FileWriter fileWriter = new FileWriter(file);
 
-            for (int i = 0; i < profile.privilegesOn.size(); i++) {
+            if (! profile.privilegesOn.isEmpty()) {
 
-                if (i < profile.privilegesOn.size() - 1) {
-                    Set nombreTablas = profile.privilegesOn.keySet();
+                for (int i = 0; i < profile.privilegesOn.size(); i++) {
 
-                    Iterator iterator = nombreTablas.iterator();
+                    if (i < profile.privilegesOn.size() - 1) {
+                        Set nombreTablas = profile.privilegesOn.keySet();
 
-                    while (iterator.hasNext()) {
+                        Iterator iterator = nombreTablas.iterator();
 
-                        List<Privilege> privileges = profile.privilegesOn.get(iterator.next());
+                        while (iterator.hasNext()) {
 
-                        for (int j = 0; i < privileges.size(); j++) {
+                            List<Privilege> privileges = profile.privilegesOn.get(iterator.next());
 
-                            if (j < privileges.size() - 1)  fileWriter.write(privileges.get(j) + ", ");
+                            if (!privileges.isEmpty()) {
 
-                            else fileWriter.write(privileges.get(j) + "\n");
+                                for (int j = 0; j < privileges.size(); j++) {
+
+                                    if (j < privileges.size() - 1) fileWriter.write(privileges.get(j) + " ");
+
+                                    else fileWriter.write(privileges.get(j) + " $\n");
+                                }
+                            }
                         }
-                    }
+                    } else {
+                        Set nombreTablas = profile.privilegesOn.keySet();
 
-                } else {
-                    Set nombreTablas = profile.privilegesOn.keySet();
+                        Iterator iterator = nombreTablas.iterator();
 
-                    Iterator iterator = nombreTablas.iterator();
+                        while (iterator.hasNext()) {
 
-                    while (iterator.hasNext()) {
-                        fileWriter.write((String) iterator.next());
+                            List<Privilege> privileges = profile.privilegesOn.get(iterator.next());
+
+                            if (! privileges.isEmpty()) {
+
+                                for (int j = 0; j < privileges.size(); j++) {
+
+                                    if (j < privileges.size() - 1) fileWriter.write(privileges.get(j) + " ");
+
+                                    else fileWriter.write(privileges.get(j) + " $\n");
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -267,6 +386,40 @@ public class Manager {
         } catch (IOException e) {
 
             e.printStackTrace();
+        }
+    }
+
+    public void deleteFolder(String path){
+        File file = new File(path);
+        File[] files;
+        File[] subDirs;
+
+        files = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isFile();
+            }
+        });
+
+        subDirs = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isDirectory() && !file.getName().equals(".") && !file.getName().equals("..");
+            }
+        });
+
+        if(files != null){
+            for(File f : files){
+                //System.out.println("Deleting "+f.getAbsolutePath());
+                f.delete();
+            }
+        }
+
+        if(subDirs != null){
+            for(File subdir : subDirs){
+                deleteFolder(subdir.getAbsolutePath());
+                subdir.delete();
+            }
         }
     }
 }

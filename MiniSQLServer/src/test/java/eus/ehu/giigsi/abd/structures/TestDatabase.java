@@ -1,7 +1,9 @@
 package eus.ehu.giigsi.abd.structures;
 
-import eus.ehu.giigsi.abd.parser.ColumnParameters;
-import eus.ehu.giigsi.abd.parser.CreateTable;
+import eus.ehu.giigsi.abd.parser.*;
+import eus.ehu.giigsi.abd.security.*;
+import eus.ehu.giigsi.abd.structures.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -90,4 +92,6 @@ public class TestDatabase {
     }
 
      */
+
+
 }
