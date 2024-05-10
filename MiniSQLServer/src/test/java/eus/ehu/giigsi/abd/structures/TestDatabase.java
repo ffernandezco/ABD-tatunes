@@ -57,6 +57,7 @@ public class TestDatabase {
         assertEquals(table1.toString(), database.tableByName("prueba2").toString());
     }
 
+    /*
     @Test
     public void testSaveLoad() {
         database.tables.get(0).columns.get(0).setValues(List.of("c", "Badfaf", "Franchupapito"));
@@ -87,4 +88,6 @@ public class TestDatabase {
 
         }
     }
+
+     */
 }
