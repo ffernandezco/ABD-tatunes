@@ -1,0 +1,5 @@
+str
+STRING
+c
+Badfaf
+Franchupapito
