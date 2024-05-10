@@ -58,7 +58,7 @@ public class Database {
 
         database.securityManager = Manager.load(databaseName, username);
 
-        if (database.securityManager.isPasswordCorrect(username, password)) {
+        if (database.securityManager != null && database.securityManager.isPasswordCorrect(username, password)) {
 
             if (database.IsUserAdmin()) {
                 String path = "databases" + File.separator + databaseName;
