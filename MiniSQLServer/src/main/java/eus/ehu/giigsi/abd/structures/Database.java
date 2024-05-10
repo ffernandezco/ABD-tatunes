@@ -3,6 +3,8 @@ package eus.ehu.giigsi.abd.structures;
 import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.parser.*;
 import eus.ehu.giigsi.abd.security.Manager;
+import eus.ehu.giigsi.abd.security.Profile;
+import eus.ehu.giigsi.abd.security.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,11 +43,19 @@ public class Database {
     {
         mUsername = adminUsername;
         mPassword = adminPassword;
+        securityManager = new Manager(adminUsername);
+        User admin = new User(adminUsername, adminPassword);
+        Profile administrador = new Profile();
+        administrador.setName(Profile.AdminProfileName);
+        administrador.getUsers().add(admin);
+        securityManager.addProfile(administrador);
     }
 
     public static Database load(String databaseName, String username, String password)
     {
+
         Database database = new Database(username, password);
+        database.securityManager.setUName(username);
         if (database.IsUserAdmin()) {
             // FALTA RECUPERAR LA BD MEDIANTE LA RUTA, QUE LA OBTENEMOS DEL String databaseName
         }
@@ -331,8 +341,6 @@ public class Database {
     }
 
     public boolean IsUserAdmin() {
-        securityManager = new Manager(mUsername);
-
         if (securityManager.isPasswordCorrect(mUsername, mPassword)) return securityManager.isUserAdmin();
         else return false;
     }

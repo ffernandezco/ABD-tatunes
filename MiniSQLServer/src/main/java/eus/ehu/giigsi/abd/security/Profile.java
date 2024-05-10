@@ -26,29 +26,24 @@ public class Profile {
 
     public boolean grantPrivilege(String table, Privilege privilege)
     {
-        //Comprobar usuario admin
-        if (name.equals(AdminProfileName)){
-            //Diferentes casos según exista o no map de privilegios
-            List<Privilege> privilegies = privilegesOn.get(table);
-            if(privilegies != null) {
-                privilegies.add(privilege);
-                privilegesOn.put(table, privilegies);
-                return true;
-            }else{
-                privilegies = new ArrayList<>();
-                privilegies.add(privilege);
-                privilegesOn.put(table, privilegies);
-                return true;
-            }
+
+        //Diferentes casos según exista o no map de privilegios
+        List<Privilege> privilegies = privilegesOn.get(table);
+        if(privilegies != null) {
+            privilegies.add(privilege);
+            privilegesOn.put(table, privilegies);
+            return true;
+        }else{
+            privilegies = new ArrayList<>();
+            privilegies.add(privilege);
+            privilegesOn.put(table, privilegies);
+            return true;
         }
 
-        return false;
     }
 
     public boolean revokePrivilege(String table, Privilege privilege)
     {
-        //Comprobar usuario admin
-        if (name.equals(AdminProfileName)){
             List<Privilege> privilegies = privilegesOn.get(table);
             if(privilegies != null) {
                 boolean removed = privilegies.remove(privilege);
@@ -59,7 +54,6 @@ public class Profile {
                     return true;
                 }
             }
-        }
         return false;
     }
 
