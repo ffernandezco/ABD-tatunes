@@ -57,6 +57,10 @@ public class Database {
         // Falta cambiar la ruta a relativa
         String path = "databases" + File.separator + databaseName; // File.separator
 
+        File file = new File(path);
+
+        if (file.exists()) deleteFolder(path);
+
         try {
             int i = 0;
             while (tables.get(i).save(databaseName) == true) {
@@ -69,7 +73,6 @@ public class Database {
             System.out.println(e.toString());
             return false;
         }
-
     }
 
     public Table select(String table, List<String> columns, Condition columnCondition) {
@@ -335,5 +338,39 @@ public class Database {
 
         if (securityManager.isPasswordCorrect(mUsername, mPassword)) return securityManager.isUserAdmin();
         else return false;
+    }
+
+    public void deleteFolder(String path){
+        File file = new File(path);
+        File[] files;
+        File[] subDirs;
+
+        files = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isFile();
+            }
+        });
+
+        subDirs = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isDirectory() && !file.getName().equals(".") && !file.getName().equals("..");
+            }
+        });
+
+        if(files != null){
+            for(File f : files){
+                //System.out.println("Deleting "+f.getAbsolutePath());
+                f.delete();
+            }
+        }
+
+        if(subDirs != null){
+            for(File subdir : subDirs){
+                deleteFolder(subdir.getAbsolutePath());
+                subdir.delete();
+            }
+        }
     }
 }

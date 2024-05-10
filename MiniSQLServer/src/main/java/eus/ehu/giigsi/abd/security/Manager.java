@@ -4,8 +4,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class Manager {
     String uName;
@@ -116,8 +121,140 @@ public class Manager {
         return null;
     }
 
-    public void save(String databaseName)
-    {
+    public void save(String databaseName) {
+        String path = databaseName + File.separator + "Manager";
 
+        for (Profile p : profiles) {
+            String pathProfile = path + p.name;
+
+            File file = new File(pathProfile);
+            file.mkdirs();
+            try {
+                File usuarios = new File(pathProfile + File.separator + "Users.txt");
+                usuarios.createNewFile();
+                writeUsers(p, usuarios);
+
+                File contrasenas = new File(pathProfile + File.separator + "Passwords.txt");
+                contrasenas.createNewFile();
+                writePasswords(p, contrasenas);
+
+                File tablas = new File(pathProfile + File.separator + "Tables.txt");
+                tablas.createNewFile();
+                writeTables(p, tablas);
+
+                File privilegios = new File(pathProfile + File.separator + "Privileges.txt");
+                privilegios.createNewFile();
+                writePrivileges(p, privilegios);
+
+            } catch (IOException exception) {}
+        }
+    }
+
+    public void writeUsers(Profile profile, File file) {
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+
+            for (int i = 0; i < profile.users.size(); i++) {
+
+                if (i < profile.users.size() - 1) fileWriter.write(profile.users.get(i).username + "\n");
+                else  fileWriter.write(profile.users.get(i).username);
+            }
+            fileWriter.close();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void writePasswords(Profile profile, File file) {
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+
+            for (int i = 0; i < profile.users.size(); i++) {
+
+                if (i < profile.users.size() - 1) fileWriter.write(profile.users.get(i).encryptedPassword + "\n");
+                else  fileWriter.write(profile.users.get(i).encryptedPassword);
+            }
+            fileWriter.close();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void writeTables(Profile profile, File file) {
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+
+            for (int i = 0; i < profile.privilegesOn.size(); i++) {
+
+                if (i < profile.privilegesOn.size() - 1) {
+                    Set nombreTablas = profile.privilegesOn.keySet();
+
+                    Iterator iterator = nombreTablas.iterator();
+
+                    while (iterator.hasNext()) {
+                        fileWriter.write((String) iterator.next() + "\n");
+                    }
+
+                } else {
+                    Set nombreTablas = profile.privilegesOn.keySet();
+
+                    Iterator iterator = nombreTablas.iterator();
+
+                    while (iterator.hasNext()) {
+                        fileWriter.write((String) iterator.next());
+                    }
+                }
+            }
+            fileWriter.close();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void writePrivileges(Profile profile, File file) {
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+
+            for (int i = 0; i < profile.privilegesOn.size(); i++) {
+
+                if (i < profile.privilegesOn.size() - 1) {
+                    Set nombreTablas = profile.privilegesOn.keySet();
+
+                    Iterator iterator = nombreTablas.iterator();
+
+                    while (iterator.hasNext()) {
+
+                        List<Privilege> privileges = profile.privilegesOn.get(iterator.next());
+
+                        for (int j = 0; i < privileges.size(); j++) {
+
+                            if (j < privileges.size() - 1)  fileWriter.write(privileges.get(j) + ", ");
+
+                            else fileWriter.write(privileges.get(j) + "\n");
+                        }
+                    }
+
+                } else {
+                    Set nombreTablas = profile.privilegesOn.keySet();
+
+                    Iterator iterator = nombreTablas.iterator();
+
+                    while (iterator.hasNext()) {
+                        fileWriter.write((String) iterator.next());
+                    }
+                }
+            }
+            fileWriter.close();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
     }
 }

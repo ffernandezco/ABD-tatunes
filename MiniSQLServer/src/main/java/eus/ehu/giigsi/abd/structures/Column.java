@@ -5,10 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -75,16 +72,24 @@ public class Column {
 
     public boolean Save(String directory)
     {
-        try(PrintWriter writer = new PrintWriter(new FileWriter(directory))) {
-            writer.println(type.toString());
-            writer.println(name);
+        File file = new File(directory + File.separator + name + ".txt");
 
-            for (String value : values) {
-                writer.println(value);
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+
+            fileWriter.write(name + "\n");
+            fileWriter.write(type.name() + "\n");
+
+            for (int i = 0; i < values.size(); i++) {
+
+                if (i < values.size() - 1) fileWriter.write(values.get(i) + "\n");
+                else  fileWriter.write(values.get(i));
             }
+            fileWriter.close();
             return true;
 
         } catch (IOException e) {
+
             e.printStackTrace();
             return false;
         }
@@ -92,21 +97,7 @@ public class Column {
 
     public static Column Load(String file)
     {
-        try(Scanner scanner = new Scanner(new File(file))){
-            DataType type = DataType.valueOf(scanner.nextLine());
-            String name = scanner.nextLine();
-            List<String> values = new ArrayList<>();
 
-            while (scanner.hasNextLine()) {
-                values.add(scanner.nextLine());
-            }
-
-            return new Column(type, name, values);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+        return null;
     }
-
 }
