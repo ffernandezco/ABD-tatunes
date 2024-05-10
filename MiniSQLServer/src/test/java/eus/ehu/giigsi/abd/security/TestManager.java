@@ -13,5 +13,9 @@ public class TestManager {
     public Manager manager;
     public String username;
 
+    @BeforeEach
+    public void init() {
+
+    }
 
 }

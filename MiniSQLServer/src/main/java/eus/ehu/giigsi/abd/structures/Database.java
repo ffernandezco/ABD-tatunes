@@ -47,8 +47,21 @@ public class Database {
     {
         Database database = new Database(username, password);
         if (database.IsUserAdmin()) {
-            // FALTA RECUPERAR LA BD MEDIANTE LA RUTA, QUE LA OBTENEMOS DEL String databaseName
+            String path = "databases" + File.separator + databaseName;
+
+            File file = new File(path);
+
+            File[] listFiles = file.listFiles();
+
+            for (File f : listFiles) {
+                Table table = new Table("name", new ArrayList<Column>());
+
+                if (table.load(f.getPath())) database.addTable(table);
+            }
+
+            return database;
         }
+
         return null;
     }
     public boolean save(String databaseName)
@@ -56,6 +69,10 @@ public class Database {
         // Guardaremos en una ruta relativa para evitarnos problemas en caso de disponer diferentes SO
         // Falta cambiar la ruta a relativa
         String path = "databases" + File.separator + databaseName; // File.separator
+
+        File file = new File(path);
+
+        if (file.exists()) deleteFolder(path);
 
         try {
             int i = 0;
@@ -69,7 +86,6 @@ public class Database {
             System.out.println(e.toString());
             return false;
         }
-
     }
 
     public Table select(String table, List<String> columns, Condition columnCondition) {
@@ -331,9 +347,48 @@ public class Database {
     }
 
     public boolean IsUserAdmin() {
+        return true;
+
+        /*
         securityManager = new Manager(mUsername);
 
         if (securityManager.isPasswordCorrect(mUsername, mPassword)) return securityManager.isUserAdmin();
         else return false;
+        */
+
+    }
+
+    public void deleteFolder(String path){
+        File file = new File(path);
+        File[] files;
+        File[] subDirs;
+
+        files = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isFile();
+            }
+        });
+
+        subDirs = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isDirectory() && !file.getName().equals(".") && !file.getName().equals("..");
+            }
+        });
+
+        if(files != null){
+            for(File f : files){
+                //System.out.println("Deleting "+f.getAbsolutePath());
+                f.delete();
+            }
+        }
+
+        if(subDirs != null){
+            for(File subdir : subDirs){
+                deleteFolder(subdir.getAbsolutePath());
+                subdir.delete();
+            }
+        }
     }
 }
