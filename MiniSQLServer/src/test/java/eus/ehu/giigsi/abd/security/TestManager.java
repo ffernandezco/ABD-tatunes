@@ -1,6 +1,5 @@
 package eus.ehu.giigsi.abd.security;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,19 +13,18 @@ public class TestManager {
     public Manager manager;
     public String username;
 
-    /*
+
+
     @Test
     public void testIsUserAdmin() {
-        Manager manager = new Manager("Admin");
+        Manager manager = new Manager("usuario");
         Profile profile = new Profile();
-        profile.setName(Profile.AdminProfileName);
-        assertTrue(manager.isUserAdmin());
+        profile.setName("Usuario");
+        manager.getProfiles().add(profile);
+        assertFalse(manager.isUserAdmin());
     }
 
-     */
 
-
-    /*
     @Test
     public void testAddProfile() {
         Manager manager = new Manager("Admin");
@@ -36,6 +34,5 @@ public class TestManager {
         assertTrue(manager.profiles.contains(profile));
     }
 
-     */
 
 }

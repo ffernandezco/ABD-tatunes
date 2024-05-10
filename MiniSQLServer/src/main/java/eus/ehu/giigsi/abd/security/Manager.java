@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Manager {
-    String uName;
+    public String uName;
     @Getter
     @Setter(AccessLevel.PRIVATE)
     public List<Profile> profiles = new ArrayList<>();
@@ -16,14 +16,24 @@ public class Manager {
 
     public Manager(String username)
     {
-        uName = username;
+        this.uName = username;
+        Profile adminProfile = new Profile();
+        adminProfile.setName(Profile.AdminProfileName);
+        User adminUser = new User(username, "admin");
+        adminProfile.users.add(adminUser);
+        profiles.add(adminProfile);
     }
 
-    public boolean isUserAdmin()
-    {
-        Profile profile = profileByUser(uName);
-
-        if (profile.name.equals("Admin")) return true;
+    public boolean isUserAdmin() {
+        for (Profile profile : profiles) {
+            if (profile.getName().equals(Profile.AdminProfileName)) {
+                for (User user : profile.getUsers()) {
+                    if (user.getUsername().equals(uName)) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -71,9 +81,7 @@ public class Manager {
 
     public void addProfile(Profile profile)
     {
-        if(isUserAdmin()) {
-            profiles.add(profile);
-        }
+        profiles.add(profile);
     }
 
     public User userByName(String username)
@@ -108,11 +116,8 @@ public class Manager {
 
     public boolean removeProfile(String profileName)
     {
-        if(isUserAdmin()) {
-            Profile p = profileByName(profileName);
-            return profiles.remove(p);
-        }
-        return false;
+        Profile p = profileByName(profileName);
+        return profiles.remove(p);
     }
 
     public static Manager load(String databaseName, String username)
