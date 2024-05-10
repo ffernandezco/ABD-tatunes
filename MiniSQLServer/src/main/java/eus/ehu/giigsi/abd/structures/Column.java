@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -97,7 +98,27 @@ public class Column {
 
     public static Column Load(String file)
     {
+        File f = new File(file);
 
-        return null;
+        try {
+            Scanner scanner = new Scanner(f);
+
+            String nombreColumna = scanner.nextLine();
+            String type = scanner.nextLine();
+
+            List<String> valores = new ArrayList<>();
+
+            while (scanner.hasNextLine()) {
+                String linea = scanner.nextLine();
+
+                valores.add(linea);
+            }
+
+            Column column = new Column(DataType.valueOf(type), nombreColumna, valores);
+            return column;
+
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

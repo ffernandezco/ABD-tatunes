@@ -48,6 +48,20 @@ public class Database {
         Database database = new Database(username, password);
         if (database.IsUserAdmin()) {
             // FALTA RECUPERAR LA BD MEDIANTE LA RUTA, QUE LA OBTENEMOS DEL String databaseName
+
+            String path = "databases" + File.separator + databaseName;
+
+            File file = new File(path);
+
+            File[] listFiles = file.listFiles();
+
+            for (File f : listFiles) {
+                Table table = new Table();
+
+                if (table.load(f.getPath())) database.addTable(table);
+            }
+
+            return database;
         }
         return null;
     }

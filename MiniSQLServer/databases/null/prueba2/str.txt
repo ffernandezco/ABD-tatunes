@@ -1,5 +1,0 @@
-str
-STRING
-D
-E
-F
