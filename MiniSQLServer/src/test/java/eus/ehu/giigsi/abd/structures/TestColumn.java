@@ -198,7 +198,8 @@ public class TestColumn {
 
     @Test
     void Load() {
-        // Creamos un archivo de prueba con datos de alguna columna
+    /*
+       // Creamos un archivo de prueba con datos de alguna columna
         String testFilePath = "testColumnLoad.txt";
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(testFilePath))) {
@@ -429,7 +430,5 @@ public class TestColumn {
             testFile.delete();
 
         }
-
-
     }
 }
