@@ -58,7 +58,7 @@ public class Database {
 
         database.securityManager = Manager.load(databaseName, username);
 
-        if (database.securityManager.isPasswordCorrect(username, password)) {
+        if (database.securityManager != null && database.securityManager.isPasswordCorrect(username, password)) {
 
             if (database.IsUserAdmin()) {
                 String path = "databases" + File.separator + databaseName;
@@ -92,7 +92,8 @@ public class Database {
         try {
             if (! tables.isEmpty()) {
                 int i = 0;
-                while (tables.get(i).save(databaseName) == true) {
+                while (i < tables.size() && tables.get(i).save(databaseName) == true) {
+
                     i++;
                 }
             }
@@ -366,7 +367,6 @@ public class Database {
     }
 
     public boolean IsUserAdmin() {
-        securityManager = new Manager(mUsername);
         if (securityManager.isPasswordCorrect(mUsername, mPassword)) return securityManager.isUserAdmin();
         else return false;
 
