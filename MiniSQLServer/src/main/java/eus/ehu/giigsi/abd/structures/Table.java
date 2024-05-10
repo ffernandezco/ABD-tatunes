@@ -32,27 +32,21 @@ public class Table {
     {
         File file = new File(path);
 
-        int indNombre = path.lastIndexOf("/");
-        name = path.substring(indNombre);
+        int indNombre = path.lastIndexOf(File.separator);
+        name = path.substring(indNombre + 1);
 
         File[] listFiles = file.listFiles();
 
-        boolean b = true;
+        for (File f : listFiles) {
+            Column column = Column.Load(f.getPath());
 
-        while (b) {
+            if(column == null) {
+                return false;
 
-            for (File f : listFiles) {
-                Column column = Column.Load(f.getPath());
-
-                if(column == null) {
-                    b = false;
-                    break;
-
-                } else columns.add(column);
-            }
+            } else columns.add(column);
         }
 
-        return b;
+        return true;
     }
 
     public boolean save(String databaseName)

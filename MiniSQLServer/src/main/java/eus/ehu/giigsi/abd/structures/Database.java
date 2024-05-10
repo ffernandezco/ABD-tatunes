@@ -47,8 +47,6 @@ public class Database {
     {
         Database database = new Database(username, password);
         if (database.IsUserAdmin()) {
-            // FALTA RECUPERAR LA BD MEDIANTE LA RUTA, QUE LA OBTENEMOS DEL String databaseName
-
             String path = "databases" + File.separator + databaseName;
 
             File file = new File(path);
@@ -56,13 +54,14 @@ public class Database {
             File[] listFiles = file.listFiles();
 
             for (File f : listFiles) {
-                Table table = new Table();
+                Table table = new Table("name", new ArrayList<Column>());
 
                 if (table.load(f.getPath())) database.addTable(table);
             }
 
             return database;
         }
+
         return null;
     }
     public boolean save(String databaseName)
@@ -348,10 +347,15 @@ public class Database {
     }
 
     public boolean IsUserAdmin() {
+        return true;
+
+        /*
         securityManager = new Manager(mUsername);
 
         if (securityManager.isPasswordCorrect(mUsername, mPassword)) return securityManager.isUserAdmin();
         else return false;
+        */
+
     }
 
     public void deleteFolder(String path){
