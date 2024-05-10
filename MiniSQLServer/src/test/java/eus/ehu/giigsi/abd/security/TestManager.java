@@ -16,7 +16,7 @@ public class TestManager {
     @Test
     public void testIsPasswordCorrect() {
         Manager manager = new Manager("admin");
-        User user1 = new User("fran", "passfran123");
+        User user1 = new User("fran", "passfranzwq123");
         String encryptedPassword = Encryption.encrypt(user1.getEncryptedPassword());
 
         Profile userProfile = new Profile();
@@ -24,7 +24,7 @@ public class TestManager {
         userProfile.users = new ArrayList(List.of((Object) user1));
         manager.getProfiles().add(userProfile);
 
-        assertTrue(manager.isPasswordCorrect(user1.getUsername(), user1.getEncryptedPassword()));
+        assertTrue(manager.isPasswordCorrect(user1.getUsername(), "passfranzwq123"));
     }
 
     @Test
