@@ -36,6 +36,8 @@ public class Encryption {
                 sb.append(letra);
             }
         }
+
         return sb.toString(); //eliminamos objeto StringBuilder y convertimos en String
+
     }
 }
