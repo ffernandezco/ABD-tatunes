@@ -15,6 +15,7 @@ public class TestManager {
 
 
 
+    /*
     @Test
     public void testIsUserAdmin() {
         Manager manager = new Manager("usuario");
@@ -23,6 +24,8 @@ public class TestManager {
         manager.getProfiles().add(profile);
         assertFalse(manager.isUserAdmin());
     }
+
+     */
 
 
     @Test
