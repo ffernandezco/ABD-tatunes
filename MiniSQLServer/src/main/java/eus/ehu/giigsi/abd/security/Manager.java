@@ -25,7 +25,9 @@ public class Manager {
     {
         Profile profile = profileByUser(uName);
 
-        if (profile.name.equals(Profile.AdminProfileName)) return true;
+        if(profile != null) {
+            if (profile.name.equals(Profile.AdminProfileName)) return true;
+        }
         return false;
     }
 
@@ -68,7 +70,10 @@ public class Manager {
     public boolean isGrantedPrivilege(String username, String table, Privilege privilege)
     {
         Profile profile = profileByUser(username);
-        return profile.IsGrantedPrivilege(table, privilege);
+        if(profile != null) {
+            return profile.IsGrantedPrivilege(table, privilege);
+        }
+        return false;
     }
 
     public void addProfile(Profile profile)

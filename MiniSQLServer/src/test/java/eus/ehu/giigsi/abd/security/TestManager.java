@@ -96,4 +96,16 @@ public class TestManager {
         assertEquals(userProfile, p);
     }
 
+    @Test
+    public void testGrant(){
+        Manager manager = new Manager("admin");
+        User user = new User("francisco", "fern4nd3z");
+        Profile profile = new Profile();
+        profile.setName("Admin");
+        profile.users.add(user);
+        manager.getProfiles().add(profile);
+        manager.grantPrivilege("francisco", "Table", Privilege.DELETE);
+        Assertions.assertTrue(manager.isGrantedPrivilege("francisco", "Table", Privilege.DELETE));
+    }
+
 }

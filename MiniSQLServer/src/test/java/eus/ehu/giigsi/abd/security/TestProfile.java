@@ -54,4 +54,26 @@ public class TestProfile {
         boolean revoked = profile.revokePrivilege(table, Privilege.UPDATE);
         assertFalse(revoked);
     }
+
+    @Test
+    public void isGrantedAdmin() {
+        Profile profile = new Profile();
+        profile.setName("Admin");
+        String table = "Table";
+        assertTrue(profile.IsGrantedPrivilege(table, Privilege.DELETE));
+        assertTrue(profile.IsGrantedPrivilege(table, Privilege.SELECT));
+        assertTrue(profile.IsGrantedPrivilege(table, Privilege.INSERT));
+        assertTrue(profile.IsGrantedPrivilege(table, Privilege.UPDATE));
+    }
+
+    @Test
+    public void testIsGrantedPrivilege() {
+        Profile profile = new Profile();
+        profile.setName("monterolachupa");
+        String table = "Table";
+        profile.grantPrivilege(table, Privilege.UPDATE);
+        assertTrue(profile.IsGrantedPrivilege(table, Privilege.UPDATE));
+    }
+
+
 }
