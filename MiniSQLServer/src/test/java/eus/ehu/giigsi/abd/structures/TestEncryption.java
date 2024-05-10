@@ -12,7 +12,6 @@ public class TestEncryption {
     public void testEncrypt() {
         String text = "FRan";
         String encriptado = "IUdq";
-
         String encryptedMessage = Encryption.encrypt(text);
         assertNotNull(encryptedMessage);
         assertEquals(encryptedMessage, encriptado);
