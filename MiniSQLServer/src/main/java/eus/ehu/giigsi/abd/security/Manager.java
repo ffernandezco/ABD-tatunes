@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -197,13 +198,17 @@ public class Manager {
                             }
                         }
 
-                        for (int x = 0; x < listUsers.size(); x++) {
-                            User user = new User(listUsers.get(x), listPasswords.get(x));
-                            profile.users.add(user);
+                        if (listUsers.size() == listPasswords.size()) {
+                            for (int x = 0; x < listUsers.size(); x++) {
+                                User user = new User(listUsers.get(x), listPasswords.get(x));
+                                profile.users.add(user);
+                            }
                         }
 
-                        for (int y = 0; y < listTables.size(); y++) {
-                            profile.privilegesOn.put(listTables.get(y), listPrivileges.get(y));
+                        if (listTables.size() == listPrivileges.size()) {
+                            for (int y = 0; y < listTables.size(); y++) {
+                                profile.privilegesOn.put(listTables.get(y), listPrivileges.get(y));
+                            }
                         }
 
                         manager.profiles.add(profile);
@@ -225,7 +230,12 @@ public class Manager {
 
     public void save(String databaseName) {
         String path = "databases" + File.separator + databaseName + File.separator + "Manager";
-        new File(path).mkdirs();
+
+        File existFile = new File(path);
+
+        if (existFile.exists()) deleteFolder(path);
+
+        existFile.mkdirs();
 
         for (Profile p : profiles) {
             String pathProfile = path + File.separator + p.name;
@@ -339,7 +349,7 @@ public class Manager {
 
                             List<Privilege> privileges = profile.privilegesOn.get(iterator.next());
 
-                            if (! privileges.isEmpty()) {
+                            if (!privileges.isEmpty()) {
 
                                 for (int j = 0; j < privileges.size(); j++) {
 
@@ -349,7 +359,6 @@ public class Manager {
                                 }
                             }
                         }
-
                     } else {
                         Set nombreTablas = profile.privilegesOn.keySet();
 
@@ -365,7 +374,7 @@ public class Manager {
 
                                     if (j < privileges.size() - 1) fileWriter.write(privileges.get(j) + " ");
 
-                                    else fileWriter.write(privileges.get(j) + " $");
+                                    else fileWriter.write(privileges.get(j) + " $\n");
                                 }
                             }
                         }
@@ -377,6 +386,40 @@ public class Manager {
         } catch (IOException e) {
 
             e.printStackTrace();
+        }
+    }
+
+    public void deleteFolder(String path){
+        File file = new File(path);
+        File[] files;
+        File[] subDirs;
+
+        files = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isFile();
+            }
+        });
+
+        subDirs = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isDirectory() && !file.getName().equals(".") && !file.getName().equals("..");
+            }
+        });
+
+        if(files != null){
+            for(File f : files){
+                //System.out.println("Deleting "+f.getAbsolutePath());
+                f.delete();
+            }
+        }
+
+        if(subDirs != null){
+            for(File subdir : subDirs){
+                deleteFolder(subdir.getAbsolutePath());
+                subdir.delete();
+            }
         }
     }
 }
