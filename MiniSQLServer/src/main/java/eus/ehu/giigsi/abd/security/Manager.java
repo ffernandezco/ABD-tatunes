@@ -73,7 +73,7 @@ public class Manager {
 
     public void addProfile(Profile profile)
     {
-        if(isUserAdmin()){
+        if(isUserAdmin()) {
             profiles.add(profile);
         }
     }

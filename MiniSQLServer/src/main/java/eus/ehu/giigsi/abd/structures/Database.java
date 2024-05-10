@@ -48,7 +48,7 @@ public class Database {
         Profile administrador = new Profile();
         administrador.setName(Profile.AdminProfileName);
         administrador.getUsers().add(admin);
-        securityManager.addProfile(administrador);
+        securityManager.profiles.add(administrador);
     }
 
     public static Database load(String databaseName, String username, String password)
