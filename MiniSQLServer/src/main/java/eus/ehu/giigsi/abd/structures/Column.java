@@ -5,11 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -75,16 +73,25 @@ public class Column {
 
     public boolean Save(String directory)
     {
-        try(PrintWriter writer = new PrintWriter(new FileWriter(directory))) {
-            writer.println(type.toString());
-            writer.println(name);
 
-            for (String value : values) {
-                writer.println(value);
+        File file = new File(directory + File.separator + name + ".txt");
+
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+
+            fileWriter.write(name + "\n");
+            fileWriter.write(type.name() + "\n");
+
+            for (int i = 0; i < values.size(); i++) {
+
+                if (i < values.size() - 1) fileWriter.write(values.get(i) + "\n");
+                else  fileWriter.write(values.get(i));
             }
+            fileWriter.close();
             return true;
 
         } catch (IOException e) {
+
             e.printStackTrace();
             return false;
         }
@@ -92,21 +99,27 @@ public class Column {
 
     public static Column Load(String file)
     {
-        try(Scanner scanner = new Scanner(new File(file))){
-            DataType type = DataType.valueOf(scanner.nextLine());
-            String name = scanner.nextLine();
-            List<String> values = new ArrayList<>();
+        File f = new File(file);
+
+        try {
+            Scanner scanner = new Scanner(f);
+
+            String nombreColumna = scanner.nextLine();
+            String type = scanner.nextLine();
+
+            List<String> valores = new ArrayList<>();
 
             while (scanner.hasNextLine()) {
-                values.add(scanner.nextLine());
+                String linea = scanner.nextLine();
+
+                valores.add(linea);
             }
 
-            return new Column(type, name, values);
+            Column column = new Column(DataType.valueOf(type), nombreColumna, valores);
+            return column;
+
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
-
     }
-
 }

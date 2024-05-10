@@ -3,11 +3,14 @@ package eus.ehu.giigsi.abd.structures;
 import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.parser.*;
 import eus.ehu.giigsi.abd.security.Manager;
+import eus.ehu.giigsi.abd.security.Profile;
+import eus.ehu.giigsi.abd.security.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.Type;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
@@ -40,16 +43,41 @@ public class Database {
     {
         mUsername = adminUsername;
         mPassword = adminPassword;
+        securityManager = new Manager(adminUsername);
+        User admin = new User(adminUsername, adminPassword);
+        Profile administrador = new Profile();
+        administrador.setName(Profile.AdminProfileName);
+        administrador.getUsers().add(admin);
+        securityManager.profiles.add(administrador);
     }
 
-    public static FileReader load(String databaseName, String username, String password) {
-        File file = new File("/archives/" + databaseName + ".txt");
-        try (FileReader fr = new FileReader(file)) {
-            return fr;
-        } catch (IOException e) {
-            return null;
+    public static Database load(String databaseName, String username, String password)
+    {
+
+        Database database = new Database(username, password);
+
+        database.securityManager = Manager.load(databaseName, username);
+
+        if (database.securityManager != null && database.securityManager.isPasswordCorrect(username, password)) {
+
+            if (database.IsUserAdmin()) {
+                String path = "databases" + File.separator + databaseName;
+
+                File file = new File(path);
+
+                File[] listFiles = file.listFiles();
+
+                for (File f : listFiles) {
+                    Table table = new Table("name", new ArrayList<Column>());
+
+                    if (table.load(f.getPath())) database.addTable(table);
+                }
+
+                return database;
+            }
         }
 
+        return null;
     }
     public boolean save(String databaseName)
     {
@@ -57,11 +85,20 @@ public class Database {
         // Falta cambiar la ruta a relativa
         String path = "databases" + File.separator + databaseName; // File.separator
 
+        File file = new File(path);
+
+        if (file.exists()) deleteFolder(path);
+
         try {
-            int i = 0;
-            while (tables.get(i).save(databaseName) == true) {
-                i++;
+            if (! tables.isEmpty()) {
+                int i = 0;
+                while (i < tables.size() && tables.get(i).save(databaseName) == true) {
+
+                    i++;
+                }
             }
+
+            securityManager.save(databaseName);
 
             return true;
         }
@@ -69,7 +106,6 @@ public class Database {
             System.out.println(e.toString());
             return false;
         }
-
     }
 
     public Table select(String table, List<String> columns, Condition columnCondition) {
@@ -330,15 +366,43 @@ public class Database {
         }
     }
 
-    public boolean IsUserAdmin() throws IOException {
-        FileReader fr = new FileReader("/archives/admin.txt");
-        BufferedReader reader = new BufferedReader(fr);
-        String line;
-        while((line = reader.readLine())!=null){
-            if(line.contains(mUsername)){
-                return true;
+    public boolean IsUserAdmin() {
+        if (securityManager.isPasswordCorrect(mUsername, mPassword)) return securityManager.isUserAdmin();
+        else return false;
+
+    }
+
+    public void deleteFolder(String path){
+        File file = new File(path);
+        File[] files;
+        File[] subDirs;
+
+        files = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isFile();
+            }
+        });
+
+        subDirs = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isDirectory() && !file.getName().equals(".") && !file.getName().equals("..");
+            }
+        });
+
+        if(files != null){
+            for(File f : files){
+                //System.out.println("Deleting "+f.getAbsolutePath());
+                f.delete();
             }
         }
-        return false;
+
+        if(subDirs != null){
+            for(File subdir : subDirs){
+                deleteFolder(subdir.getAbsolutePath());
+                subdir.delete();
+            }
+        }
     }
 }
