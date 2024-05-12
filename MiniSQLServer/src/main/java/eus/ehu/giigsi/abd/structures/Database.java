@@ -295,6 +295,7 @@ public class Database {
         //Parse the query
         MiniSQLQuery miniSQLQuery = MiniSQLParser.parse(query);
 
+
         if (miniSQLQuery == null)
             return Constants.SYNTAX_ERROR;
 

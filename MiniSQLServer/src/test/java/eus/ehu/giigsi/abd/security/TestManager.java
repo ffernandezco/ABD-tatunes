@@ -108,4 +108,30 @@ public class TestManager {
         Assertions.assertTrue(manager.isGrantedPrivilege("francisco", "Table", Privilege.DELETE));
     }
 
+    @Test
+    public void testSaveAndLoad2Manager(){
+        Manager save =  new Manager("Root");
+        save.save("Manager-2");
+
+        Manager load = Manager.load("Manager-2", "Root");
+
+        if (save.getProfiles().size() == load.getProfiles().size()){
+            for (int i = 0; i< save.getProfiles().size();i++){
+                Profile profile = save.getProfiles().get(i);
+                Profile loadProfile = load.getProfiles().get(i);
+
+                if (!profile.getName().equals(loadProfile.getName())){
+                    System.out.println("error");
+                }
+
+                if (profile.getUsers().size() != loadProfile.getUsers().size()){
+
+                    System.out.println("error");
+                }
+
+
+            }
+        }
+    }
+
 }
