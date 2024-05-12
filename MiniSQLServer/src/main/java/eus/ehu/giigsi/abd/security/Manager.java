@@ -35,7 +35,9 @@ public class Manager {
 
     public void revokePrivilege(String profileName, String table, Privilege privilege)
     {
-
+        Profile pf = profiles.get(0);
+        //Profile pf = profileByName(profileName);
+        pf.revokePrivilege(table,privilege);
     }
 
     public boolean isGrantedPrivilege(String username, String table, Privilege privilege)

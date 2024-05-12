@@ -32,6 +32,13 @@ public class Profile {
 
     public boolean revokePrivilege(String table, Privilege privilege)
     {
+        List<Privilege> priv = privilegesOn.get(table);
+        for(int i=0; i< priv.size();i++){
+            if(priv.get(i).name().equalsIgnoreCase(String.valueOf(privilege))){
+                priv.remove(i);
+                return true;
+            }
+        }
         return false;
     }
 
