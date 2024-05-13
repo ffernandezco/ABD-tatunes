@@ -24,16 +24,27 @@ public class Manager {
     public Manager(String username)
     {
         this.uName = username;
+        this.profiles = new ArrayList<>();
     }
 
     public boolean isUserAdmin()
     {
         Profile profile = profileByUser(uName);
 
-        if(profile != null) {
+       /* if(profile != null) {
             if (profile.name.equals(Profile.AdminProfileName)) return true;
         }
+        return false;*/
+
+
+        for (Profile p : profiles){
+            if (p.getName().equals(Profile.AdminProfileName)){
+                return true;
+            }
+
+        }
         return false;
+
     }
 
     public boolean isPasswordCorrect(String username, String password)
@@ -54,7 +65,7 @@ public class Manager {
     {
         if (isUserAdmin()){
             for (Profile profile : profiles){
-                if(profile.getName() == profileName) {
+                if(profile.getName().equals(profileName)) {
                     profile.grantPrivilege(table, privilege);
                 }
             }
@@ -235,7 +246,7 @@ public class Manager {
 
         File existFile = new File(path);
 
-        if (existFile.exists()) deleteFolder(path);
+      /* if (existFile.exists()) deleteFolder(path);
 
         existFile.mkdirs();
 
@@ -263,8 +274,45 @@ public class Manager {
 
             } catch (IOException exception) {
             }
+        }*/
+        if (!existFile.exists()){
+            existFile.mkdirs();
         }
+        for (Profile p : profiles) {
+            String pathProfile = path + File.separator + p.getName();
+            try {
+                FileWriter usuariosFile = new FileWriter(pathProfile + File.separator + "Users.txt");
+                FileWriter passwordsFile = new FileWriter(pathProfile + File.separator + "Passwords.txt");
+                FileWriter tablesFile = new FileWriter(pathProfile + File.separator + "Tables.txt");
+                FileWriter privilegesFile = new FileWriter(pathProfile + File.separator + "Privileges.txt");
+
+                for (User user : p.getUsers()) {
+                    usuariosFile.write(user.getUsername() + "\n");
+                    passwordsFile.write(user.getEncryptedPassword() + "\n");
+                }
+
+                for (Map.Entry<String, List<Privilege>> entry : p.getPrivilegesOn().entrySet()) {
+                    tablesFile.write(entry.getKey() + "\n");
+                    List<Privilege> privileges = entry.getValue();
+                    for (Privilege privilege : privileges) {
+                        privilegesFile.write(privilege.name() + " ");
+                    }
+                    privilegesFile.write("$\n");
+
+                }
+                usuariosFile.close();
+                passwordsFile.close();
+                tablesFile.close();
+                privilegesFile.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
+
+
 
 
     public void writeUsers(Profile profile, File file) {
