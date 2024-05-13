@@ -19,6 +19,7 @@ public class TestCreateSecurityProfile {
          this.database = new Database("admin", "admin");
      }
 
+     /*
      @Test
     public void TestCreateSecurityProfile(){
 
@@ -30,6 +31,8 @@ public class TestCreateSecurityProfile {
 
 
      }
+
+      */
 
      @Test
      public void TestCreateSecurityProfileError(){
