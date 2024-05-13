@@ -1,13 +1,40 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
+import eus.ehu.giigsi.abd.security.Privilege;
+import eus.ehu.giigsi.abd.security.Profile;
+import eus.ehu.giigsi.abd.security.User;
 import eus.ehu.giigsi.abd.structures.Column;
+import eus.ehu.giigsi.abd.structures.Database;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMiniSQLParser {
+
+    Database database;
+    Database cargadaDatabase;
+
+    @BeforeEach
+    public void init () {
+        database = new Database("admin", "admin");
+
+        Profile profile = new Profile();
+        profile.setName("Profile");
+
+        profile.users.add(new User("Asier", "morenasbajitas"));
+        profile.users.add(new User("Fran", "rubiasaltas"));
+
+        database.getSecurityManager().addProfile(profile);
+
+        database.save("testeo");
+    }
+
 
     //TEST PARSER
     @Test
@@ -302,4 +329,59 @@ public class TestMiniSQLParser {
         }
     }
 
+    @Test
+    public void peticionesSinSerAdmin () {
+        cargadaDatabase = Database.load("testeo", "Asier", "morenasbajitas");
+
+        AddUser addUser = new AddUser("Pablo", "pelirrojastambien", "Profile");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, addUser.execute(cargadaDatabase));
+
+        DeleteUser deleteUser = new DeleteUser("Usuario");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, deleteUser.execute(cargadaDatabase));
+
+
+        DropSecurityProfile dropSecurityProfile = new DropSecurityProfile("Profile");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, dropSecurityProfile.execute(cargadaDatabase));
+
+        CreateSecurityProfile createSecurityProfile = new CreateSecurityProfile("Profile");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, createSecurityProfile.execute(cargadaDatabase));
+    }
+
+    @Test
+    public void perfilNoExiste () {
+        cargadaDatabase = Database.load("testeo", "admin", "admin");
+
+        AddUser addUser = new AddUser("Lander", "Zubillaga", "Ulia");
+        assertEquals(Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR, addUser.execute(cargadaDatabase));
+
+        DropSecurityProfile dropSecurityProfile = new DropSecurityProfile("Vitoria");
+        assertEquals(Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR, dropSecurityProfile.execute(cargadaDatabase));
+    }
+
+    @Test
+    public void usuarioInexistente () {
+        cargadaDatabase = Database.load("testeo", "admin", "admin");
+
+        DeleteUser deleteUser = new DeleteUser("Ander");
+        assertEquals(Constants.USER_DOES_NOT_EXIST_ERROR, deleteUser.execute(cargadaDatabase));
+    }
+
+    @Test
+    public void borrarUsuarioExistente() {
+        cargadaDatabase = Database.load("testeo", "admin", "admin");
+
+        Profile profile = cargadaDatabase.securityManager.profileByName("Profile");
+
+        AddUser addUser = new AddUser("Ander", "Bidebieta", "Profile");
+
+        assertEquals(Constants.ADD_USER_SUCCESS, addUser.execute(cargadaDatabase));
+        assertEquals(3, profile.users.size());
+        assertEquals("Ander", profile.users.get(profile.users.size()-1).username);
+
+        DeleteUser deleteUser = new DeleteUser("Ander");
+
+        assertEquals(Constants.DELETE_USER_SUCCESS, deleteUser.execute(cargadaDatabase));
+        assertEquals(2, profile.users.size());
+        assertEquals("Fran", profile.users.get(profile.users.size()-1).username);
+    }
 }

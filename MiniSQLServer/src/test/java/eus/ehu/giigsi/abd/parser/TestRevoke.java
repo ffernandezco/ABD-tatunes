@@ -59,7 +59,7 @@ public class TestRevoke {
 
     }
 
-    /*
+/*
 
     @Test
     public void prueba1(){
@@ -69,7 +69,9 @@ public class TestRevoke {
         assertEquals(Constants.REVOKE_PRIVILEGE_SUCCESS,result);
     }
 
-     */
+
+ */
+
 
 
 }
