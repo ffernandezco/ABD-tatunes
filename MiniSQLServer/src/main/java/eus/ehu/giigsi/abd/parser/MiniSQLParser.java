@@ -25,7 +25,8 @@ public class MiniSQLParser {
     public static final Pattern DROP_SECURITY_PROFILE_PATTERN = Pattern.compile("DROP\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)");
     public static final Pattern GRANT_PATTERN = Pattern.compile("GRANT\\s+(?<privilege>[a-zA-Z0-9]+)\\s+ON\\s+(?<tableName>[a-zA-Z0-9]+)\\s+TO\\s+(?<securityProfile>[a-zA-Z]+)");
     public static final Pattern REVOKE_PATTERN = Pattern.compile("REVOKE\\s+(?<privilege>[a-zA-Z0-9]+)\\s+ON\\s+(?<tableName>[a-zA-Z0-9]+)\\s+TO\\s+(?<securityProfile>[a-zA-Z]+)");
-
+    public static final Pattern ADD_USER_PATTERN = Pattern.compile("ADD\\s+USER\\s+\\((?<username>[a-zA-Z]+),\\s*(?<password>[^,]+),\\s*(?<securityProfile>[a-zA-Z]+)\\)");
+    public static final Pattern DELETE_USER_PATTERN = Pattern.compile("DELETE\\s+USER\\s+(?<username>[a-zA-Z]+)");
 
     public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 2;
     public static final int CREATE_TABLE_PATTERN_GROUP_NAME = 1;
@@ -59,6 +60,10 @@ public class MiniSQLParser {
     public static final int REVOKE_PATTERN_GROUP_PRIVILEGE = 1;
     public static final int REVOKE_PATTERN_GROUP_TABLE = 2;
     public static final int REVOKE_PATTERN_GROUP_PROFILE = 3;
+    public static final int ADD_USER_PATTERN_GROUP_USERNAME = 1;
+    public static final int ADD_USER_PATTERN_GROUP_PASSWORD = 2;
+    public static final int ADD_USER_PATTERN_GROUP_PROFILE = 3;
+    public static final int DELETE_USER_GROUP_USERNAME = 1;
 
     public static MiniSQLQuery parse(String miniSQLQuery)
     {
@@ -292,6 +297,22 @@ public class MiniSQLParser {
 
             return new Revoke(privilege, table, profile);
         }
+
+        matcher = ADD_USER_PATTERN.matcher(miniSQLQuery);
+        if (matcher.find()) {
+            String username = matcher.group(ADD_USER_PATTERN_GROUP_USERNAME);
+            String password = matcher.group(ADD_USER_PATTERN_GROUP_PASSWORD);
+            String profile = matcher.group(ADD_USER_PATTERN_GROUP_PROFILE);
+            return new AddUser(username, password, profile);
+        }
+
+        matcher = DELETE_USER_PATTERN.matcher(miniSQLQuery);
+        if (matcher.find()) {
+            String username = matcher.group(DELETE_USER_GROUP_USERNAME);
+            return new DeleteUser(username);
+        }
+
+
 
         if(false /* Comprobar las demás sentencias */){
             return null;
