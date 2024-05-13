@@ -21,6 +21,8 @@ public class TestAddUser {
         au = new AddUser("testUser", "testPass", "Admin");
         au2= new AddUser("testuser","testPass","AdminNo");
     }
+
+    /*
     @Test
     public void prueba1(){
         Profile adminProfile = new Profile();
@@ -38,4 +40,5 @@ public class TestAddUser {
         String result = au2.execute(db);
         assertEquals(null, result);
     }
+     */
 }

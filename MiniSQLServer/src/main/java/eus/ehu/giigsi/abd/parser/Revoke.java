@@ -28,20 +28,25 @@ public class Revoke implements MiniSQLQuery{
     {
         Manager sm = database.getSecurityManager();
 
-        if (sm.profileByName(profileName) == null) {
-            return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
-        }
+
         if (!sm.isUserAdmin()) {
-            return Constants.USER_DOES_NOT_HAVE_PRIVILEGE_ERROR;
-        }
-        else {
+            return Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE;
+
+        } if (sm.profileByName(profileName) == null) {
+            return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
+
+        } else if (sm.profileByName(profileName).privilegesOn.get(tableName) == null) {
+            return Constants.ERROR;
+
+        } else {
             sm.revokePrivilege(profileName, tableName, Privilege.valueOf(privilegeName));
-        }
-        if (sm.isGrantedPrivilege(profileName, tableName, Privilege.valueOf(privilegeName))){
-            return Constants.ERROR + "Failed to revoke privilage";
-        }
 
-        return Constants.REVOKE_PRIVILEGE_SUCCESS;
+            if (sm.isGrantedPrivilege(profileName, tableName, Privilege.valueOf(privilegeName))){
+                return Constants.ERROR;
+
+            } else {
+                return Constants.REVOKE_PRIVILEGE_SUCCESS;
+            }
+        }
     }
-
 }

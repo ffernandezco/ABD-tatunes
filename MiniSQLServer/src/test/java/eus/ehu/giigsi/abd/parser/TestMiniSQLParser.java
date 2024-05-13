@@ -6,11 +6,8 @@ import eus.ehu.giigsi.abd.security.Profile;
 import eus.ehu.giigsi.abd.security.User;
 import eus.ehu.giigsi.abd.structures.Column;
 import eus.ehu.giigsi.abd.structures.Database;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -345,6 +342,12 @@ public class TestMiniSQLParser {
 
         CreateSecurityProfile createSecurityProfile = new CreateSecurityProfile("Profile");
         assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, createSecurityProfile.execute(cargadaDatabase));
+
+        Revoke revoke = new Revoke(Privilege.INSERT.name(), "Tabla", "Profile");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, revoke.execute(cargadaDatabase));
+
+        Grant grant = new Grant(Privilege.INSERT.name(), "Tabla", "Profile");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, grant.execute(cargadaDatabase));
     }
 
     @Test
@@ -384,4 +387,17 @@ public class TestMiniSQLParser {
         assertEquals(2, profile.users.size());
         assertEquals("Fran", profile.users.get(profile.users.size()-1).username);
     }
+
+    /*
+    @Test
+    public void grantRevoke () {
+        cargadaDatabase = Database.load("testeo", "admin", "admin");
+        cargadaDatabase.securityManager.profileByName("Profile").privilegesOn.put("Tabla1", List.of(Privilege.SELECT));
+
+        Grant grant = new Grant(Privilege.UPDATE.name(), "Tabla1", "Profile");
+
+        assertEquals(Constants.GRANT_PRIVILEGE_SUCCESS, grant.execute(cargadaDatabase));
+        assertEquals(List.of(Privilege.SELECT, Privilege.UPDATE), cargadaDatabase.securityManager.profileByName("Profile").privilegesOn.get("Tabla1"));
+    }
+     */
 }
