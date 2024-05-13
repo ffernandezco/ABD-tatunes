@@ -1,5 +1,8 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
+import eus.ehu.giigsi.abd.security.Manager;
+import eus.ehu.giigsi.abd.security.Profile;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,7 +19,21 @@ public class CreateSecurityProfile implements MiniSQLQuery {
     }
     public String execute(Database database)
     {
-        return null;
+
+        if (profileName == null) {
+            return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
+        } else {
+            Manager securityManager = database.getSecurityManager();
+            Profile profile = new Profile();
+            profile.setName(profileName);
+            if (securityManager != null) {
+                return Constants.CREATE_SECURITY_PROFILE_SUCCESS;
+            } else {
+                securityManager.addProfile(profile);
+                return Constants.CREATE_SECURITY_PROFILE_SUCCESS;
+            }
+        }
+
     }
 
 }
