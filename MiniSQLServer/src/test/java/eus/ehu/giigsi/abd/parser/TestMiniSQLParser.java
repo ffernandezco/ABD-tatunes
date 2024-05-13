@@ -197,6 +197,25 @@ public class TestMiniSQLParser {
         assertEquals("TableName", ((DropTable) parsedQuery).getTable());
     }
 
+    //TEST PARSER - Security
+    @Test
+    public void testCreateSecurityProfileParse() {
+        String query = "CREATE SECURITY PROFILE ProfileDemo";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof CreateSecurityProfile);
+        assertEquals("ProfileDemo", ((CreateSecurityProfile) parsedQuery).getProfileName());
+    }
+
+    @Test
+    public void testDropSecurityProfileParse() {
+        String query = "DROP SECURITY PROFILE ProfileDemo";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof DropSecurityProfile);
+        assertEquals("ProfileDemo", ((DropSecurityProfile) parsedQuery).getProfileName());
+    }
+
     //TEST MÉTODOS
     @Test
     public void testCommaSeparatedNames() {

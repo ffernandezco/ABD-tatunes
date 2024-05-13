@@ -28,7 +28,7 @@ public class MiniSQLParser {
     public static final Pattern ADD_USER_PATTERN = Pattern.compile("ADD\\s+USER\\s+\\((?<username>[a-zA-Z]+),\\s*(?<password>[^,]+),\\s*(?<securityProfile>[a-zA-Z]+)\\)");
     public static final Pattern DELETE_USER_PATTERN = Pattern.compile("DELETE\\s+USER\\s+(?<username>[a-zA-Z]+)");
 
-    public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 2;
+    public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 1;
     public static final int CREATE_TABLE_PATTERN_GROUP_NAME = 1;
     public static final int CREATE_TABLE_PATTERN_GROUP_COLUMNS = 2;
     public static final int DROP_TABLE_PATTERN_GROUP_NAME = 1;
@@ -53,7 +53,7 @@ public class MiniSQLParser {
     public static final int UPDATE_PATTERN_GROUP_COLUMN = 3;
     public static final int UPDATE_PATTERN_GROUP_OPERATOR = 4;
     public static final int UPDATE_PATTERN_GROUP_LITERAL_VALUE = 5;
-    public static final int DROP_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 2;
+    public static final int DROP_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 1;
     public static final int GRANT_PATTERN_GROUP_PRIVILEGE = 1;
     public static final int GRANT_PATTERN_GROUP_TABLE = 2;
     public static final int GRANT_PATTERN_GROUP_PROFILE = 3;
