@@ -30,9 +30,23 @@ public class Table {
 
     public boolean load(String path)
     {
-        File f = new File(path);
+        File file = new File(path);
 
-        return false;
+        int indNombre = path.lastIndexOf(File.separator);
+        name = path.substring(indNombre + 1);
+
+        File[] listFiles = file.listFiles();
+
+        for (File f : listFiles) {
+            Column column = Column.Load(f.getPath());
+
+            if(column == null) {
+                return false;
+
+            } else columns.add(column);
+        }
+
+        return true;
     }
 
     public boolean save(String databaseName)
