@@ -146,7 +146,7 @@ public class Manager {
 
         Manager manager = new Manager(username);
 
-        try {
+       /* try {
 
             File[] listFiles = file.listFiles();
 
@@ -236,6 +236,78 @@ public class Manager {
         } catch (IOException e) {
 
             return null;
+        }
+
+        return null;*/
+
+        try {
+            File[] listFiles = file.listFiles();
+
+            if (listFiles != null) {
+                for (File f : listFiles) {
+                    Profile profile = new Profile();
+
+                    // Establecer el nombre del perfil usando el nombre del directorio
+                    profile.setName(f.getName());
+
+                    List<String> listUsers = new ArrayList<>();
+                    List<String> listPasswords = new ArrayList<>();
+                    List<String> listTables = new ArrayList<>();
+                    List<List<Privilege>> listPrivileges = new ArrayList<>();
+
+                    for (File f1 : f.listFiles()) {
+                        Scanner scanner = new Scanner(f1);
+
+                        if (f1.getName().equals("Users.txt")) {
+                            while (scanner.hasNextLine()) {
+                                String nombreUser = scanner.nextLine();
+                                listUsers.add(nombreUser);
+                            }
+                        } else if (f1.getName().equals("Passwords.txt")) {
+                            while (scanner.hasNextLine()) {
+                                String contraUser = scanner.nextLine();
+                                listPasswords.add(contraUser);
+                            }
+                        } else if (f1.getName().equals("Tables.txt")) {
+                            while (scanner.hasNextLine()) {
+                                String table = scanner.nextLine();
+                                listTables.add(table);
+                            }
+                        } else {
+                            while (scanner.hasNext()) {
+                                String p = scanner.next();
+                                List<Privilege> privs = new ArrayList<>();
+                                while (!p.equals("$")) {
+                                    privs.add(Privilege.valueOf(p));
+                                    p = scanner.next();
+                                }
+                                listPrivileges.add(privs);
+                            }
+                        }
+                    }
+
+                    // Asignar usuarios y privilegios al perfil
+                    if (listUsers.size() == listPasswords.size()) {
+                        for (int x = 0; x < listUsers.size(); x++) {
+                            User user = new User(listUsers.get(x), listPasswords.get(x));
+                            profile.getUsers().add(user);
+                        }
+                    }
+
+                    if (listTables.size() == listPrivileges.size()) {
+                        for (int y = 0; y < listTables.size(); y++) {
+                            profile.getPrivilegesOn().put(listTables.get(y), listPrivileges.get(y));
+                        }
+                    }
+
+                    // Agregar el perfil al manager
+                    manager.getProfiles().add(profile);
+                }
+
+                return manager;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return null;
