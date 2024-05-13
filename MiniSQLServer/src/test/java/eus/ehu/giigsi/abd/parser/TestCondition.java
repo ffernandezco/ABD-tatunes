@@ -1,17 +1,10 @@
 package eus.ehu.giigsi.abd.parser;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import eus.ehu.giigsi.abd.structures.Column;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestCondition {
     @Test

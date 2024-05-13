@@ -7,7 +7,6 @@ import eus.ehu.giigsi.abd.structures.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,11 +3,9 @@ package eus.ehu.giigsi.abd.parser;
 import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.security.Manager;
 import eus.ehu.giigsi.abd.security.Profile;
-import eus.ehu.giigsi.abd.security.User;
 import eus.ehu.giigsi.abd.structures.Database;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

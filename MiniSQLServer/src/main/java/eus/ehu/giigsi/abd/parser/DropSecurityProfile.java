@@ -25,6 +25,9 @@ public class DropSecurityProfile implements MiniSQLQuery{
         } else {
             Manager securityManager = database.getSecurityManager();
             if (securityManager != null) {
+                if(securityManager.profileByName(profileName) == null){
+                    return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
+                }
                 securityManager.removeProfile(profileName);
                 return Constants.DROP_SECURITY_PROFILE_SUCCESS;
             } else {

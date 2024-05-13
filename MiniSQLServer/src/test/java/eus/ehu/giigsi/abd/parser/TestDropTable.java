@@ -1,8 +1,6 @@
 package eus.ehu.giigsi.abd.parser;
 
-import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.structures.Database;
-import eus.ehu.giigsi.abd.structures.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
