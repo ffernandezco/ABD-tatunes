@@ -27,9 +27,6 @@ public class Grant implements MiniSQLQuery{
     }
     public String execute(Database database)
     {
-        if (database.tableByName(tableName) == null) {
-            return Constants.TABLE_DOES_NOT_EXIST_ERROR;
-        }
 
         Manager manager = database.securityManager;
 

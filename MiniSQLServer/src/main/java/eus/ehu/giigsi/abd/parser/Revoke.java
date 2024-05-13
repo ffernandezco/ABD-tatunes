@@ -28,10 +28,6 @@ public class Revoke implements MiniSQLQuery{
     {
         Manager sm = database.getSecurityManager();
 
-        if (database.tableByName(tableName) == null) {
-            return Constants.TABLE_DOES_NOT_EXIST_ERROR;
-        }
-
         if (sm.profileByName(profileName) == null) {
             return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
         }
