@@ -1,14 +1,11 @@
 package eus.ehu.giigsi.abd.parser;
 
 import eus.ehu.giigsi.abd.Constants;
-import eus.ehu.giigsi.abd.security.Manager;
-import eus.ehu.giigsi.abd.security.Profile;
 import eus.ehu.giigsi.abd.structures.Database;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestCreateSecurityProfile {
     private Database database;

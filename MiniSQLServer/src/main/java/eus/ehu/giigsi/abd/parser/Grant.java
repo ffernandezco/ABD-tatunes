@@ -27,9 +27,6 @@ public class Grant implements MiniSQLQuery{
     }
     public String execute(Database database)
     {
-        if (database.tableByName(tableName) == null) {
-            return Constants.TABLE_DOES_NOT_EXIST_ERROR;
-        }
 
         Manager manager = database.securityManager;
 
@@ -40,12 +37,11 @@ public class Grant implements MiniSQLQuery{
             return Constants.USER_DOES_NOT_HAVE_PRIVILEGE_ERROR;
         } else {
             manager.grantPrivilege(profileName, tableName, Privilege.valueOf(privilegeName));
-        }
-        if (!manager.isGrantedPrivilege(profileName, tableName, Privilege.valueOf(privilegeName))){
-            return Constants.ERROR + "Failed to grant privilege";
+            return Constants.GRANT_PRIVILEGE_SUCCESS;
         }
 
-        return Constants.GRANT_PRIVILEGE_SUCCESS;
+        // return Constants.ERROR + "Failed to grant privilege";
+
     }
 }
 

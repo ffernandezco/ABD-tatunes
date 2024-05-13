@@ -58,7 +58,9 @@ public class TestRevoke {
 
 
     }
+
     /*
+
     @Test
     public void prueba1(){
         Revoke rv = new Revoke("INSERT","empleado",Profile.AdminProfileName);
@@ -68,4 +70,6 @@ public class TestRevoke {
     }
 
      */
+
+
 }
