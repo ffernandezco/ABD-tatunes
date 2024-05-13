@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MiniSQLParser {
-    public static final Pattern CREATE_SECURITY_PROFILE_PATTERN = Pattern.compile("CREATE\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)");
+    public static final Pattern CREATE_SECURITY_PROFILE_PATTERN = Pattern.compile("CREATE\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)$");
     public static final Pattern CREATE_TABLE_PATTERN = Pattern.compile("CREATE\\s+TABLE\\s+(?<table>[a-zA-Z]+)\\s*\\((?<columns>[^)]+)\\)$");
     public static final Pattern DROP_TABLE_PATTERN = Pattern.compile("DROP\\s+TABLE\\s+(?<table>[a-zA-Z]+)$");
     //public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z0-9]+(?:\\s*,\\s*[a-zA-Z0-9]+)*)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<condition>.+))?");
@@ -22,11 +22,11 @@ public class MiniSQLParser {
     public static final Pattern INSERT_PATTERN = Pattern.compile("INSERT\\s+INTO\\s+(?<table>[a-zA-Z0-9]+)\\s+VALUES\\s+\\((?<literalValues>(.*))\\)$");
     //public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<conditions>.+)");
     public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:,[^\\s]+)*)\\s+WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*(?<literalValue>(-?\\d+|-?\\d+\\.\\d+|'(.*)'))$");
-    public static final Pattern DROP_SECURITY_PROFILE_PATTERN = Pattern.compile("DROP\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)");
-    public static final Pattern GRANT_PATTERN = Pattern.compile("GRANT\\s+(?<privilege>[a-zA-Z0-9]+)\\s+ON\\s+(?<tableName>[a-zA-Z0-9]+)\\s+TO\\s+(?<securityProfile>[a-zA-Z]+)");
-    public static final Pattern REVOKE_PATTERN = Pattern.compile("REVOKE\\s+(?<privilege>[a-zA-Z0-9]+)\\s+ON\\s+(?<tableName>[a-zA-Z0-9]+)\\s+TO\\s+(?<securityProfile>[a-zA-Z]+)");
-    public static final Pattern ADD_USER_PATTERN = Pattern.compile("ADD\\s+USER\\s+\\((?<username>[a-zA-Z]+),\\s*(?<password>[^,]+),\\s*(?<securityProfile>[a-zA-Z]+)\\)");
-    public static final Pattern DELETE_USER_PATTERN = Pattern.compile("DELETE\\s+USER\\s+(?<username>[a-zA-Z]+)");
+    public static final Pattern DROP_SECURITY_PROFILE_PATTERN = Pattern.compile("DROP\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)$");
+    public static final Pattern GRANT_PATTERN = Pattern.compile("GRANT\\s+(?<privilege>[a-zA-Z0-9]+)\\s+ON\\s+(?<tableName>[a-zA-Z0-9]+)\\s+TO\\s+(?<securityProfile>[a-zA-Z]+)$");
+    public static final Pattern REVOKE_PATTERN = Pattern.compile("REVOKE\\s+(?<privilege>[a-zA-Z0-9]+)\\s+ON\\s+(?<tableName>[a-zA-Z0-9]+)\\s+TO\\s+(?<securityProfile>[a-zA-Z]+)$");
+    public static final Pattern ADD_USER_PATTERN = Pattern.compile("ADD\\s+USER\\s+\\((?<username>[a-zA-Z]+),(?<password>[^,]+),(?<securityProfile>[a-zA-Z]+)\\)$");
+    public static final Pattern DELETE_USER_PATTERN = Pattern.compile("DELETE\\s+USER\\s+(?<username>[a-zA-Z]+)$");
 
     public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 1;
     public static final int CREATE_TABLE_PATTERN_GROUP_NAME = 1;

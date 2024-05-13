@@ -208,12 +208,85 @@ public class TestMiniSQLParser {
     }
 
     @Test
+    public void testCreateSecurityProfileSinLetrasParse() {
+        String query = "CREATE SECURITY PROFILE ProfileDemo1";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertNull(parsedQuery);
+    }
+
+    @Test
     public void testDropSecurityProfileParse() {
         String query = "DROP SECURITY PROFILE ProfileDemo";
         MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
 
         assertTrue(parsedQuery instanceof DropSecurityProfile);
         assertEquals("ProfileDemo", ((DropSecurityProfile) parsedQuery).getProfileName());
+    }
+
+    @Test
+    public void testGrantParse() {
+        String query = "GRANT DELETE ON tabla TO Profile";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof Grant);
+        assertEquals("DELETE", ((Grant) parsedQuery).getPrivilegeName());
+        assertEquals("tabla", ((Grant) parsedQuery).getTableName());
+        assertEquals("Profile", ((Grant) parsedQuery).getProfileName());
+    }
+
+    @Test
+    public void testRevokeParse() {
+        String query = "REVOKE SELECT ON tabla TO Profile";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof Revoke);
+        assertEquals("SELECT", ((Revoke) parsedQuery).getPrivilegeName());
+        assertEquals("tabla", ((Revoke) parsedQuery).getTableName());
+        assertEquals("Profile", ((Revoke) parsedQuery).getProfileName());
+    }
+
+    @Test
+    public void testAddUser() {
+        String query = "ADD USER (Usuario,Pass,Perfil)";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof AddUser);
+        assertEquals("Usuario", ((AddUser) parsedQuery).getUsername());
+        assertEquals("Pass", ((AddUser) parsedQuery).getPassword());
+        assertEquals("Perfil", ((AddUser) parsedQuery).getProfileName());
+    }
+
+    @Test
+    public void testAddUserSinLetras() {
+        String query = "ADD USER (Usuario1,Pass,Perfil1)";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertNull(parsedQuery);
+    }
+    @Test
+    public void testAddUserConEspacios() {
+        String query = "ADD USER (Usuario, Pass, Perfil)";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertNull(parsedQuery);
+    }
+
+    @Test
+    public void testDeleteUserParse() {
+        String query = "DELETE USER Fran";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof DeleteUser);
+        assertEquals("Fran", ((DeleteUser) parsedQuery).getUsername());
+    }
+
+    @Test
+    public void testDeleteUserSinLetrasParse() {
+        String query = "DELETE USER Asier1";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertNull(parsedQuery);
     }
 
     //TEST MÉTODOS
