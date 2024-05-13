@@ -22,6 +22,8 @@ public class MiniSQLParser {
     public static final Pattern INSERT_PATTERN = Pattern.compile("INSERT\\s+INTO\\s+(?<table>[a-zA-Z0-9]+)\\s+VALUES\\s+\\((?<literalValues>(.*))\\)$");
     //public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<conditions>.+)");
     public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:,[^\\s]+)*)\\s+WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*(?<literalValue>(-?\\d+|-?\\d+\\.\\d+|'(.*)'))$");
+    public static final Pattern DROP_SECURITY_PROFILE_PATTERN = Pattern.compile("DROP\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)");
+
 
     public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 2;
     public static final int CREATE_TABLE_PATTERN_GROUP_NAME = 1;
@@ -48,6 +50,7 @@ public class MiniSQLParser {
     public static final int UPDATE_PATTERN_GROUP_COLUMN = 3;
     public static final int UPDATE_PATTERN_GROUP_OPERATOR = 4;
     public static final int UPDATE_PATTERN_GROUP_LITERAL_VALUE = 5;
+    public static final int DROP_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 2;
     public static MiniSQLQuery parse(String miniSQLQuery)
     {
         // System.out.println("Ejecutando " + miniSQLQuery);
@@ -254,6 +257,13 @@ public class MiniSQLParser {
         if(matcher.find() && matcher.groupCount() == CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT){
             String nombreSP = matcher.group("nombreSecurityProfile");
             return new CreateSecurityProfile(nombreSP);
+        }
+
+        matcher = DROP_SECURITY_PROFILE_PATTERN.matcher(miniSQLQuery);
+
+        if(matcher.find() && matcher.groupCount() == DROP_SECURITY_PROFILE_PATTERN_GROUP_COUNT){
+            String nombreSP = matcher.group("nombreSecurityProfile");
+            return new DropSecurityProfile(nombreSP);
         }
 
         if(false /* Comprobar las demás sentencias */){
