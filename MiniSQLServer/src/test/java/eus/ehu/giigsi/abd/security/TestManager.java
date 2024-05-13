@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestManager {
 
     @Test
-    public void testIsPasswordCorrect() {
+    public void testIsPasswordCorrect(){
         Manager manager = new Manager("admin");
         User user1 = new User("fran", "passfranzwq123");
         String encryptedPassword = Encryption.encrypt(user1.getEncryptedPassword());
