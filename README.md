@@ -29,6 +29,6 @@ Utilizando el método `MiniSQLParser.parse()` es posible **utilizar la especific
 | _DELETE USER_             | A partir de un nombre de usuario, permite eliminarlo.                                                                                                           | `DROP USER Username`                                          |
 
 ## Autores e información
-Este proyecto ha sido realizado por el _Grupo “Tatunes”_, formado por los alumnos **Asier Montero, Francisco Fernández, Julen Berbetoros, Martina Anabel Gioiello y Mauricio Bryan Gómez** de la Escuela de Ingeniería de Vitoria-Gasteiz como parte de la asignatura _Administración de Bases de Datos_ del Grado en Ingeniería Informática de Gestión y Sistemas de Información en el curso 2023-24.
+Este proyecto ha sido realizado por el _Grupo “Tatunes”_, formado por los alumnos **Asier Montero, Francisco Fernández, Julen Berbetoros, Martina Anabel Gioiello y Mauricio Bryan Gómez** de la Escuela de Ingeniería de Vitoria-Gasteiz, como parte de la asignatura _Administración de Bases de Datos_ del Grado en Ingeniería Informática de Gestión y Sistemas de Información en el curso 2023-24.
 
 _[Universidad del País Vasco / Euskal Herriko Unibertsitatea (UPV/EHU)](https://www.ehu.eus/es/)_
