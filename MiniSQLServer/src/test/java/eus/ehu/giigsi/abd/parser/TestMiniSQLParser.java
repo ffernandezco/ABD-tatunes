@@ -369,27 +369,6 @@ public class TestMiniSQLParser {
         assertEquals(Constants.USER_DOES_NOT_EXIST_ERROR, deleteUser.execute(cargadaDatabase));
     }
 
-    /*
-    @Test
-    public void borrarUsuarioExistente() {
-        cargadaDatabase = Database.load("testeo", "admin", "admin");
-
-        Profile profile = cargadaDatabase.securityManager.profileByName("Profile");
-
-        AddUser addUser = new AddUser("Ander", "Bidebieta", "Profile");
-
-        assertEquals(Constants.ADD_USER_SUCCESS, addUser.execute(cargadaDatabase));
-        assertEquals(3, profile.users.size());
-        assertEquals("Ander", profile.users.get(profile.users.size()-1).username);
-
-        DeleteUser deleteUser = new DeleteUser("Ander");
-
-        assertEquals(Constants.DELETE_USER_SUCCESS, deleteUser.execute(cargadaDatabase));
-        assertEquals(2, profile.users.size());
-        assertEquals("Fran", profile.users.get(profile.users.size()-1).username);
-    }
-
-     */
 
     /*
     @Test
