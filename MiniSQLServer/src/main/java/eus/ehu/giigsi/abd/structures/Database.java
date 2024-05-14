@@ -2,6 +2,7 @@ package eus.ehu.giigsi.abd.structures;
 
 import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.parser.*;
+import eus.ehu.giigsi.abd.security.Encryption;
 import eus.ehu.giigsi.abd.security.Manager;
 import eus.ehu.giigsi.abd.security.Profile;
 import eus.ehu.giigsi.abd.security.User;
@@ -53,6 +54,8 @@ public class Database {
 
     public static Database load(String databaseName, String username, String password)
     {
+
+        password = Encryption.encrypt(password);
 
         Database database = new Database(username, password);
 
