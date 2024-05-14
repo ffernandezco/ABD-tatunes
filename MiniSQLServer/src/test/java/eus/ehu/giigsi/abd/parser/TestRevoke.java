@@ -1,77 +1,63 @@
 package eus.ehu.giigsi.abd.parser;
 
-import eus.ehu.giigsi.abd.Constants;
-import eus.ehu.giigsi.abd.security.Manager;
 import eus.ehu.giigsi.abd.security.Privilege;
 import eus.ehu.giigsi.abd.security.Profile;
+import eus.ehu.giigsi.abd.security.User;
 import eus.ehu.giigsi.abd.structures.Column;
 import eus.ehu.giigsi.abd.structures.Database;
 import eus.ehu.giigsi.abd.structures.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestRevoke {
-    private Database db;
-    private Profile pf;
-    private List<Privilege> priv,priv2;
-    private String tb,tb2;
+    Database database;
+    Database cargadaDatabase;
+    User user;
 
     @BeforeEach
-    public void init(){
-        db = new Database("admin", "admin");
-        Manager sm = new Manager("manager");
-        db.securityManager = sm;
+    public void init () {
+        database = new Database("admin", "admin");
+        List<Column> listaCP = new ArrayList<>();
+        listaCP.add(new Column(Column.DataType.INT,"id"));
+        Table table = new Table("table", listaCP);
 
-        List<ColumnParameters> listaCP = new ArrayList<>();
+        database.addTable(table);
 
-        listaCP.add(new ColumnParameters("str", Column.DataType.STRING));
-        listaCP.add(new ColumnParameters("dbl", Column.DataType.DOUBLE));
-        listaCP.add(new ColumnParameters("int", Column.DataType.INT));
-        db.createTable("empleado",listaCP);
+        Profile profile = new Profile();
+        profile.setName("Profile");
 
-        pf = new Profile();
-        pf.setName(Profile.AdminProfileName);
-        db.getSecurityManager().getProfiles().add(pf);
+        user = new User("Fran", "rubiasaltas");
 
-        priv = new ArrayList<>();
-        priv.add(Privilege.INSERT);
-        priv.add(Privilege.DELETE);
+        profile.users.add(new User("Asier", "morenasbajitas"));
+        profile.users.add(user);
 
-        priv2 = new ArrayList<>();
-        priv2.add(Privilege.UPDATE);
-        priv2.add(Privilege.INSERT);
+        database.getSecurityManager().addProfile(profile);
 
-        tb = "empleado";
-        tb2 = "departamento";
-
-        pf.getPrivilegesOn().put(tb,priv);
-        pf.getPrivilegesOn().put(tb2,priv2);
-        pf.getPrivilegesOn();
-
-
+        database.save("testeo");
     }
 
-/*
 
     @Test
-    public void prueba1(){
-        Revoke rv = new Revoke("INSERT","empleado",Profile.AdminProfileName);
-        String result = rv.execute(db);
+    public void testRevoke(){
+        cargadaDatabase = Database.load("testeo", "admin", "admin");
+        Grant grant = new Grant("DELETE", "table", "Profile");
+        grant.execute(cargadaDatabase);
+        Profile profile = cargadaDatabase.getSecurityManager().profileByName("Profile");
 
-        assertEquals(Constants.REVOKE_PRIVILEGE_SUCCESS,result);
+        assertTrue(profile.IsGrantedPrivilege("table", Privilege.DELETE));
+        assertFalse(profile.IsGrantedPrivilege("table", Privilege.SELECT));
+        assertFalse(profile.IsGrantedPrivilege("table", Privilege.INSERT));
+
+        Revoke revoke = new Revoke("DELETE", "table","Profile");
+        revoke.execute(cargadaDatabase);
+        assertFalse(profile.IsGrantedPrivilege("table", Privilege.DELETE));
+
     }
-
-
- */
-
 
 
 }

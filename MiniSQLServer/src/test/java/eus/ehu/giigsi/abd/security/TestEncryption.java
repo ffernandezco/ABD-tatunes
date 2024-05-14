@@ -1,4 +1,4 @@
-package eus.ehu.giigsi.abd.structures;
+package eus.ehu.giigsi.abd.security;
 
 import eus.ehu.giigsi.abd.security.Encryption;
 import org.junit.jupiter.api.Test;
