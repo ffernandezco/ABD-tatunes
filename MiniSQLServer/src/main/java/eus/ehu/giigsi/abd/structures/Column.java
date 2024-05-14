@@ -1,6 +1,7 @@
 package eus.ehu.giigsi.abd.structures;
 
 import eus.ehu.giigsi.abd.parser.Condition;
+import eus.ehu.giigsi.abd.parser.DataTypeUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -115,7 +116,7 @@ public class Column {
                 valores.add(linea);
             }
 
-            Column column = new Column(DataType.valueOf(type), nombreColumna, valores);
+            Column column = new Column(DataTypeUtils.fromMiniSQLName(type), nombreColumna, valores);
             return column;
 
         } catch (IOException e) {

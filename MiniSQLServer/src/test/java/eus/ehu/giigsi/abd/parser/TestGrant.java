@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestRevoke {
+public class TestGrant {
     Database database;
     Database cargadaDatabase;
     User user;
@@ -43,7 +43,7 @@ public class TestRevoke {
 
 
     @Test
-    public void testRevoke(){
+    public void testGrant(){
         cargadaDatabase = Database.load("testeo", "admin", "admin");
         Grant grant = new Grant("DELETE", "table", "Profile");
         grant.execute(cargadaDatabase);
@@ -52,10 +52,6 @@ public class TestRevoke {
         assertTrue(profile.IsGrantedPrivilege("table", Privilege.DELETE));
         assertFalse(profile.IsGrantedPrivilege("table", Privilege.SELECT));
         assertFalse(profile.IsGrantedPrivilege("table", Privilege.INSERT));
-
-        Revoke revoke = new Revoke("DELETE", "table","Profile");
-        revoke.execute(cargadaDatabase);
-        assertFalse(profile.IsGrantedPrivilege("table", Privilege.DELETE));
 
     }
 
