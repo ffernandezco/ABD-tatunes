@@ -1,16 +1,13 @@
 package eus.ehu.giigsi.abd.structures;
-import eus.ehu.giigsi.abd.parser.Condition;
 
-import static org.junit.jupiter.api.Assertions.*;
+import eus.ehu.giigsi.abd.parser.Condition;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestColumn {

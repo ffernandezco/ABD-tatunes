@@ -2,6 +2,7 @@ package eus.ehu.giigsi.abd.structures;
 
 import eus.ehu.giigsi.abd.Constants;
 import eus.ehu.giigsi.abd.parser.*;
+import eus.ehu.giigsi.abd.security.Encryption;
 import eus.ehu.giigsi.abd.security.Manager;
 import eus.ehu.giigsi.abd.security.Profile;
 import eus.ehu.giigsi.abd.security.User;
@@ -54,29 +55,32 @@ public class Database {
     public static Database load(String databaseName, String username, String password)
     {
 
+        password = Encryption.encrypt(password);
+
         Database database = new Database(username, password);
 
         database.securityManager = Manager.load(databaseName, username);
 
         if (database.securityManager != null && database.securityManager.isPasswordCorrect(username, password)) {
 
-            if (database.IsUserAdmin()) {
-                String path = "databases" + File.separator + databaseName;
+            // if (database.IsUserAdmin()) {
+            String path = "databases" + File.separator + databaseName;
 
-                File file = new File(path);
+            File file = new File(path);
 
-                File[] listFiles = file.listFiles();
+            File[] listFiles = file.listFiles();
 
-                for (File f : listFiles) {
-                    Table table = new Table("name", new ArrayList<Column>());
+            for (File f : listFiles) {
+                Table table = new Table("name", new ArrayList<Column>());
 
-                    if (table.load(f.getPath())) database.addTable(table);
-                }
-
-                return database;
+                if (table.load(f.getPath())) database.addTable(table);
             }
+
+            return database;
+            // }
         }
 
+        // Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE
         return null;
     }
     public boolean save(String databaseName)

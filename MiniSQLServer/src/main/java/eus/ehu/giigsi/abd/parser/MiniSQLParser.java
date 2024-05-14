@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MiniSQLParser {
-    public static final Pattern CREATE_SECURITY_PROFILE_PATTERN = Pattern.compile("CREATE\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)");
+    public static final Pattern CREATE_SECURITY_PROFILE_PATTERN = Pattern.compile("CREATE\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)$");
     public static final Pattern CREATE_TABLE_PATTERN = Pattern.compile("CREATE\\s+TABLE\\s+(?<table>[a-zA-Z]+)\\s*\\((?<columns>[^)]+)\\)$");
     public static final Pattern DROP_TABLE_PATTERN = Pattern.compile("DROP\\s+TABLE\\s+(?<table>[a-zA-Z]+)$");
     //public static final Pattern SELECT_PATTERN = Pattern.compile("SELECT\\s+(?<columns>[a-zA-Z0-9]+(?:\\s*,\\s*[a-zA-Z0-9]+)*)\\s+FROM\\s+(?<tableName>[a-zA-Z]+)\\s*(?:WHERE\\s+(?<condition>.+))?");
@@ -22,8 +22,13 @@ public class MiniSQLParser {
     public static final Pattern INSERT_PATTERN = Pattern.compile("INSERT\\s+INTO\\s+(?<table>[a-zA-Z0-9]+)\\s+VALUES\\s+\\((?<literalValues>(.*))\\)$");
     //public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:\\s*,\\s*[^\\s]+)*)\\s+WHERE\\s+(?<conditions>.+)");
     public static final Pattern UPDATE_PATTERN = Pattern.compile("UPDATE\\s+(?<table>[a-zA-Z]+)\\s+SET\\s+(?<literalValues>[^\\s]+(?:,[^\\s]+)*)\\s+WHERE\\s+(?<column>[a-zA-Z]+)\\s*(?<operator>[=<>])\\s*(?<literalValue>(-?\\d+|-?\\d+\\.\\d+|'(.*)'))$");
+    public static final Pattern DROP_SECURITY_PROFILE_PATTERN = Pattern.compile("DROP\\s+SECURITY\\s+PROFILE\\s+(?<nombreSecurityProfile>[a-zA-Z]+)$");
+    public static final Pattern GRANT_PATTERN = Pattern.compile("GRANT\\s+(?<privilege>[a-zA-Z0-9]+)\\s+ON\\s+(?<tableName>[a-zA-Z0-9]+)\\s+TO\\s+(?<securityProfile>[a-zA-Z]+)$");
+    public static final Pattern REVOKE_PATTERN = Pattern.compile("REVOKE\\s+(?<privilege>[a-zA-Z0-9]+)\\s+ON\\s+(?<tableName>[a-zA-Z0-9]+)\\s+TO\\s+(?<securityProfile>[a-zA-Z]+)$");
+    public static final Pattern ADD_USER_PATTERN = Pattern.compile("ADD\\s+USER\\s+\\((?<username>[a-zA-Z]+),(?<password>[^,]+),(?<securityProfile>[a-zA-Z]+)\\)$");
+    public static final Pattern DELETE_USER_PATTERN = Pattern.compile("DELETE\\s+USER\\s+(?<username>[a-zA-Z]+)$");
 
-    public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 2;
+    public static final int CREATE_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 1;
     public static final int CREATE_TABLE_PATTERN_GROUP_NAME = 1;
     public static final int CREATE_TABLE_PATTERN_GROUP_COLUMNS = 2;
     public static final int DROP_TABLE_PATTERN_GROUP_NAME = 1;
@@ -48,6 +53,18 @@ public class MiniSQLParser {
     public static final int UPDATE_PATTERN_GROUP_COLUMN = 3;
     public static final int UPDATE_PATTERN_GROUP_OPERATOR = 4;
     public static final int UPDATE_PATTERN_GROUP_LITERAL_VALUE = 5;
+    public static final int DROP_SECURITY_PROFILE_PATTERN_GROUP_COUNT = 1;
+    public static final int GRANT_PATTERN_GROUP_PRIVILEGE = 1;
+    public static final int GRANT_PATTERN_GROUP_TABLE = 2;
+    public static final int GRANT_PATTERN_GROUP_PROFILE = 3;
+    public static final int REVOKE_PATTERN_GROUP_PRIVILEGE = 1;
+    public static final int REVOKE_PATTERN_GROUP_TABLE = 2;
+    public static final int REVOKE_PATTERN_GROUP_PROFILE = 3;
+    public static final int ADD_USER_PATTERN_GROUP_USERNAME = 1;
+    public static final int ADD_USER_PATTERN_GROUP_PASSWORD = 2;
+    public static final int ADD_USER_PATTERN_GROUP_PROFILE = 3;
+    public static final int DELETE_USER_GROUP_USERNAME = 1;
+
     public static MiniSQLQuery parse(String miniSQLQuery)
     {
         // System.out.println("Ejecutando " + miniSQLQuery);
@@ -255,6 +272,47 @@ public class MiniSQLParser {
             String nombreSP = matcher.group("nombreSecurityProfile");
             return new CreateSecurityProfile(nombreSP);
         }
+
+        matcher = DROP_SECURITY_PROFILE_PATTERN.matcher(miniSQLQuery);
+
+        if(matcher.find() && matcher.groupCount() == DROP_SECURITY_PROFILE_PATTERN_GROUP_COUNT){
+            String nombreSP = matcher.group("nombreSecurityProfile");
+            return new DropSecurityProfile(nombreSP);
+        }
+
+        matcher = GRANT_PATTERN.matcher(miniSQLQuery);
+        if (matcher.find()) {
+            String privilege = matcher.group(GRANT_PATTERN_GROUP_PRIVILEGE);
+            String table = matcher.group(GRANT_PATTERN_GROUP_TABLE);
+            String profile = matcher.group(GRANT_PATTERN_GROUP_PROFILE);
+
+            return new Grant(privilege, table, profile);
+        }
+
+        matcher = REVOKE_PATTERN.matcher(miniSQLQuery);
+        if (matcher.find()) {
+            String privilege = matcher.group(REVOKE_PATTERN_GROUP_PRIVILEGE);
+            String table = matcher.group(REVOKE_PATTERN_GROUP_TABLE);
+            String profile = matcher.group(REVOKE_PATTERN_GROUP_PROFILE);
+
+            return new Revoke(privilege, table, profile);
+        }
+
+        matcher = ADD_USER_PATTERN.matcher(miniSQLQuery);
+        if (matcher.find()) {
+            String username = matcher.group(ADD_USER_PATTERN_GROUP_USERNAME);
+            String password = matcher.group(ADD_USER_PATTERN_GROUP_PASSWORD);
+            String profile = matcher.group(ADD_USER_PATTERN_GROUP_PROFILE);
+            return new AddUser(username, password, profile);
+        }
+
+        matcher = DELETE_USER_PATTERN.matcher(miniSQLQuery);
+        if (matcher.find()) {
+            String username = matcher.group(DELETE_USER_GROUP_USERNAME);
+            return new DeleteUser(username);
+        }
+
+
 
         if(false /* Comprobar las demás sentencias */){
             return null;

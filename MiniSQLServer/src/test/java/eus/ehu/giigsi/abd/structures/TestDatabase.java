@@ -1,17 +1,14 @@
 package eus.ehu.giigsi.abd.structures;
 
-import eus.ehu.giigsi.abd.parser.*;
-import eus.ehu.giigsi.abd.security.*;
-import eus.ehu.giigsi.abd.structures.*;
-import org.junit.jupiter.api.Assertions;
+import eus.ehu.giigsi.abd.parser.ColumnParameters;
+import eus.ehu.giigsi.abd.parser.CreateTable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestDatabase {
 

@@ -20,18 +20,27 @@ public class DeleteUser implements MiniSQLQuery{
     {
         this.username = username;
     }
-    public String execute(Database database)
-    {
+    public String execute(Database database) {
         Manager sm = database.getSecurityManager();
-        List<Profile> pf = sm.getProfiles();
-            for(int i=0; i<pf.size();i++){
-                for(int j=0;j<pf.get(i).getUsers().size();j++){
-                    if(pf.get(i).getUsers().get(j).getUsername().equalsIgnoreCase(username)){
-                        pf.get(i).getUsers().remove(j);
-                        return Constants.DELETE_USER_SUCCESS;
-                    }
+
+        if (! sm.isUserAdmin()) {
+            return Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE;
+
+        } else if (sm.profileByUser(username) == null) {
+            return Constants.USER_DOES_NOT_EXIST_ERROR;
+
+        } else {
+            List<User> userList = sm.profileByUser(username).users;
+
+            for (User u : userList) {
+                if (u.username.equals(username)) {
+
+                    userList.remove(u);
+                    return Constants.DELETE_USER_SUCCESS;
                 }
             }
-            return Constants.USER_DOES_NOT_EXIST_ERROR;
+
+            return Constants.ERROR;
+        }
     }
 }

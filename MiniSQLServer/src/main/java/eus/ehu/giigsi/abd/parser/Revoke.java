@@ -1,5 +1,8 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
+import eus.ehu.giigsi.abd.security.Manager;
+import eus.ehu.giigsi.abd.security.Privilege;
 import eus.ehu.giigsi.abd.structures.Database;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +26,27 @@ public class Revoke implements MiniSQLQuery{
     }
     public String execute(Database database)
     {
-        return null;
-    }
+        Manager sm = database.getSecurityManager();
 
+
+        if (!sm.isUserAdmin()) {
+            return Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE;
+
+        } if (sm.profileByName(profileName) == null) {
+            return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
+
+        } else if (sm.profileByName(profileName).privilegesOn.get(tableName) == null) {
+            return Constants.ERROR;
+
+        } else {
+            sm.revokePrivilege(profileName, tableName, PrivilegeUtils.fromPrivilegeName(privilegeName));
+
+            if (sm.isGrantedPrivilege(profileName, tableName, PrivilegeUtils.fromPrivilegeName(privilegeName))){
+                return Constants.ERROR;
+
+            } else {
+                return Constants.REVOKE_PRIVILEGE_SUCCESS;
+            }
+        }
+    }
 }

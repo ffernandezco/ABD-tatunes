@@ -27,17 +27,20 @@ public class AddUser implements MiniSQLQuery{
         this.password = password;
         this.profileName= profileName;
     }
-    public String execute(Database database)
-    {
+    public String execute(Database database) {
         Manager sm = database.getSecurityManager();
-            for (int i = 0; i < sm.profiles.size(); i++) {
-                if(sm.getProfiles().get(i).getName().equalsIgnoreCase(profileName)) {
-                   User us = new User(username,password);
-                   sm.getProfiles().get(i).getUsers().add(us);
-                   return Constants.ADD_USER_SUCCESS;
-                }
-            }
-            return null;
-    }
 
+        if (! sm.isUserAdmin()) {
+            return Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE;
+
+        } else if (sm.profileByName(profileName) == null) {
+            return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
+
+        } else {
+            User user = new User(username, password);
+            sm.profileByName(profileName).users.add(user);
+
+            return Constants.ADD_USER_SUCCESS;
+        }
+    }
 }

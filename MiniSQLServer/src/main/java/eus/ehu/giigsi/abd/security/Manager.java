@@ -51,10 +51,9 @@ public class Manager {
     public void grantPrivilege(String profileName, String table, Privilege privilege)
     {
         if (isUserAdmin()){
-            for (Profile profile : profiles){
-                if(profile.getName() == profileName) {
-                    profile.grantPrivilege(table, privilege);
-                }
+            Profile profile = profileByName(profileName);
+            if(profile != null){
+                profile.grantPrivilege(table, privilege);
             }
         }
     }
@@ -62,10 +61,9 @@ public class Manager {
     public void revokePrivilege(String profileName, String table, Privilege privilege)
     {
         if (isUserAdmin()){
-            for (Profile profile : profiles){
-                if(profile.getName() == profileName) {
-                    profile.revokePrivilege(table, privilege);
-                }
+            Profile profile = profileByName(profileName);
+            if(profile != null){
+                profile.revokePrivilege(table, privilege);
             }
         }
     }

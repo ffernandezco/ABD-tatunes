@@ -1,13 +1,37 @@
 package eus.ehu.giigsi.abd.parser;
 
+import eus.ehu.giigsi.abd.Constants;
+import eus.ehu.giigsi.abd.security.Privilege;
+import eus.ehu.giigsi.abd.security.Profile;
+import eus.ehu.giigsi.abd.security.User;
 import eus.ehu.giigsi.abd.structures.Column;
+import eus.ehu.giigsi.abd.structures.Database;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMiniSQLParser {
+
+    Database database;
+    Database cargadaDatabase;
+
+    @BeforeEach
+    public void init () {
+        database = new Database("admin", "admin");
+
+        Profile profile = new Profile();
+        profile.setName("Profile");
+
+        profile.users.add(new User("Asier", "morenasbajitas"));
+        profile.users.add(new User("Fran", "rubiasaltas"));
+
+        database.getSecurityManager().addProfile(profile);
+
+        database.save("testeo");
+    }
+
 
     //TEST PARSER
     @Test
@@ -197,6 +221,98 @@ public class TestMiniSQLParser {
         assertEquals("TableName", ((DropTable) parsedQuery).getTable());
     }
 
+    //TEST PARSER - Security
+    @Test
+    public void testCreateSecurityProfileParse() {
+        String query = "CREATE SECURITY PROFILE ProfileDemo";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof CreateSecurityProfile);
+        assertEquals("ProfileDemo", ((CreateSecurityProfile) parsedQuery).getProfileName());
+    }
+
+    @Test
+    public void testCreateSecurityProfileSinLetrasParse() {
+        String query = "CREATE SECURITY PROFILE ProfileDemo1";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertNull(parsedQuery);
+    }
+
+    @Test
+    public void testDropSecurityProfileParse() {
+        String query = "DROP SECURITY PROFILE ProfileDemo";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof DropSecurityProfile);
+        assertEquals("ProfileDemo", ((DropSecurityProfile) parsedQuery).getProfileName());
+    }
+
+    @Test
+    public void testGrantParse() {
+        String query = "GRANT DELETE ON tabla TO Profile";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof Grant);
+        assertEquals("DELETE", ((Grant) parsedQuery).getPrivilegeName());
+        assertEquals("tabla", ((Grant) parsedQuery).getTableName());
+        assertEquals("Profile", ((Grant) parsedQuery).getProfileName());
+    }
+
+    @Test
+    public void testRevokeParse() {
+        String query = "REVOKE SELECT ON tabla TO Profile";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof Revoke);
+        assertEquals("SELECT", ((Revoke) parsedQuery).getPrivilegeName());
+        assertEquals("tabla", ((Revoke) parsedQuery).getTableName());
+        assertEquals("Profile", ((Revoke) parsedQuery).getProfileName());
+    }
+
+    @Test
+    public void testAddUser() {
+        String query = "ADD USER (Usuario,Pass,Perfil)";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof AddUser);
+        assertEquals("Usuario", ((AddUser) parsedQuery).getUsername());
+        assertEquals("Pass", ((AddUser) parsedQuery).getPassword());
+        assertEquals("Perfil", ((AddUser) parsedQuery).getProfileName());
+    }
+
+    @Test
+    public void testAddUserSinLetras() {
+        String query = "ADD USER (Usuario1,Pass,Perfil1)";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertNull(parsedQuery);
+    }
+    @Test
+    public void testAddUserConEspacios() {
+        String query = "ADD USER (Usuario, Pass, Perfil)";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertNull(parsedQuery);
+    }
+
+    @Test
+    public void testDeleteUserParse() {
+        String query = "DELETE USER Fran";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertTrue(parsedQuery instanceof DeleteUser);
+        assertEquals("Fran", ((DeleteUser) parsedQuery).getUsername());
+    }
+
+    @Test
+    public void testDeleteUserSinLetrasParse() {
+        String query = "DELETE USER Asier1";
+        MiniSQLQuery parsedQuery = MiniSQLParser.parse(query);
+
+        assertNull(parsedQuery);
+    }
+
     //TEST MÉTODOS
     @Test
     public void testCommaSeparatedNames() {
@@ -210,4 +326,60 @@ public class TestMiniSQLParser {
         }
     }
 
+    @Test
+    public void peticionesSinSerAdmin () {
+        cargadaDatabase = Database.load("testeo", "Asier", "morenasbajitas");
+
+        AddUser addUser = new AddUser("Pablo", "pelirrojastambien", "Profile");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, addUser.execute(cargadaDatabase));
+
+        DeleteUser deleteUser = new DeleteUser("Usuario");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, deleteUser.execute(cargadaDatabase));
+
+
+        DropSecurityProfile dropSecurityProfile = new DropSecurityProfile("Profile");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, dropSecurityProfile.execute(cargadaDatabase));
+
+        CreateSecurityProfile createSecurityProfile = new CreateSecurityProfile("Profile");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, createSecurityProfile.execute(cargadaDatabase));
+
+        Revoke revoke = new Revoke(Privilege.INSERT.name(), "Tabla", "Profile");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, revoke.execute(cargadaDatabase));
+
+        Grant grant = new Grant(Privilege.INSERT.name(), "Tabla", "Profile");
+        assertEquals(Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE, grant.execute(cargadaDatabase));
+    }
+
+    @Test
+    public void perfilNoExiste () {
+        cargadaDatabase = Database.load("testeo", "admin", "admin");
+
+        AddUser addUser = new AddUser("Lander", "Zubillaga", "Ulia");
+        assertEquals(Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR, addUser.execute(cargadaDatabase));
+
+        DropSecurityProfile dropSecurityProfile = new DropSecurityProfile("Vitoria");
+        assertEquals(Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR, dropSecurityProfile.execute(cargadaDatabase));
+    }
+
+    @Test
+    public void usuarioInexistente () {
+        cargadaDatabase = Database.load("testeo", "admin", "admin");
+
+        DeleteUser deleteUser = new DeleteUser("Ander");
+        assertEquals(Constants.USER_DOES_NOT_EXIST_ERROR, deleteUser.execute(cargadaDatabase));
+    }
+
+
+    /*
+    @Test
+    public void grantRevoke () {
+        cargadaDatabase = Database.load("testeo", "admin", "admin");
+        cargadaDatabase.securityManager.profileByName("Profile").privilegesOn.put("Tabla1", List.of(Privilege.SELECT));
+
+        Grant grant = new Grant(Privilege.UPDATE.name(), "Tabla1", "Profile");
+
+        assertEquals(Constants.GRANT_PRIVILEGE_SUCCESS, grant.execute(cargadaDatabase));
+        assertEquals(List.of(Privilege.SELECT, Privilege.UPDATE), cargadaDatabase.securityManager.profileByName("Profile").privilegesOn.get("Tabla1"));
+    }
+     */
 }
