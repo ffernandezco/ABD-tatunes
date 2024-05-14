@@ -1,44 +1,47 @@
 package eus.ehu.giigsi.abd.parser;
 
-import eus.ehu.giigsi.abd.Constants;
-import eus.ehu.giigsi.abd.security.Manager;
+import eus.ehu.giigsi.abd.security.Encryption;
 import eus.ehu.giigsi.abd.security.Profile;
+import eus.ehu.giigsi.abd.security.User;
 import eus.ehu.giigsi.abd.structures.Database;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestAddUser {
-    private Database db;
-    private AddUser au,au2,au3,au4;
+    Database database;
+    Database cargadaDatabase;
 
     @BeforeEach
-    public void init(){
-        db = new Database("user", "user");
-        Manager mg = new Manager("manager");
-        db.securityManager = mg;
-        au = new AddUser("testUser", "testPass", "Admin");
-        au2= new AddUser("testuser","testPass","AdminNo");
+    public void init () {
+        database = new Database("admin", "admin");
+
+        Profile profile = new Profile();
+        profile.setName("Profile");
+
+        profile.users.add(new User("Asier", "morenasbajitas"));
+        profile.users.add(new User("Fran", "rubiasaltas"));
+
+        database.getSecurityManager().addProfile(profile);
+
+        database.save("testeo");
     }
 
-    /*
+
     @Test
-    public void prueba1(){
-        Profile adminProfile = new Profile();
-        adminProfile.setName(Profile.AdminProfileName);
-        db.getSecurityManager().getProfiles().add(adminProfile);
+    public void testAddUser(){
+        cargadaDatabase = Database.load("testeo", "admin", "admin");
+        AddUser add = new AddUser("Antonio", "fr4n", "Profile");
+        add.execute(cargadaDatabase);
+        Profile profile = cargadaDatabase.getSecurityManager().profileByName("Profile");
+        User user = profile.getUsers().get(profile.getUsers().size() - 1);
 
-        String result = au.execute(db);
+        assertNotNull(user);
+        assertTrue(profile.getUsers().contains(user));
+        assertEquals("Antonio", user.getUsername());
+        assertEquals(Encryption.encrypt("fr4n"), user.getEncryptedPassword());
+    }
 
-        assertEquals(Constants.ADD_USER_SUCCESS, result);
-        assertEquals(1, adminProfile.getUsers().size());
-        assertEquals("testUser", adminProfile.getUsers().get(0).getUsername());
-    }
-    @Test
-    public void prueba2(){
-        String result = au2.execute(db);
-        assertEquals(null, result);
-    }
-     */
+
 }

@@ -39,9 +39,9 @@ public class Revoke implements MiniSQLQuery{
             return Constants.ERROR;
 
         } else {
-            sm.revokePrivilege(profileName, tableName, Privilege.valueOf(privilegeName));
+            sm.revokePrivilege(profileName, tableName, PrivilegeUtils.fromPrivilegeName(privilegeName));
 
-            if (sm.isGrantedPrivilege(profileName, tableName, Privilege.valueOf(privilegeName))){
+            if (sm.isGrantedPrivilege(profileName, tableName, PrivilegeUtils.fromPrivilegeName(privilegeName))){
                 return Constants.ERROR;
 
             } else {

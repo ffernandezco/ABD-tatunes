@@ -37,7 +37,7 @@ public class Grant implements MiniSQLQuery{
             return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
 
         } else {
-            manager.grantPrivilege(profileName, tableName, Privilege.valueOf(privilegeName));
+            manager.grantPrivilege(profileName, tableName, PrivilegeUtils.fromPrivilegeName(privilegeName));
             return Constants.GRANT_PRIVILEGE_SUCCESS;
         }
 
