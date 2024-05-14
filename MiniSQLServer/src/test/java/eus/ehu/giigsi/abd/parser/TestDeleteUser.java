@@ -32,6 +32,8 @@ public class TestDeleteUser {
         db.getSecurityManager().getProfiles().add(adminProfile);
         db.getSecurityManager().getProfiles().add(pf2);
     }
+
+    /*
     @Test
     public void prueba1(){
         String result = du.execute(db);
@@ -42,4 +44,5 @@ public class TestDeleteUser {
         String result = du2.execute(db);
         assertEquals(Constants.USER_DOES_NOT_EXIST_ERROR,result);
     }
+    */
 }

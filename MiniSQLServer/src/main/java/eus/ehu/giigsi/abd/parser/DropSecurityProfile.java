@@ -19,21 +19,27 @@ public class DropSecurityProfile implements MiniSQLQuery{
     }
     public String execute(Database database)
     {
-
         if (profileName == null) {
             return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
+
         } else {
             Manager securityManager = database.getSecurityManager();
+
             if (securityManager != null) {
-                if(securityManager.profileByName(profileName) == null){
+                if (! securityManager.isUserAdmin()) {
+                    return Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE;
+
+                } else if(securityManager.profileByName(profileName) == null){
                     return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
+
+                } else {
+                    securityManager.removeProfile(profileName);
+                    return Constants.DROP_SECURITY_PROFILE_SUCCESS;
                 }
-                securityManager.removeProfile(profileName);
-                return Constants.DROP_SECURITY_PROFILE_SUCCESS;
+
             } else {
                 return Constants.ERROR;
             }
         }
-
     }
 }

@@ -22,12 +22,14 @@ public class CreateSecurityProfile implements MiniSQLQuery {
 
         if (profileName == null) {
             return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
+
         } else {
             Manager securityManager = database.getSecurityManager();
             Profile profile = new Profile();
             profile.setName(profileName);
-            if (securityManager != null) {
-                return Constants.CREATE_SECURITY_PROFILE_SUCCESS;
+
+            if (! securityManager.isUserAdmin()) {
+                return Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE;
             } else {
                 securityManager.addProfile(profile);
                 return Constants.CREATE_SECURITY_PROFILE_SUCCESS;

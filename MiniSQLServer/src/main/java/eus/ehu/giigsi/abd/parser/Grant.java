@@ -30,11 +30,12 @@ public class Grant implements MiniSQLQuery{
 
         Manager manager = database.securityManager;
 
-        if (manager.profileByName(profileName) == null) {
-            return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
-        }
         if (!manager.isUserAdmin()) {
-            return Constants.USER_DOES_NOT_HAVE_PRIVILEGE_ERROR;
+            return Constants.USERS_PROFILE_IS_NOT_GRANTED_REQUIRED_PRIVILEGE;
+
+        } else if (manager.profileByName(profileName) == null) {
+            return Constants.SECURITY_PROFILE_DOES_NOT_EXIST_ERROR;
+
         } else {
             manager.grantPrivilege(profileName, tableName, Privilege.valueOf(privilegeName));
             return Constants.GRANT_PRIVILEGE_SUCCESS;
