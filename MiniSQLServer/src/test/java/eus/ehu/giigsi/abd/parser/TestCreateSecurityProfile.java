@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestCreateSecurityProfile {
     Database database;
     Database cargadaDatabase;
-
     @BeforeEach
     public void init () {
         database = new Database("admin", "admin");
