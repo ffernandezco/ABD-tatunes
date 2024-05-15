@@ -16,19 +16,21 @@ public class TestDeleteUser {
 
     @BeforeEach
     public void init() {
-        db = new Database("user", "user");
+        db = new Database("manager", "manager");
         Manager mg = new Manager("manager");
         db.securityManager = mg;
         du = new DeleteUser("user1");
         du2 = new DeleteUser("user10");
         Profile adminProfile = new Profile();
-        adminProfile.setName("adminProfileName");
+        adminProfile.setName(Profile.AdminProfileName);
         Profile pf2 = new Profile();
         pf2.setName("pf2");
         User us = new User("user1","user1Pass");
         User us2 = new User("user2", "user2pass");
+        User admin = new User("manager","manager");
         adminProfile.getUsers().add(us);
         adminProfile.getUsers().add(us2);
+        adminProfile.getUsers().add(admin);
         db.getSecurityManager().getProfiles().add(adminProfile);
         db.getSecurityManager().getProfiles().add(pf2);
     }

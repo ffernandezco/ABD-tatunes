@@ -30,6 +30,9 @@ public class AddUser implements MiniSQLQuery{
     public String execute(Database database)
     {
         Manager sm = database.getSecurityManager();
+        if(!database.IsUserAdmin()){
+            return Constants.ERROR;
+        }
             for (int i = 0; i < sm.profiles.size(); i++) {
                 if(sm.getProfiles().get(i).getName().equalsIgnoreCase(profileName)) {
                    User us = new User(username,password);

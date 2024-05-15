@@ -23,6 +23,9 @@ public class DeleteUser implements MiniSQLQuery{
     public String execute(Database database)
     {
         Manager sm = database.getSecurityManager();
+        if(!database.IsUserAdmin()){
+            return Constants.ERROR;
+        }
         List<Profile> pf = sm.getProfiles();
             for(int i=0; i<pf.size();i++){
                 for(int j=0;j<pf.get(i).getUsers().size();j++){
